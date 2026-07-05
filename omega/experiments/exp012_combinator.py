@@ -172,6 +172,12 @@ class CombinatorPhysics:
         # it per patch, reset each deme generation.
         self.deme_fitness = "size"
         self._deme_prod: dict[int, int] = {}
+        # exp019 local feed: direct the random feed to under-full patches (local
+        # carrying capacity) instead of uniformly, so a local replicator can take
+        # over its deme (raise within-deme dominance) without starving the whole
+        # soup. Tests whether within-deme dominance is what unlocks collective
+        # selection — the missing upstream ingredient exp018 identified.
+        self.local_feed = False
         # direct collective-heredity measure: after a deme is founded from a source,
         # does it resemble that source (class-set Jaccard) more than a random deme?
         self._pending: dict[int, frozenset] = {}
@@ -209,7 +215,19 @@ class CombinatorPhysics:
                         p = self._patch[parent]
                         break
                 if p is None:
-                    p = rng.randint(0, self.n_patches - 1)
+                    # rootless orgs are the feed. Default: land in a uniformly random
+                    # patch (global feed — dilutes every deme equally). exp019 local
+                    # feed instead directs each fed org to a patch with probability
+                    # proportional to its local vacancy (target - occupancy), so a
+                    # deme a replicator has filled stops receiving diluting feed and
+                    # can consolidate a heritable type — without cutting total feed.
+                    if self.local_feed:
+                        target = max(1.0, len(pop) / self.n_patches)
+                        weights = [max(1e-3, target - len(buckets[i]))
+                                   for i in range(self.n_patches)]
+                        p = rng.weighted_choice(range(self.n_patches), weights)
+                    else:
+                        p = rng.randint(0, self.n_patches - 1)
                 self._patch[o.uid] = p
             if rng.random() < self.mig_rate:         # migration couples the demes
                 p = rng.randint(0, self.n_patches - 1)
@@ -374,6 +392,7 @@ def _make(seed, experiment, **overrides):
     physics.propagule_size = int(overrides.get("propagule_size", 4))
     physics.propagule_mode = str(overrides.get("propagule_mode", "source"))
     physics.deme_fitness = str(overrides.get("deme_fitness", "size"))
+    physics.local_feed = bool(overrides.get("local_feed", False))
     cfg = Config(
         experiment=experiment,
         seed=seed,
@@ -450,3 +469,25 @@ def build_collective_fitness(seed: int = 0, **overrides) -> tuple[Physics, Confi
     overrides.setdefault("propagule_size", 16)
     overrides.setdefault("deme_fitness", "productivity")
     return _make(seed, "exp018", **overrides)
+
+
+@register("exp019")
+def build_local_feed(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp019 — patch-local feed: exp018 found collectives cannot be selected
+    because demes never crystallize a heritable *type* (within-deme dominance
+    stays ≤0.35), and the global feed's constant injection of random forms is the
+    churn that prevents local replicator takeover. This directs the feed to
+    under-full patches (`local_feed=True`) — local carrying capacity — so a deme a
+    replicator fills stops being diluted, without cutting total feed (no
+    starvation). All exp018 collective ingredients stay on. Tests whether local
+    feed raises within-deme dominance and *then* lets the collective winnow
+    (`n_deme_types` / types-per-live-deme below the well-mixed null)."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 16)
+    overrides.setdefault("deme_fitness", "productivity")
+    overrides.setdefault("local_feed", True)
+    return _make(seed, "exp019", **overrides)

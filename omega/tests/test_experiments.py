@@ -267,6 +267,30 @@ class TestScientificClaims(unittest.TestCase):
         # no differential winnowing per live deme: source is not meaningfully below null
         self.assertLess(abs(src_tl - mix_tl), 0.15)
 
+    def test_exp019_local_feed_does_not_unlock_collective_selection(self):
+        # Ω-0.16: exp018 predicted a patch-local feed would let a local replicator
+        # take over a deme (a heritable type) and unlock collective selection.
+        # exp019 implements it. Claim (still negative): in a healthy regime the
+        # collective still does not winnow — `source` types-per-live-deme is not
+        # below the well-mixed `mixed` null. Local feed raises dominance and deme
+        # survival but never clears the barrier.
+        from statistics import mean
+
+        def types_per_live(mode):
+            p, c = get_experiment("exp019")(seed=0, ticks=600, n_patches=24,
+                                            propagule_mode=mode)
+            p.feed_rate = 4            # healthy regime (not collapsed)
+            r = run(p, c)
+            tail = r.metrics[-len(r.metrics) // 5:]
+            ndt = mean(m["gauges"].get("n_deme_types", 0.0) for m in tail)
+            live = mean(m["gauges"].get("n_live_demes", 1.0) for m in tail)
+            return (ndt / live if live else 0.0), r.final_population
+
+        src_tl, src_pop = types_per_live("source")
+        mix_tl, _ = types_per_live("mixed")
+        self.assertGreater(src_pop, 20)               # healthy, not collapsed
+        self.assertGreater(src_tl, mix_tl - 0.05)     # no winnowing below the null
+
     def test_combinator_reducer_correct(self):
         # the SKI reducer must implement the three rules correctly
         from omega.experiments.exp012_combinator import normalize

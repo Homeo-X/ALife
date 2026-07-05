@@ -107,3 +107,15 @@ per-patch reservoir, so a good local replicator can sweep its deme and give the
 collective a stable, heritable phenotype *before* between-deme selection is asked
 to sort it. Until within-deme dominance clears ~0.35, no amount of collective-level
 selection pressure will make collectives outcompete individuals.
+
+---
+
+**Follow-up (see `EXP019_FINDINGS.md`).** exp019 implemented the patch-local feed
+proposed above. It helps — within-deme dominance rises (0.33→0.37) and far more
+demes survive under scarcity — but it does **not** unlock collective selection:
+dominance still caps at ~0.37, and in every healthy regime `source` shows no
+winnowing relative to the mixed null. The barrier turns out to be deeper than feed
+geometry: the SKI-combinator soup never produces a replicator strong enough to
+sweep even one isolated, locally-fed patch (dominance → ~1). The individual level,
+not the collective machinery, is the bottleneck — so the next lever is a stronger
+copying primitive, not another multi-level knob.

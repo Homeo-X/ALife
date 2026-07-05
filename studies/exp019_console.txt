@@ -1,0 +1,22 @@
+### exp019 local-feed sweep vs global (6000t/5seed)
+40 runs @ 6000 ticks, 5 seeds
+
+feed    mode within-dom  live_demes   pop n_deme_types  types/live
+--------------------------------------------------------------------
+   8  global      0.285     23.6/24   110         19.6        0.83
+   8   local      0.321     24.0/24   113         20.3        0.85
+   4  global      0.330     21.7/24    57         17.9        0.82
+   4   local      0.370     23.7/24    61         19.7        0.83
+   2  global      0.351     13.6/24    20          9.6        0.71
+   2   local      0.333     18.7/24    16         10.2        0.54
+   1  global      0.351     13.6/24    20          9.6        0.71
+   1   local      0.333     18.7/24    16         10.2        0.54
+
+### exp019 source-vs-mixed control under local feed (6000t/6seed)
+LOCAL feed | 6 seeds
+feed    mode  n_deme_types      live   types/live   pop
+--------------------------------------------------------
+   4  source       19.8     23.7/24     0.835±0.010    60
+   4   mixed       18.4     23.7/24     0.778±0.021    94
+   2  source       10.1     18.6/24     0.543±0.007    16
+   2   mixed       15.8     22.4/24     0.706±0.029    70
