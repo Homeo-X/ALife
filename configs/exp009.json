@@ -1,0 +1,14 @@
+{
+  "experiment": "exp009",
+  "seed": 0,
+  "ticks": 2500,
+  "total_quanta": 4000,
+  "decay_hazard": 0.04,
+  "max_reactions_per_tick": 120,
+  "params": {
+    "module_prob": 0.6,
+    "module_min_depth": 5,
+    "module_size": 32,
+    "frontier_prob": 0.2
+  }
+}

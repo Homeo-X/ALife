@@ -1,0 +1,13 @@
+{
+  "experiment": "exp004",
+  "seed": 0,
+  "ticks": 2000,
+  "total_quanta": 3000,
+  "decay_hazard": 0.04,
+  "max_reactions_per_tick": 120,
+  "params": {
+    "base_alphabet": "abc",
+    "reify": true,
+    "meta_prob": 0.5
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "experiment": "exp014",
+  "seed": 0,
+  "ticks": 3000,
+  "total_quanta": 4000,
+  "decay_hazard": 0.05,
+  "max_reactions_per_tick": 150,
+  "params": {
+    "fuel": 120,
+    "max_size": 24,
+    "mut_prob": 0.05
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "experiment": "exp002",
+  "seed": 0,
+  "ticks": 400,
+  "total_quanta": 4000,
+  "decay_hazard": 0.04,
+  "max_reactions_per_tick": 120,
+  "params": {
+    "types": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "bind": true
+  }
+}

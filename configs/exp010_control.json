@@ -1,0 +1,12 @@
+{
+  "experiment": "exp010",
+  "seed": 0,
+  "ticks": 1500,
+  "total_quanta": 4000,
+  "decay_hazard": 0.04,
+  "max_reactions_per_tick": 150,
+  "params": {
+    "dup_prob": 0.0,
+    "op_feed_rate": 3
+  }
+}

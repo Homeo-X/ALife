@@ -1,0 +1,13 @@
+{
+  "experiment": "exp007",
+  "seed": 0,
+  "ticks": 4000,
+  "total_quanta": 4000,
+  "decay_hazard": 0.04,
+  "max_reactions_per_tick": 120,
+  "params": {
+    "frontier_prob": 0.0,
+    "frontier_band": 2,
+    "reify_max_len": 6
+  }
+}

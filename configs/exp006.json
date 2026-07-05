@@ -1,0 +1,13 @@
+{
+  "experiment": "exp006",
+  "seed": 0,
+  "ticks": 4000,
+  "total_quanta": 4000,
+  "decay_hazard": 0.04,
+  "max_reactions_per_tick": 120,
+  "params": {
+    "reify_max_len": 8,
+    "max_len": 24,
+    "reify_threshold_nested": 2
+  }
+}

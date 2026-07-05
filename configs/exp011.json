@@ -1,0 +1,12 @@
+{
+  "experiment": "exp011",
+  "seed": 0,
+  "ticks": 1500,
+  "total_quanta": 4000,
+  "decay_hazard": 0.05,
+  "max_reactions_per_tick": 150,
+  "params": {
+    "functional": true,
+    "activity_gain": 0.6
+  }
+}

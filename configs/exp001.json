@@ -1,0 +1,12 @@
+{
+  "experiment": "exp001",
+  "seed": 0,
+  "ticks": 300,
+  "total_quanta": 6000,
+  "decay_hazard": 0.05,
+  "max_reactions_per_tick": 80,
+  "params": {
+    "alphabet_size": 52,
+    "feed_rate": 40
+  }
+}
