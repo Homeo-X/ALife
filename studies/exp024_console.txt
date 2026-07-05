@@ -1,0 +1,17 @@
+20 runs @ 4000 ticks, 5 seeds
+
+    exp    mode within-dom heredity s/n  ndt @t0  ndt late
+------------------------------------------------------------
+ exp023  source      0.328         1.59     12.6      14.9
+ exp023   mixed      0.319         0.00     12.6      15.6
+ exp024  source      0.330         1.40     12.8      15.4
+ exp024   mixed      0.323         0.00     12.8      14.9
+
+individuation check (exp024, source vs mixed):
+  within-dom: 0.330 vs 0.323
+  ndt late  : 15.4 vs 14.9
+
+substrate type-space diagnostic (feed distribution, 5000 draws):
+  distinct normal forms: 204;  top-9 cover 0.72 of mass;  top-9 freqs: [0.147, 0.144, 0.136, 0.05, 0.049, 0.048, 0.048, 0.047, 0.045]
+  -> monoculture founders collide onto ~a dozen shared attractor types;
+     24 demes cannot be given distinct persistent identities.

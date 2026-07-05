@@ -1,0 +1,202 @@
+[
+  {
+    "exp": "exp023",
+    "mode": "source",
+    "seed": 0,
+    "within_dom": 0.320386124401,
+    "hered_ratio": 1.4796990468647242,
+    "ndt_t0": 13.0,
+    "ndt_late": 15.4625,
+    "pop": 174
+  },
+  {
+    "exp": "exp023",
+    "mode": "source",
+    "seed": 1,
+    "within_dom": 0.31967018932982116,
+    "hered_ratio": 1.8505936838141699,
+    "ndt_t0": 11.0,
+    "ndt_late": 17.01125,
+    "pop": 165
+  },
+  {
+    "exp": "exp023",
+    "mode": "source",
+    "seed": 2,
+    "within_dom": 0.33172177810753234,
+    "hered_ratio": 1.592965052300858,
+    "ndt_t0": 11.0,
+    "ndt_late": 13.72,
+    "pop": 159
+  },
+  {
+    "exp": "exp023",
+    "mode": "source",
+    "seed": 3,
+    "within_dom": 0.33073949932482877,
+    "hered_ratio": 1.4502503477608968,
+    "ndt_t0": 15.0,
+    "ndt_late": 15.5475,
+    "pop": 168
+  },
+  {
+    "exp": "exp023",
+    "mode": "source",
+    "seed": 4,
+    "within_dom": 0.3352549554179461,
+    "hered_ratio": 1.5809699576978296,
+    "ndt_t0": 13.0,
+    "ndt_late": 12.75,
+    "pop": 153
+  },
+  {
+    "exp": "exp023",
+    "mode": "mixed",
+    "seed": 0,
+    "within_dom": 0.32533681097974215,
+    "hered_ratio": 0.0,
+    "ndt_t0": 13.0,
+    "ndt_late": 14.0975,
+    "pop": 176
+  },
+  {
+    "exp": "exp023",
+    "mode": "mixed",
+    "seed": 1,
+    "within_dom": 0.3326135530378837,
+    "hered_ratio": 0.0,
+    "ndt_t0": 11.0,
+    "ndt_late": 12.9675,
+    "pop": 172
+  },
+  {
+    "exp": "exp023",
+    "mode": "mixed",
+    "seed": 2,
+    "within_dom": 0.3169870709325347,
+    "hered_ratio": 0.0,
+    "ndt_t0": 11.0,
+    "ndt_late": 15.9775,
+    "pop": 160
+  },
+  {
+    "exp": "exp023",
+    "mode": "mixed",
+    "seed": 3,
+    "within_dom": 0.3093100878055765,
+    "hered_ratio": 0.0,
+    "ndt_t0": 15.0,
+    "ndt_late": 17.09125,
+    "pop": 143
+  },
+  {
+    "exp": "exp023",
+    "mode": "mixed",
+    "seed": 4,
+    "within_dom": 0.31107302055619473,
+    "hered_ratio": 0.0,
+    "ndt_t0": 13.0,
+    "ndt_late": 17.97875,
+    "pop": 150
+  },
+  {
+    "exp": "exp024",
+    "mode": "source",
+    "seed": 0,
+    "within_dom": 0.3306920608440055,
+    "hered_ratio": 1.4908695326859063,
+    "ndt_t0": 13.0,
+    "ndt_late": 15.7525,
+    "pop": 163
+  },
+  {
+    "exp": "exp024",
+    "mode": "source",
+    "seed": 1,
+    "within_dom": 0.33618852468381644,
+    "hered_ratio": 1.472414105022759,
+    "ndt_t0": 14.0,
+    "ndt_late": 14.89125,
+    "pop": 152
+  },
+  {
+    "exp": "exp024",
+    "mode": "source",
+    "seed": 2,
+    "within_dom": 0.3352871810024708,
+    "hered_ratio": 1.2691966246861994,
+    "ndt_t0": 10.0,
+    "ndt_late": 13.9275,
+    "pop": 148
+  },
+  {
+    "exp": "exp024",
+    "mode": "source",
+    "seed": 3,
+    "within_dom": 0.32405401671276657,
+    "hered_ratio": 1.3884144056534689,
+    "ndt_t0": 13.0,
+    "ndt_late": 15.625,
+    "pop": 189
+  },
+  {
+    "exp": "exp024",
+    "mode": "source",
+    "seed": 4,
+    "within_dom": 0.3246864576994266,
+    "hered_ratio": 1.370280910493935,
+    "ndt_t0": 14.0,
+    "ndt_late": 16.5725,
+    "pop": 149
+  },
+  {
+    "exp": "exp024",
+    "mode": "mixed",
+    "seed": 0,
+    "within_dom": 0.326612204498419,
+    "hered_ratio": 0.0,
+    "ndt_t0": 13.0,
+    "ndt_late": 16.2075,
+    "pop": 158
+  },
+  {
+    "exp": "exp024",
+    "mode": "mixed",
+    "seed": 1,
+    "within_dom": 0.32194258789365343,
+    "hered_ratio": 0.0,
+    "ndt_t0": 14.0,
+    "ndt_late": 15.1825,
+    "pop": 178
+  },
+  {
+    "exp": "exp024",
+    "mode": "mixed",
+    "seed": 2,
+    "within_dom": 0.33146212380767365,
+    "hered_ratio": 0.0,
+    "ndt_t0": 10.0,
+    "ndt_late": 12.8925,
+    "pop": 164
+  },
+  {
+    "exp": "exp024",
+    "mode": "mixed",
+    "seed": 3,
+    "within_dom": 0.3134049884436579,
+    "hered_ratio": 0.0,
+    "ndt_t0": 13.0,
+    "ndt_late": 15.99875,
+    "pop": 150
+  },
+  {
+    "exp": "exp024",
+    "mode": "mixed",
+    "seed": 4,
+    "within_dom": 0.32394078537701315,
+    "hered_ratio": 0.0,
+    "ndt_t0": 14.0,
+    "ndt_late": 14.135,
+    "pop": 150
+  }
+]

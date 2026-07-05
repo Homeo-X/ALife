@@ -78,3 +78,14 @@ supply *part* of what a major transition needs — collective selection (exp022)
 within-deme dominance (exp023), and heredity+relatedness (exp021) — but no single
 experiment yet supplies all at once. The next step is their **combination**, not
 another isolated lever.
+
+---
+
+**Follow-up (see `EXP024_FINDINGS.md`).** exp024 combined all three levers plus
+forced founder divergence (monoculture-seeded demes). It still did not individuate —
+and revealed *why*: 24 distinct monoculture founders collapse onto ~13 classes at
+tick 0 because small combinator expressions reduce to only ~9 common attractor normal
+forms (top-9 = 72% of the feed's mass). Individuation is blocked by **substrate
+type-space poverty**, not the multi-level machinery — a substrate-level wall echoing
+the Phase-A→Phase-B pivot. The next move is a richer type space (a substrate pivot) or
+redefining deme identity combinatorially over cross-production networks.

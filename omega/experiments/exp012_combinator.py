@@ -193,6 +193,13 @@ class CombinatorPhysics:
         self.feed_mode = "random"
         self._niche: dict[int, list] = {}
         self.niche_window = 64
+        # exp024 founder divergence: with founder_mode="monoculture" each patch is
+        # seeded as a distinct monoculture (its own founder class), so demes start in
+        # different basins. exp023 showed recycle feed raises dominance but converges
+        # every deme on the same global winner; forcing initial divergence is the
+        # missing ingredient for recycle to lock *distinct* types into *distinct*
+        # demes (individuation). "random" (default) leaves prior experiments untouched.
+        self.founder_mode = "random"
         # exp020 replicase: strength/fidelity of the explicit template-copy channel.
         # copy_rate=0 (default) leaves every earlier experiment untouched.
         self.copy_rate = 0.0
@@ -227,14 +234,28 @@ class CombinatorPhysics:
         nf = normalize(e, self.fuel, self.max_size)
         return nf if nf is not None else rng.choice(_ATOMS)
 
+    def _seed_coop(self, org, rng: Noise) -> None:
+        # exp021: only the founding population carries cooperators; the feed is all
+        # defectors, so cooperation must be sustained by heredity+selection.
+        if self.coop and org is not None:
+            self._coop[org.uid] = 1.0 if rng.random() < self.coop_init else 0.0
+
     def seed(self, universe: Universe, rng: Noise) -> None:
+        if self.founder_mode == "monoculture" and self.n_patches > 0:
+            # each patch = a distinct monoculture (its own founder class), pinned to
+            # that patch, so demes begin in different basins (exp024 divergence).
+            per = max(1, self.seed_pop // self.n_patches)
+            for p in range(self.n_patches):
+                founder = self._random_normal(rng)
+                for _ in range(per):
+                    org = universe.spawn(founder, kind="expr")
+                    if org is not None:
+                        self._patch[org.uid] = p
+                        self._seed_coop(org, rng)
+            return
         for _ in range(self.seed_pop):
             org = universe.spawn(self._random_normal(rng), kind="expr")
-            # exp021: only the founding population carries cooperators; the feed is
-            # all defectors, so cooperation must be sustained by heredity+selection,
-            # not propped up by constant external re-injection.
-            if self.coop and org is not None:
-                self._coop[org.uid] = 1.0 if rng.random() < self.coop_init else 0.0
+            self._seed_coop(org, rng)
 
     def _build_patches(self, pop, rng: Noise) -> list:
         """Assign each org to a patch (inheriting its function-parent's patch, else
@@ -568,6 +589,7 @@ def _make(seed, experiment, **overrides):
     physics.measure_xprod = bool(overrides.get("measure_xprod", False))
     physics.feed_mode = str(overrides.get("feed_mode", "random"))
     physics.niche_window = int(overrides.get("niche_window", 64))
+    physics.founder_mode = str(overrides.get("founder_mode", "random"))
     cfg = Config(
         experiment=experiment,
         seed=seed,
@@ -768,3 +790,28 @@ def build_niche(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("propagule_size", 8)
     overrides.setdefault("feed_mode", "recycle")
     return _make(seed, "exp023", **overrides)
+
+
+@register("exp024")
+def build_individuation(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp024 — the combination (open-problem track). exp021/022/023 each supplied
+    *part* of a major transition: collective selection, an emergent group trait, and
+    within-deme dominance — but none individuated demes. This combines all three plus
+    the ingredient exp023 exposed as missing: forced founder divergence.
+      - founder_mode="monoculture": each deme starts as a distinct monoculture;
+      - feed_mode="recycle" (exp023): each deme reinforces its own composition;
+      - deme_fitness="network" (exp022): collective selection favors cross-producers;
+      - mig_rate=0: isolation preserves the divergence.
+    Tests whether demes now become discrete, heritable collective individuals — high
+    within-deme dominance AND strong collective heredity (self≫null) that persists,
+    rather than all demes collapsing onto one global winner."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("deme_fitness", "network")
+    overrides.setdefault("founder_mode", "monoculture")
+    return _make(seed, "exp024", **overrides)

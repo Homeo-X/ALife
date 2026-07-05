@@ -378,6 +378,26 @@ class TestScientificClaims(unittest.TestCase):
         self.assertLess(rec_ndt, rnd_ndt - 2.0)   # recycling consolidates deme-types
         self.assertLess(rec_nov, rnd_nov)          # at a cost: less open-ended novelty
 
+    def test_exp024_individuation_blocked_by_substrate_type_space(self):
+        # Ω-0.21: combining every partial lever — recycle feed (dominance), network
+        # fitness (collective selection), monoculture founding (forced divergence),
+        # isolation — still does not individuate demes. The diagnosis is a NEW
+        # substrate-level wall: small combinator expressions reduce to only ~a dozen
+        # common attractor normal forms, so 24 distinct monoculture founders *collide*
+        # — the count of distinct deme-types at t0 is far below 24 — and those shared
+        # attractors re-homogenize every deme. Individuation is blocked by type-space
+        # poverty, not by the multi-level machinery.
+        from statistics import mean
+
+        p, c = get_experiment("exp024")(seed=0, ticks=600, n_patches=24,
+                                        propagule_mode="source")
+        r = run(p, c)
+        g = [m["gauges"].get("n_deme_types", 0.0) for m in r.metrics]
+        # 24 distinct monoculture founders collapse onto ~a dozen classes at t0:
+        self.assertLess(g[0], 18.0)
+        # and demes never individuate into many distinct persistent types:
+        self.assertLess(mean(g[-len(g) // 5:]), 22.0)
+
     def test_combinator_reducer_correct(self):
         # the SKI reducer must implement the three rules correctly
         from omega.experiments.exp012_combinator import normalize
