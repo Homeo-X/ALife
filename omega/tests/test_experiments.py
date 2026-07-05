@@ -355,6 +355,29 @@ class TestScientificClaims(unittest.TestCase):
         src, mix = xprod("source"), xprod("mixed")
         self.assertGreater(src, mix * 1.15)   # emergent collective trait is favored
 
+    def test_exp023_niche_construction_lifts_dominance_but_costs_novelty(self):
+        # Ω-0.20: attacks the within-deme-dominance wall (stuck ~0.37 across
+        # exp017-022) with a second, environmental inheritance channel — recycle a
+        # deme's own recent products as its feed. It works partially: deme-types
+        # consolidate (n_deme_types drops vs the random-feed baseline) as the
+        # environment reinforces each deme's composition, but at a real cost — the
+        # novelty rate falls sharply (the Ω-0.14 heredity-vs-diversity tension, now
+        # localized to the feed). (It does not, on its own, individuate: source~=mixed.)
+        from statistics import mean
+
+        def probe(feed_mode):
+            p, c = get_experiment("exp023")(seed=0, ticks=800, n_patches=24,
+                                            propagule_mode="source", feed_mode=feed_mode)
+            r = run(p, c)
+            tail = r.metrics[-len(r.metrics) // 5:]
+            ndt = mean(m["gauges"].get("n_deme_types", 0.0) for m in tail)
+            return ndt, r.open_endedness["novelty_rate"]
+
+        rnd_ndt, rnd_nov = probe("random")
+        rec_ndt, rec_nov = probe("recycle")
+        self.assertLess(rec_ndt, rnd_ndt - 2.0)   # recycling consolidates deme-types
+        self.assertLess(rec_nov, rnd_nov)          # at a cost: less open-ended novelty
+
     def test_combinator_reducer_correct(self):
         # the SKI reducer must implement the three rules correctly
         from omega.experiments.exp012_combinator import normalize

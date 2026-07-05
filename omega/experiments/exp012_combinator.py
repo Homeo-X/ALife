@@ -184,6 +184,15 @@ class CombinatorPhysics:
         # soup. Tests whether within-deme dominance is what unlocks collective
         # selection — the missing upstream ingredient exp018 identified.
         self.local_feed = False
+        # exp023 niche construction: with feed_mode="recycle" a deme is fed a resample
+        # of ITS OWN recent products (self._niche) rather than fresh random forms, so
+        # the deme's environment becomes a second, heritable inheritance channel — a
+        # positive feedback meant to lift within-deme dominance past the ~0.37 ceiling
+        # that blocked exp017-022. "random" (default) leaves every prior experiment
+        # untouched. _niche is a per-patch rolling buffer of recent product states.
+        self.feed_mode = "random"
+        self._niche: dict[int, list] = {}
+        self.niche_window = 64
         # exp020 replicase: strength/fidelity of the explicit template-copy channel.
         # copy_rate=0 (default) leaves every earlier experiment untouched.
         self.copy_rate = 0.0
@@ -363,12 +372,37 @@ class CombinatorPhysics:
             self._ensure_coop(list(universe.organizations.values()), rng)
 
         budget = int(self.feed_rate * (1.0 - reservoir_pressure(universe)))
-        for _ in range(max(budget, 1)):
-            nf = self._random_normal(rng)
-            if self.suppress and canonical_cls(nf) in self.suppress:
-                continue  # never (re)introduce a knocked-out class
-            reactions.append(Reaction(inputs=(), consume=(),
-                                      outputs=((nf, "expr"),), via="feed"))
+        if self.feed_mode == "recycle" and self.n_patches > 0:
+            # niche construction: feed each deme a resample of its own recent products,
+            # anchored on a resident (catalyst) so the new org inherits that deme's
+            # patch via lineage. Uses last tick's persistent patch map (self._patch).
+            members_by_patch: dict[int, list] = {}
+            for o in universe.organizations.values():
+                p = self._patch.get(o.uid)
+                if p is not None:
+                    members_by_patch.setdefault(p, []).append(o)
+            patched = [p for p in members_by_patch if members_by_patch[p]]
+            for _ in range(max(budget, 1)):
+                if not patched:                       # warmup / no patch map yet
+                    nf = self._random_normal(rng)
+                    reactions.append(Reaction(inputs=(), consume=(),
+                                              outputs=((nf, "expr"),), via="feed"))
+                    continue
+                p = rng.choice(patched)
+                buf = self._niche.get(p)
+                state = rng.choice(buf) if buf else self._random_normal(rng)
+                if self.suppress and canonical_cls(state) in self.suppress:
+                    continue
+                anchor = rng.choice(members_by_patch[p])
+                reactions.append(Reaction(inputs=(anchor.uid,), consume=(),
+                                          outputs=((state, "expr"),), via="recycle"))
+        else:
+            for _ in range(max(budget, 1)):
+                nf = self._random_normal(rng)
+                if self.suppress and canonical_cls(nf) in self.suppress:
+                    continue  # never (re)introduce a knocked-out class
+                reactions.append(Reaction(inputs=(), consume=(),
+                                          outputs=((nf, "expr"),), via="feed"))
 
         # deme-level reproduction round (multi-level selection)
         if (self.deme_gen and self.n_patches > 0 and universe.tick > 0
@@ -450,6 +484,15 @@ class CombinatorPhysics:
                 reactions.append(Reaction(
                     inputs=(f.uid, x.uid), consume=(x.uid,),
                     outputs=((product, "expr"),), via="apply"))
+                if self.feed_mode == "recycle" and patches is not None:
+                    # remember this deme's product so it can be recycled as its feed
+                    for pi in range(len(patches)):
+                        if patches[pi] is members:
+                            buf = self._niche.setdefault(pi, [])
+                            buf.append(product)
+                            if len(buf) > self.niche_window:
+                                del buf[0]
+                            break
 
         # exp020 replicase: an explicit template-copy channel. exp017-019 showed the
         # combinator soup never produces a replicator strong enough to sweep a patch
@@ -523,6 +566,8 @@ def _make(seed, experiment, **overrides):
     physics.coop_mut = float(overrides.get("coop_mut", 0.0))
     physics.coop_init = float(overrides.get("coop_init", 0.5))
     physics.measure_xprod = bool(overrides.get("measure_xprod", False))
+    physics.feed_mode = str(overrides.get("feed_mode", "random"))
+    physics.niche_window = int(overrides.get("niche_window", 64))
     cfg = Config(
         experiment=experiment,
         seed=seed,
@@ -703,3 +748,23 @@ def build_network(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("deme_fitness", "network")
     overrides.setdefault("propagule_size", 8)
     return _make(seed, "exp022", **overrides)
+
+
+@register("exp023")
+def build_niche(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp023 — niche construction / environmental heredity (open-problem track A1).
+    The wall behind exp017-022: within-deme dominance never clears ~0.37 because the
+    random global feed constantly dilutes every deme, so no local type crystallizes.
+    Here `feed_mode="recycle"` feeds each deme a resample of ITS OWN recent products
+    instead of fresh random forms — the deme's environment becomes a second, heritable
+    inheritance channel and a positive feedback on its own composition. Tests whether
+    this lifts within-deme dominance and lets demes individuate (n_deme_types winnow
+    under `source` vs the `mixed` null) — without collapsing open-ended novelty."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    return _make(seed, "exp023", **overrides)

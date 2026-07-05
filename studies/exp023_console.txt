@@ -1,0 +1,18 @@
+### 2x2: feed_mode {random,recycle} x {source,mixed} (5000t/5seed)
+20 runs @ 5000 ticks, 5 seeds
+
+    feed    mode within-dom n_deme_types  types/live     OEI novelty_rate  classes
+----------------------------------------------------------------------------------
+  random  source      0.245         18.9       0.791   0.000        6.350    35806
+  random   mixed      0.243         19.0       0.793   0.000        6.602    36359
+ recycle  source      0.325         15.4       0.650   0.000        2.342    10818
+ recycle   mixed      0.318         15.8       0.668   0.000        1.836    13007
+
+individuation check (source n_deme_types below mixed => collective winnowing):
+   random: ndt source 18.9 vs mixed 19.0 (diff -0.1); types/live source 0.791 vs mixed 0.793 (diff -0.002)
+  recycle: ndt source 15.4 vs mixed 15.8 (diff -0.4); types/live source 0.650 vs mixed 0.668 (diff -0.018)
+
+### founder-bottleneck probe (recycle, 3000t/2seed): does a strong bottleneck individuate?
+  psize=1: source ndt=15.3  mixed ndt=16.3  diff=-1.0
+  psize=2: source ndt=16.5  mixed ndt=14.2  diff=+2.3  (inconsistent sign -> no robust individuation)
+  psize=8: source ndt=15.8  mixed ndt=15.5  diff=+0.3

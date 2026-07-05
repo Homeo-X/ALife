@@ -118,3 +118,17 @@ structure" to "collective individuals":
 The single most promising is **H-A**: it is a different *inheritance* mechanism
 (environmental, not just propagule), and it targets the one wall — the absence of
 within-deme dominance — that blocked exp017–020 and still caps exp022's networks.
+
+---
+
+**Follow-up (see `EXP023_FINDINGS.md`).** exp023 built H-A (niche construction:
+recycle a deme's own products as its feed). It is the first lever to actually move
+within-deme dominance (0.245 → 0.322) — confirming environmental heredity is a real
+second channel — but it raises dominance *globally without differentiation*
+(source ≈ mixed, no individuation) and halves the novelty rate. It amplifies shared
+global winners in every deme rather than differentiating them, exposing a
+chicken-and-egg: recycling locks in composition only once demes have diverged. The
+conclusion is that no single lever suffices; exp021 (selection), exp022 (emergent
+trait), and exp023 (within-deme dominance) each supply *part* of a transition, and
+the next step is to **combine** them (e.g. recycle feed + network fitness + forced
+founder divergence).
