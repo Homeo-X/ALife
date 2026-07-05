@@ -242,6 +242,31 @@ class TestScientificClaims(unittest.TestCase):
         self.assertGreater(low, 2.0)      # strong collective heredity at low feed
         self.assertGreater(low, high)     # and stronger than the high-feed regime
 
+    def test_exp018_collective_fitness_does_not_outcompete_individuals(self):
+        # Ω-0.15: exp017 gave collective heredity but no collective *selection*.
+        # exp018 adds heritable between-deme fitness variance (productivity-weighted
+        # deme reproduction) + strong heredity. Claim (a negative one): it still does
+        # not make the collective win — the fraction of *live* demes that are distinct
+        # types is no lower under `source` (selection ON) than under the well-mixed
+        # `mixed` null. Any raw drop in deme-type count is deme die-off, not selection.
+        from statistics import mean
+
+        def types_per_live(mode):
+            p, c = get_experiment("exp018")(seed=0, ticks=600, n_patches=24,
+                                            propagule_mode=mode)
+            p.feed_rate = 4            # low enough to strengthen heredity, still alive
+            r = run(p, c)
+            tail = r.metrics[-len(r.metrics) // 5:]
+            ndt = mean(m["gauges"].get("n_deme_types", 0.0) for m in tail)
+            live = mean(m["gauges"].get("n_live_demes", 1.0) for m in tail)
+            return (ndt / live if live else 0.0), r.final_population
+
+        src_tl, src_pop = types_per_live("source")
+        mix_tl, _ = types_per_live("mixed")
+        self.assertGreater(src_pop, 20)              # system still alive (not collapsed)
+        # no differential winnowing per live deme: source is not meaningfully below null
+        self.assertLess(abs(src_tl - mix_tl), 0.15)
+
     def test_combinator_reducer_correct(self):
         # the SKI reducer must implement the three rules correctly
         from omega.experiments.exp012_combinator import normalize

@@ -162,6 +162,16 @@ class CombinatorPhysics:
         self.deme_death_frac = 0.3
         self.propagule_size = 4
         self.propagule_mode = "source"
+        # exp018 collective fitness: how a surviving deme's chance of founding a
+        # propagule is set. "size" (the exp017 default) weights by deme headcount —
+        # but the global reservoir cap pins every deme to ~the same size, so
+        # deme-level selection is near-neutral (drift). "productivity" instead
+        # weights by the deme's *construction throughput* (viable applications it
+        # produced this generation), a heritable, composition-derived trait — the
+        # heritable between-deme fitness variance exp017 lacked. _deme_prod tallies
+        # it per patch, reset each deme generation.
+        self.deme_fitness = "size"
+        self._deme_prod: dict[int, int] = {}
         # direct collective-heredity measure: after a deme is founded from a source,
         # does it resemble that source (class-set Jaccard) more than a random deme?
         self._pending: dict[int, frozenset] = {}
@@ -242,7 +252,11 @@ class CombinatorPhysics:
             for o in by_patch[kp]:
                 universe.dissolve(o.uid)
             if self.propagule_mode == "source":
-                src = rng.weighted_choice(survivors, [len(by_patch[s]) for s in survivors])
+                if self.deme_fitness == "productivity":
+                    weights = [self._deme_prod.get(s, 0) + 1 for s in survivors]
+                else:
+                    weights = [len(by_patch[s]) for s in survivors]
+                src = rng.weighted_choice(survivors, weights)
                 pool = by_patch[src]
             else:  # "mixed" null — propagule from the whole survivor pool
                 pool = [o for s in survivors for o in by_patch[s]]
@@ -252,6 +266,7 @@ class CombinatorPhysics:
                     self._patch[child.uid] = kp
             if self.propagule_mode == "source":  # remember source for heredity check
                 self._pending[kp] = frozenset(o.cls for o in by_patch[src])
+        self._deme_prod.clear()  # start a fresh productivity window for next gen
 
     def propose(self, universe: Universe, rng: Noise):
         reactions: list[Reaction] = []
@@ -302,6 +317,14 @@ class CombinatorPhysics:
                 product = normalize((f.state, x.state), self.fuel, self.max_size)
                 if product is None:
                     continue
+                if self.deme_fitness == "productivity" and patches is not None:
+                    # credit this deme with a viable construction event (its fitness).
+                    # identity lookup consumes no RNG, so non-productivity runs and
+                    # every other experiment stay byte-identical.
+                    for pi in range(len(patches)):
+                        if patches[pi] is members:
+                            self._deme_prod[pi] = self._deme_prod.get(pi, 0) + 1
+                            break
                 if self.mut_prob > 0.0 and rng.random() < self.mut_prob:
                     m = normalize(mutate(product, rng), self.fuel, self.max_size)
                     if m is not None:
@@ -350,6 +373,7 @@ def _make(seed, experiment, **overrides):
     physics.deme_death_frac = float(overrides.get("deme_death_frac", 0.3))
     physics.propagule_size = int(overrides.get("propagule_size", 4))
     physics.propagule_mode = str(overrides.get("propagule_mode", "source"))
+    physics.deme_fitness = str(overrides.get("deme_fitness", "size"))
     cfg = Config(
         experiment=experiment,
         seed=seed,
@@ -406,3 +430,23 @@ def build_multilevel(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("n_patches", 24)
     overrides.setdefault("deme_gen", 40)
     return _make(seed, "exp017", **overrides)
+
+
+@register("exp018")
+def build_collective_fitness(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp018 — collective fitness: exp017's long-run study found real collective
+    *heredity* but no collective *selection*, because the global reservoir cap
+    equalizes deme size and makes size-weighted deme reproduction near-neutral.
+    This turns on both missing ingredients: heritable between-deme fitness variance
+    (``deme_fitness="productivity"`` — reproduce fitter/more-constructive demes)
+    and strong collective heredity (isolated demes + a deme-dominating propagule +
+    fast turnover). Tests whether *then* the collective actually outcompetes:
+    whether ``n_deme_types`` winnows below the exp017 controls."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 16)
+    overrides.setdefault("deme_fitness", "productivity")
+    return _make(seed, "exp018", **overrides)

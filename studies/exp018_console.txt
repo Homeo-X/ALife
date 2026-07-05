@@ -1,0 +1,27 @@
+### 2x2 factorial (6000t/6seed)
+24 runs @ 6000 ticks, 6 seeds/cell
+
+cell                               n_deme_types (early>late, min)   heredity self/null     pop
+------------------------------------------------------------------------------------------------
+size / weak  (=exp017 baseline)     19.4 ->  19.5 ± 0.4 (min 10.2)/24   0.033/0.028 (1.19x)     168
+size / strong                       19.1 ->  18.9 ± 0.2 (min 10.2)/24   0.066/0.028 (2.37x)     177
+productivity / weak                 19.4 ->  19.3 ± 0.2 (min 10.3)/24   0.029/0.029 (1.02x)     170
+productivity / strong (=exp018)     18.7 ->  18.8 ± 0.2 (min  9.3)/24   0.057/0.029 (1.97x)     172
+
+### feed sweep + within-deme dominance (6000t/5seed)
+20 runs @ 6000 ticks, 5 seeds/feed (productivity fitness + strong heredity)
+
+feed_rate  within-deme dom   n_deme_types e>late  heredity    pop  live demes
+----------------------------------------------------------------------------------
+       14            0.245     18.7 ->  18.9±0.3      1.90x    173     23.9/24
+        8            0.285     19.7 ->  19.6±0.3      2.39x    110     23.6/24
+        4            0.330     17.7 ->  17.9±0.2      4.47x     57     21.7/24
+        2            0.351      9.6 ->   9.6±0.3      6.15x     20     13.6/24
+
+### source-vs-mixed collapse control (6000t/5seed)
+feed    mode  n_deme_types  live_demes  types/live   pop
+------------------------------------------------------------
+   4  source       17.9±0.2      21.7/24       0.82    57
+   4   mixed       17.4±0.3      22.4/24       0.78    82
+   2  source        9.6±0.3      13.6/24       0.71    20
+   2   mixed       14.1±0.6      20.3/24       0.70    66

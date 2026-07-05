@@ -46,7 +46,7 @@ def _ensure_loaded() -> None:
         exp009_modules,
         exp010_copying,
         exp011_function,
-        exp012_combinator,  # also registers exp013/014/016/017 (evolution→multi-level)
+        exp012_combinator,  # also registers exp013/014/016/017/018 (evolution→collective fitness)
     )
 
 

@@ -101,3 +101,17 @@ equalizes them. Falsifiable prediction: under per-deme budgets the source arm's
 `n_deme_types` should fall well below the mixed control; if it still does not,
 collective selection is not viable in this substrate regardless of heredity
 strength.
+
+---
+
+**Follow-up (see `EXP018_FINDINGS.md`).** exp018 tested the fitness-variance lever
+directly (`deme_fitness="productivity"`, a heritable throughput-weighted deme
+fitness). Result: it did **not** produce winnowing, and the prediction above was
+only half right. The deeper obstacle is that demes never develop a heritable
+*type* to begin with — within-deme dominance stays ≤0.35 (each patch is a churning
+~7-organism mix). And the one regime that makes collective heredity strong
+(starving the global feed) does so only by crashing the population and killing
+demes — the apparent winnowing there is collapse, not collective victory
+(source's distinct-types-per-*live*-deme equals the well-mixed null). The binding
+constraint is upstream: no local replicator takeover, so multi-level selection has
+no unit to grip.
