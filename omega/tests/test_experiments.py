@@ -316,6 +316,26 @@ class TestScientificClaims(unittest.TestCase):
         self.assertLess(src_ndt, 15.0)            # copying consolidated deme-types
         self.assertGreater(src_tl, mix_tl - 0.05)  # but not collective: source !< null
 
+    def test_exp021_group_selection_maintains_cooperation(self):
+        # Ω-0.18: the positive capstone. exp017-020 found the multi-level structure
+        # inert because no group-selectable trait emerged. exp021 supplies one — a
+        # cooperation trait that is individually costly but collectively beneficial —
+        # and, at strong relatedness (single-founder bottleneck), group selection
+        # finally works: cooperation is maintained far above the well-mixed null
+        # under collective heredity (`source`) but decays toward it under `mixed`.
+        from statistics import mean
+
+        def coop_late(mode):
+            p, c = get_experiment("exp021")(seed=0, ticks=800, n_patches=24,
+                                            propagule_mode=mode)
+            r = run(p, c)
+            cf = [m["gauges"].get("coop_frac", 0.0) for m in r.metrics]
+            return mean(cf[-len(cf) // 4:]) if cf else 0.0
+
+        src, mix = coop_late("source"), coop_late("mixed")
+        self.assertGreater(src, 0.20)          # cooperation maintained under group heredity
+        self.assertGreater(src, mix + 0.08)    # and well above the well-mixed null
+
     def test_combinator_reducer_correct(self):
         # the SKI reducer must implement the three rules correctly
         from omega.experiments.exp012_combinator import normalize

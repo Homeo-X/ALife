@@ -91,3 +91,14 @@ individual novelty (exp012–014) but not a major transition to collective
 individuality. The honest verdict across exp017–020 stands: collectives do not
 outcompete individuals here; every appearance of them doing so is either collapse or
 individual replicators winning under a collective label.
+
+---
+
+**Follow-up (see `EXP021_FINDINGS.md`).** exp021 built exactly this deme-level trait
+— a cooperation bit that is individually costly but raises its deme's reproduction
+rate — and found the multi-level machinery is *sound*: at strong relatedness,
+`source` maintains cooperation far above the `mixed` null (gap +0.04→+0.22, decaying
+as individual cost rises), the textbook Price/Hamilton result. So the exp017–020
+inertness was never the machinery; it was the absence of a group-selectable trait
+for it to act on. Given one, collectives do outcompete individuals — as a bounded
+force requiring high relatedness.

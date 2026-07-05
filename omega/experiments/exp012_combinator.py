@@ -182,6 +182,18 @@ class CombinatorPhysics:
         # copy_rate=0 (default) leaves every earlier experiment untouched.
         self.copy_rate = 0.0
         self.copy_mut = 0.0
+        # exp021 cooperation: a genuine group-beneficial, individually-costly trait —
+        # the missing ingredient exp017-020 lacked. Each org carries a heritable coop
+        # bit (self._coop). A cooperator replicates slower (pays coop_cost on each
+        # copy) but raises its *deme's* reproduction weight (coop_benefit x cooperator
+        # fraction). Within-deme selection erodes cooperation; between-deme selection
+        # (source propagules) can maintain it. coop=False leaves exp012-020 untouched.
+        self.coop = False
+        self.coop_cost = 0.0
+        self.coop_benefit = 0.0
+        self.coop_mut = 0.0
+        self.coop_init = 0.5
+        self._coop: dict[int, float] = {}
         # direct collective-heredity measure: after a deme is founded from a source,
         # does it resemble that source (class-set Jaccard) more than a random deme?
         self._pending: dict[int, frozenset] = {}
@@ -202,7 +214,12 @@ class CombinatorPhysics:
 
     def seed(self, universe: Universe, rng: Noise) -> None:
         for _ in range(self.seed_pop):
-            universe.spawn(self._random_normal(rng), kind="expr")
+            org = universe.spawn(self._random_normal(rng), kind="expr")
+            # exp021: only the founding population carries cooperators; the feed is
+            # all defectors, so cooperation must be sustained by heredity+selection,
+            # not propped up by constant external re-injection.
+            if self.coop and org is not None:
+                self._coop[org.uid] = 1.0 if rng.random() < self.coop_init else 0.0
 
     def _build_patches(self, pop, rng: Noise) -> list:
         """Assign each org to a patch (inheriting its function-parent's patch, else
@@ -238,6 +255,27 @@ class CombinatorPhysics:
                 self._patch[o.uid] = p
             buckets[p].append(o)
         return buckets
+
+    def _ensure_coop(self, pop, rng: Noise) -> None:
+        """Assign each org a heritable cooperation bit, inheriting from its lineage
+        (with coop_mut flips) exactly as patches are inherited; feed/seed orgs draw
+        one at rate coop_init. This is the group-beneficial trait exp021 selects on."""
+        live = {o.uid for o in pop}
+        for u in [u for u in self._coop if u not in live]:
+            del self._coop[u]
+        for o in pop:
+            if o.uid in self._coop:
+                continue
+            c = None
+            for parent in o.lineage:
+                if parent in self._coop:
+                    c = self._coop[parent]
+                    break
+            if c is None:
+                c = 0.0                           # feed organisms are defectors
+            elif self.coop_mut > 0.0 and rng.random() < self.coop_mut:
+                c = 1.0 - c                       # heritable variation (rare flip)
+            self._coop[o.uid] = c
 
     def _deme_reproduction(self, universe: Universe, rng: Noise) -> None:
         """Kill a fraction of demes and recolonize each from a propagule copied out
@@ -278,6 +316,16 @@ class CombinatorPhysics:
                     weights = [self._deme_prod.get(s, 0) + 1 for s in survivors]
                 else:
                     weights = [len(by_patch[s]) for s in survivors]
+                if self.coop:
+                    # group benefit: a deme founds propagules in proportion to its
+                    # cooperator fraction — the collective phenotype selection acts on.
+                    boosted = []
+                    for w, s in zip(weights, survivors):
+                        m = by_patch[s]
+                        frac = (sum(1 for o in m if self._coop.get(o.uid, 0.0) >= 1.0)
+                                / len(m)) if m else 0.0
+                        boosted.append(w * (1.0 + self.coop_benefit * frac))
+                    weights = boosted
                 src = rng.weighted_choice(survivors, weights)
                 pool = by_patch[src]
             else:  # "mixed" null — propagule from the whole survivor pool
@@ -286,6 +334,8 @@ class CombinatorPhysics:
                 child = universe.spawn(o.state, "expr")
                 if child is not None:
                     self._patch[child.uid] = kp
+                    if self.coop:  # propagule carries its source org's coop bit
+                        self._coop[child.uid] = self._coop.get(o.uid, 0.0)
             if self.propagule_mode == "source":  # remember source for heredity check
                 self._pending[kp] = frozenset(o.cls for o in by_patch[src])
         self._deme_prod.clear()  # start a fresh productivity window for next gen
@@ -298,6 +348,10 @@ class CombinatorPhysics:
             for uid in [u for u, o in universe.organizations.items()
                         if o.cls in self.suppress]:
                 universe.dissolve(uid)
+
+        # exp021: refresh the heritable coop trait before deme reproduction reads it
+        if self.coop:
+            self._ensure_coop(list(universe.organizations.values()), rng)
 
         budget = int(self.feed_rate * (1.0 - reservoir_pressure(universe)))
         for _ in range(max(budget, 1)):
@@ -388,6 +442,9 @@ class CombinatorPhysics:
                     t = rng.choice(members)
                 else:
                     t = rng.choice(pop)
+                if self.coop and self._coop.get(t.uid, 0.0) >= 1.0 \
+                        and rng.random() < self.coop_cost:
+                    continue                       # cooperators replicate slower
                 state = t.state
                 if self.copy_mut > 0.0 and rng.random() < self.copy_mut:
                     m = normalize(mutate(state, rng), self.fuel, self.max_size)
@@ -405,6 +462,9 @@ class CombinatorPhysics:
         universe.gauges["dominance"] = (max(popc.values()) / total) if total else 0.0
         universe.gauges["max_selfcat"] = float(max(self._selfcat.values())) if self._selfcat else 0.0
         universe.gauges["n_selfcat_classes"] = float(len(self._selfcat))
+        if self.coop and pop:
+            universe.gauges["coop_frac"] = (
+                sum(1 for o in pop if self._coop.get(o.uid, 0.0) >= 1.0) / len(pop))
         return reactions
 
 
@@ -426,6 +486,11 @@ def _make(seed, experiment, **overrides):
     physics.local_feed = bool(overrides.get("local_feed", False))
     physics.copy_rate = float(overrides.get("copy_rate", 0.0))
     physics.copy_mut = float(overrides.get("copy_mut", 0.0))
+    physics.coop = bool(overrides.get("coop", False))
+    physics.coop_cost = float(overrides.get("coop_cost", 0.0))
+    physics.coop_benefit = float(overrides.get("coop_benefit", 0.0))
+    physics.coop_mut = float(overrides.get("coop_mut", 0.0))
+    physics.coop_init = float(overrides.get("coop_init", 0.5))
     cfg = Config(
         experiment=experiment,
         seed=seed,
@@ -546,3 +611,38 @@ def build_replicase(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("copy_rate", 0.5)
     overrides.setdefault("copy_mut", 0.02)
     return _make(seed, "exp020", **overrides)
+
+
+@register("exp021")
+def build_cooperation(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp021 — group-beneficial trait: exp017-020 found the multi-level structure
+    inert because nothing coupled a deme's composition to its reproduction in a way
+    individual selection wouldn't already produce. This adds the canonical missing
+    ingredient — a cooperation trait that is individually costly (`coop_cost`:
+    cooperators replicate slower) but collectively beneficial (`coop_benefit`: a
+    deme founds propagules in proportion to its cooperator fraction). Within-deme
+    selection erodes cooperation; between-deme selection (source propagules) can
+    maintain it. Decisive test: does global cooperator fraction stay > 0 under
+    `source` but collapse to 0 under the well-mixed `mixed` null?"""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 16)
+    overrides.setdefault("deme_fitness", "productivity")
+    overrides.setdefault("local_feed", True)
+    # strong-relatedness regime: a single-founder propagule bottleneck + fast, strong
+    # deme turnover is what gives group selection any purchase (Hamilton/Price).
+    overrides.setdefault("total_quanta", 1200)
+    overrides.setdefault("copy_rate", 0.3)
+    overrides.setdefault("copy_mut", 0.02)
+    overrides.setdefault("propagule_size", 1)
+    overrides.setdefault("deme_gen", 5)
+    overrides.setdefault("deme_death_frac", 0.5)
+    overrides.setdefault("coop", True)
+    overrides.setdefault("coop_cost", 0.05)
+    overrides.setdefault("coop_benefit", 10.0)
+    overrides.setdefault("coop_mut", 0.02)
+    overrides.setdefault("coop_init", 0.7)
+    return _make(seed, "exp021", **overrides)

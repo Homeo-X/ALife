@@ -1,0 +1,352 @@
+[
+  {
+    "cost": 0.0,
+    "mode": "source",
+    "seed": 0,
+    "coop_late": 0.3776096853202585,
+    "pop": 664
+  },
+  {
+    "cost": 0.0,
+    "mode": "source",
+    "seed": 1,
+    "coop_late": 0.3239617890461377,
+    "pop": 567
+  },
+  {
+    "cost": 0.0,
+    "mode": "source",
+    "seed": 2,
+    "coop_late": 0.3574434483038271,
+    "pop": 652
+  },
+  {
+    "cost": 0.0,
+    "mode": "source",
+    "seed": 3,
+    "coop_late": 0.31122879718388685,
+    "pop": 551
+  },
+  {
+    "cost": 0.0,
+    "mode": "source",
+    "seed": 4,
+    "coop_late": 0.3295105338081276,
+    "pop": 531
+  },
+  {
+    "cost": 0.0,
+    "mode": "mixed",
+    "seed": 0,
+    "coop_late": 0.23744608962946107,
+    "pop": 645
+  },
+  {
+    "cost": 0.0,
+    "mode": "mixed",
+    "seed": 1,
+    "coop_late": 0.14611748636690705,
+    "pop": 500
+  },
+  {
+    "cost": 0.0,
+    "mode": "mixed",
+    "seed": 2,
+    "coop_late": 0.09748544371696145,
+    "pop": 601
+  },
+  {
+    "cost": 0.0,
+    "mode": "mixed",
+    "seed": 3,
+    "coop_late": 0.13634111175220018,
+    "pop": 540
+  },
+  {
+    "cost": 0.0,
+    "mode": "mixed",
+    "seed": 4,
+    "coop_late": 0.09622414271663375,
+    "pop": 216
+  },
+  {
+    "cost": 0.05,
+    "mode": "source",
+    "seed": 0,
+    "coop_late": 0.3317077185878415,
+    "pop": 566
+  },
+  {
+    "cost": 0.05,
+    "mode": "source",
+    "seed": 1,
+    "coop_late": 0.40091148644706487,
+    "pop": 581
+  },
+  {
+    "cost": 0.05,
+    "mode": "source",
+    "seed": 2,
+    "coop_late": 0.3412283764460783,
+    "pop": 722
+  },
+  {
+    "cost": 0.05,
+    "mode": "source",
+    "seed": 3,
+    "coop_late": 0.3283533379970939,
+    "pop": 694
+  },
+  {
+    "cost": 0.05,
+    "mode": "source",
+    "seed": 4,
+    "coop_late": 0.374348391457709,
+    "pop": 682
+  },
+  {
+    "cost": 0.05,
+    "mode": "mixed",
+    "seed": 0,
+    "coop_late": 0.15379021899080278,
+    "pop": 624
+  },
+  {
+    "cost": 0.05,
+    "mode": "mixed",
+    "seed": 1,
+    "coop_late": 0.136180877588524,
+    "pop": 607
+  },
+  {
+    "cost": 0.05,
+    "mode": "mixed",
+    "seed": 2,
+    "coop_late": 0.1786072555883816,
+    "pop": 584
+  },
+  {
+    "cost": 0.05,
+    "mode": "mixed",
+    "seed": 3,
+    "coop_late": 0.08802725821082798,
+    "pop": 576
+  },
+  {
+    "cost": 0.05,
+    "mode": "mixed",
+    "seed": 4,
+    "coop_late": 0.13953997571988747,
+    "pop": 660
+  },
+  {
+    "cost": 0.1,
+    "mode": "source",
+    "seed": 0,
+    "coop_late": 0.24846491562828749,
+    "pop": 544
+  },
+  {
+    "cost": 0.1,
+    "mode": "source",
+    "seed": 1,
+    "coop_late": 0.353047009044063,
+    "pop": 164
+  },
+  {
+    "cost": 0.1,
+    "mode": "source",
+    "seed": 2,
+    "coop_late": 0.23858129822775342,
+    "pop": 571
+  },
+  {
+    "cost": 0.1,
+    "mode": "source",
+    "seed": 3,
+    "coop_late": 0.22384912975782437,
+    "pop": 710
+  },
+  {
+    "cost": 0.1,
+    "mode": "source",
+    "seed": 4,
+    "coop_late": 0.3279985375619598,
+    "pop": 576
+  },
+  {
+    "cost": 0.1,
+    "mode": "mixed",
+    "seed": 0,
+    "coop_late": 0.08133681166502145,
+    "pop": 599
+  },
+  {
+    "cost": 0.1,
+    "mode": "mixed",
+    "seed": 1,
+    "coop_late": 0.06611426282047761,
+    "pop": 604
+  },
+  {
+    "cost": 0.1,
+    "mode": "mixed",
+    "seed": 2,
+    "coop_late": 0.16760612310617892,
+    "pop": 573
+  },
+  {
+    "cost": 0.1,
+    "mode": "mixed",
+    "seed": 3,
+    "coop_late": 0.11013609373460989,
+    "pop": 638
+  },
+  {
+    "cost": 0.1,
+    "mode": "mixed",
+    "seed": 4,
+    "coop_late": 0.12596831643151957,
+    "pop": 678
+  },
+  {
+    "cost": 0.2,
+    "mode": "source",
+    "seed": 0,
+    "coop_late": 0.14599553656917405,
+    "pop": 724
+  },
+  {
+    "cost": 0.2,
+    "mode": "source",
+    "seed": 1,
+    "coop_late": 0.1740046609051051,
+    "pop": 609
+  },
+  {
+    "cost": 0.2,
+    "mode": "source",
+    "seed": 2,
+    "coop_late": 0.23128397311172463,
+    "pop": 555
+  },
+  {
+    "cost": 0.2,
+    "mode": "source",
+    "seed": 3,
+    "coop_late": 0.1442313981674214,
+    "pop": 427
+  },
+  {
+    "cost": 0.2,
+    "mode": "source",
+    "seed": 4,
+    "coop_late": 0.21403732991451022,
+    "pop": 568
+  },
+  {
+    "cost": 0.2,
+    "mode": "mixed",
+    "seed": 0,
+    "coop_late": 0.07271444815666113,
+    "pop": 539
+  },
+  {
+    "cost": 0.2,
+    "mode": "mixed",
+    "seed": 1,
+    "coop_late": 0.09344226353809139,
+    "pop": 585
+  },
+  {
+    "cost": 0.2,
+    "mode": "mixed",
+    "seed": 2,
+    "coop_late": 0.11848978034155706,
+    "pop": 629
+  },
+  {
+    "cost": 0.2,
+    "mode": "mixed",
+    "seed": 3,
+    "coop_late": 0.08049043419366905,
+    "pop": 634
+  },
+  {
+    "cost": 0.2,
+    "mode": "mixed",
+    "seed": 4,
+    "coop_late": 0.119756363412933,
+    "pop": 608
+  },
+  {
+    "cost": 0.4,
+    "mode": "source",
+    "seed": 0,
+    "coop_late": 0.11389073076729687,
+    "pop": 510
+  },
+  {
+    "cost": 0.4,
+    "mode": "source",
+    "seed": 1,
+    "coop_late": 0.09938941429355745,
+    "pop": 470
+  },
+  {
+    "cost": 0.4,
+    "mode": "source",
+    "seed": 2,
+    "coop_late": 0.10664222883762625,
+    "pop": 548
+  },
+  {
+    "cost": 0.4,
+    "mode": "source",
+    "seed": 3,
+    "coop_late": 0.0764308355490894,
+    "pop": 644
+  },
+  {
+    "cost": 0.4,
+    "mode": "source",
+    "seed": 4,
+    "coop_late": 0.12280922463207669,
+    "pop": 688
+  },
+  {
+    "cost": 0.4,
+    "mode": "mixed",
+    "seed": 0,
+    "coop_late": 0.0671454959081006,
+    "pop": 571
+  },
+  {
+    "cost": 0.4,
+    "mode": "mixed",
+    "seed": 1,
+    "coop_late": 0.06923811298166276,
+    "pop": 601
+  },
+  {
+    "cost": 0.4,
+    "mode": "mixed",
+    "seed": 2,
+    "coop_late": 0.06482880825628022,
+    "pop": 437
+  },
+  {
+    "cost": 0.4,
+    "mode": "mixed",
+    "seed": 3,
+    "coop_late": 0.05809105893474252,
+    "pop": 681
+  },
+  {
+    "cost": 0.4,
+    "mode": "mixed",
+    "seed": 4,
+    "coop_late": 0.049096261100881104,
+    "pop": 434
+  }
+]
