@@ -84,3 +84,14 @@ exp017–019's collective machinery can be re-run to see whether selection final
 grips. Absent that, the honest verdict stands: **in this substrate collectives
 never reliably outcompete individuals; the appearance of winnowing is always
 collapse.**
+
+---
+
+**Follow-up (see `EXP020_FINDINGS.md`).** exp020 added the explicit replicase. It
+does make strong replicators that consolidate the soup (`n_deme_types` 19 → ~8,
+population to carrying capacity) — but within-deme dominance still never clears
+~0.36 (uniform per-capita copying is frequency-neutral), and the source-vs-mixed
+control shows the consolidation is **individual**-level, identical with collective
+heredity on or off. So even a strong replicase does not make collectives win; when
+replicators finally emerge they win as individuals colonizing every deme. The
+four-experiment verdict is now firm.

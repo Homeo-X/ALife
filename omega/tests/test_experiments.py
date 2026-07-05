@@ -291,6 +291,31 @@ class TestScientificClaims(unittest.TestCase):
         self.assertGreater(src_pop, 20)               # healthy, not collapsed
         self.assertGreater(src_tl, mix_tl - 0.05)     # no winnowing below the null
 
+    def test_exp020_replicase_consolidates_but_not_as_a_collective(self):
+        # Ω-0.17: an explicit strong copy channel (T -> T + T) finally makes
+        # replicators that consolidate the soup (n_deme_types collapses ~19 -> ~10,
+        # population grows to carrying capacity). But it is *individual*-level
+        # selection: a few compact replicators colonize every deme. Claim: the
+        # consolidation is identical with collective heredity ON (`source`) and OFF
+        # (`mixed`) — source's types-per-live-deme is not below the mixed null — so
+        # it is not the collective outcompeting.
+        from statistics import mean
+
+        def probe(mode):
+            p, c = get_experiment("exp020")(seed=0, ticks=400, n_patches=24,
+                                            propagule_mode=mode, copy_rate=0.5)
+            r = run(p, c)
+            tail = r.metrics[-len(r.metrics) // 5:]
+            ndt = mean(m["gauges"].get("n_deme_types", 0.0) for m in tail)
+            live = mean(m["gauges"].get("n_live_demes", 1.0) for m in tail)
+            return (ndt / live if live else 0.0), ndt, r.final_population
+
+        src_tl, src_ndt, src_pop = probe("source")
+        mix_tl, _, _ = probe("mixed")
+        self.assertGreater(src_pop, 400)          # replicase active (grew from ~174)
+        self.assertLess(src_ndt, 15.0)            # copying consolidated deme-types
+        self.assertGreater(src_tl, mix_tl - 0.05)  # but not collective: source !< null
+
     def test_combinator_reducer_correct(self):
         # the SKI reducer must implement the three rules correctly
         from omega.experiments.exp012_combinator import normalize

@@ -178,6 +178,10 @@ class CombinatorPhysics:
         # soup. Tests whether within-deme dominance is what unlocks collective
         # selection — the missing upstream ingredient exp018 identified.
         self.local_feed = False
+        # exp020 replicase: strength/fidelity of the explicit template-copy channel.
+        # copy_rate=0 (default) leaves every earlier experiment untouched.
+        self.copy_rate = 0.0
+        self.copy_mut = 0.0
         # direct collective-heredity measure: after a deme is founded from a source,
         # does it resemble that source (class-set Jaccard) more than a random deme?
         self._pending: dict[int, frozenset] = {}
@@ -367,6 +371,33 @@ class CombinatorPhysics:
                     inputs=(f.uid, x.uid), consume=(x.uid,),
                     outputs=((product, "expr"),), via="apply"))
 
+        # exp020 replicase: an explicit template-copy channel. exp017-019 showed the
+        # combinator soup never produces a replicator strong enough to sweep a patch
+        # (within-deme dominance caps ~0.37) because self-catalysis (f x)->f is rare
+        # and fragile. A copy reaction T -> T + T (template catalytic, cost paid from
+        # the reservoir so it stays resource-limited) is a *strong* replicator: it
+        # competes for free quanta, cheaper/compact templates win, and a class can
+        # sweep its deme. copy_mut gives it heritable variation. The copy inherits
+        # the template's patch (via lineage), so replication is local.
+        if self.copy_rate > 0.0 and pop:
+            for _ in range(int(self.copy_rate * len(pop))):
+                if patches is not None:
+                    members = rng.choice(patches)
+                    if not members:
+                        continue
+                    t = rng.choice(members)
+                else:
+                    t = rng.choice(pop)
+                state = t.state
+                if self.copy_mut > 0.0 and rng.random() < self.copy_mut:
+                    m = normalize(mutate(state, rng), self.fuel, self.max_size)
+                    if m is not None:
+                        state = m
+                if self.suppress and canonical_cls(state) in self.suppress:
+                    continue
+                reactions.append(Reaction(inputs=(t.uid,), consume=(),
+                                          outputs=((state, "expr"),), via="copy"))
+
         amp, _ = universe.amplification()
         universe.gauges["amplification"] = amp
         popc = universe.class_population()
@@ -393,6 +424,8 @@ def _make(seed, experiment, **overrides):
     physics.propagule_mode = str(overrides.get("propagule_mode", "source"))
     physics.deme_fitness = str(overrides.get("deme_fitness", "size"))
     physics.local_feed = bool(overrides.get("local_feed", False))
+    physics.copy_rate = float(overrides.get("copy_rate", 0.0))
+    physics.copy_mut = float(overrides.get("copy_mut", 0.0))
     cfg = Config(
         experiment=experiment,
         seed=seed,
@@ -491,3 +524,25 @@ def build_local_feed(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("deme_fitness", "productivity")
     overrides.setdefault("local_feed", True)
     return _make(seed, "exp019", **overrides)
+
+
+@register("exp020")
+def build_replicase(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp020 — explicit replicase: exp017-019 hit the same wall — the combinator
+    soup never makes a replicator strong enough to sweep a patch (within-deme
+    dominance ≤0.37), so multi-level selection has no heritable collective unit.
+    This adds a strong copy channel (T -> T + T, template catalytic, reservoir-
+    limited, `copy_mut` fidelity) on top of exp019's local feed + collective
+    machinery. Tests whether local dominance now clears ~0.5 and whether the
+    collective *then* winnows (`source` types-per-live-deme below the mixed null)."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 16)
+    overrides.setdefault("deme_fitness", "productivity")
+    overrides.setdefault("local_feed", True)
+    overrides.setdefault("copy_rate", 0.5)
+    overrides.setdefault("copy_mut", 0.02)
+    return _make(seed, "exp020", **overrides)
