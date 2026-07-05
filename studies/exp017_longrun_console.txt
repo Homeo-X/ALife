@@ -1,0 +1,49 @@
+### 6000-tick / 8-seed run
+running 16 runs @ 6000 ticks, seeds=[0, 1, 2, 3, 4, 5, 6, 7]
+
+==============================================================================
+exp017 collectives-vs-individuals | 6000 ticks | 8 seeds/arm
+==============================================================================
+
+[source]
+  collective heredity gap (self-null Jaccard):
+     early window: +0.0024 ± 0.0022
+     late  window: +0.0042 ± 0.0041  (self 0.032 vs null 0.028)
+     seeds with POSITIVE late gap: 7/8
+  between-deme diversity n_deme_types: early 19.4 -> late 19.5
+  collapse check: final_pop 170±9, pop_min 68, live_demes_late 23.9/24
+  organization: amp_late 443.5, entropy_late 6.31, classes_ever 42978
+
+[mixed]
+  collective heredity gap (self-null Jaccard):
+     early window: +0.0000 ± 0.0000
+     late  window: +0.0000 ± 0.0000  (self 0.000 vs null 0.000)
+     seeds with POSITIVE late gap: 0/8
+  between-deme diversity n_deme_types: early 19.3 -> late 19.4
+  collapse check: final_pop 168±7, pop_min 68, live_demes_late 23.9/24
+  organization: amp_late 410.3, entropy_late 6.31, classes_ever 42876
+
+### 12000-tick / 6-seed run
+running 12 runs @ 12000 ticks, seeds=[0, 1, 2, 3, 4, 5]
+
+==============================================================================
+exp017 collectives-vs-individuals | 12000 ticks | 6 seeds/arm
+==============================================================================
+
+[source]
+  collective heredity gap (self-null Jaccard) trajectory (5 windows):
+     +0.0019  +0.0047  +0.0030  +0.0042  +0.0038
+     late window: +0.0038 ± 0.0043  (self 0.031 vs null 0.028)
+     seeds with POSITIVE late gap: 5/6
+  between-deme diversity n_deme_types: early 19.4 -> late 19.5
+  collapse check: final_pop 168±8, pop_min 68, live_demes_late 23.9/24
+  organization: amp_late 685.7, entropy_late 6.31, classes_ever 79770
+
+[mixed]
+  collective heredity gap (self-null Jaccard) trajectory (5 windows):
+     +0.0000  +0.0000  +0.0000  +0.0000  +0.0000
+     late window: +0.0000 ± 0.0000  (self 0.000 vs null 0.000)
+     seeds with POSITIVE late gap: 0/6
+  between-deme diversity n_deme_types: early 19.4 -> late 19.4
+  collapse check: final_pop 171±7, pop_min 68, live_demes_late 23.9/24
+  organization: amp_late 828.5, entropy_late 6.29, classes_ever 79504
