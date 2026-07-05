@@ -79,3 +79,15 @@ predicts (exp021) — but it does not, on its own, invent the collective trait t
 major transition to collective individuality would require. Bridging that gap —
 getting a group-selectable trait to *emerge* rather than be imposed — is the open
 problem this arc leaves.
+
+---
+
+**Follow-up (see `EXP022_FINDINGS.md`).** exp022 attacks exactly this: it defines
+deme fitness on an *emergent* irreducibly-collective property — internal
+cross-production (a member making a different member) — with no imposed bit. Result:
+a group-selectable trait *does* emerge. `source` maintains up to ~1.5× the
+cross-production of the mixed null, decomposing into a collective-heredity component
+(preservation) and a collective-selection component, with a novel transmission
+threshold (needs a propagule large enough to carry the network — opposite to this
+experiment's single-locus optimum). It stops short of full individuation (no
+deme-type winnowing), leaving that as the next frontier.

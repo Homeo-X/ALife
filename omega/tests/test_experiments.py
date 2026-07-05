@@ -336,6 +336,25 @@ class TestScientificClaims(unittest.TestCase):
         self.assertGreater(src, 0.20)          # cooperation maintained under group heredity
         self.assertGreater(src, mix + 0.08)    # and well above the well-mixed null
 
+    def test_exp022_emergent_collective_trait_is_group_selectable(self):
+        # Ω-0.19: the open problem — a group trait that *emerges* rather than being
+        # imposed. Deme fitness is internal cross-production (a member making a
+        # different member): irreducibly collective, no single replicator can
+        # maximize it. With a propagule large enough to transmit the network,
+        # collective heredity+selection (`source`) maintains markedly more
+        # cross-production than the well-mixed `mixed` null.
+        from statistics import mean
+
+        def xprod(mode):
+            p, c = get_experiment("exp022")(seed=0, ticks=1500, n_patches=24,
+                                            propagule_mode=mode, propagule_size=20)
+            r = run(p, c)
+            g = [m["gauges"].get("mean_cross_prod", 0.0) for m in r.metrics]
+            return mean(g[-len(g) // 4:]) if g else 0.0
+
+        src, mix = xprod("source"), xprod("mixed")
+        self.assertGreater(src, mix * 1.15)   # emergent collective trait is favored
+
     def test_combinator_reducer_correct(self):
         # the SKI reducer must implement the three rules correctly
         from omega.experiments.exp012_combinator import normalize

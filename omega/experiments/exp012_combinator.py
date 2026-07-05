@@ -172,6 +172,12 @@ class CombinatorPhysics:
         # it per patch, reset each deme generation.
         self.deme_fitness = "size"
         self._deme_prod: dict[int, int] = {}
+        # exp022 emergent-collective trait: internal cross-production per deme (a
+        # member producing a *different* member). Tallied in _xprod, separate from
+        # productivity so it can be *measured* (measure_xprod) even when demes are
+        # selected by another rule — isolating selection-for from mere preservation.
+        self._xprod: dict[int, int] = {}
+        self.measure_xprod = False
         # exp019 local feed: direct the random feed to under-full patches (local
         # carrying capacity) instead of uniformly, so a local replicator can take
         # over its deme (raise within-deme dominance) without starving the whole
@@ -314,6 +320,8 @@ class CombinatorPhysics:
             if self.propagule_mode == "source":
                 if self.deme_fitness == "productivity":
                     weights = [self._deme_prod.get(s, 0) + 1 for s in survivors]
+                elif self.deme_fitness == "network":
+                    weights = [self._xprod.get(s, 0) + 1 for s in survivors]
                 else:
                     weights = [len(by_patch[s]) for s in survivors]
                 if self.coop:
@@ -339,6 +347,7 @@ class CombinatorPhysics:
             if self.propagule_mode == "source":  # remember source for heredity check
                 self._pending[kp] = frozenset(o.cls for o in by_patch[src])
         self._deme_prod.clear()  # start a fresh productivity window for next gen
+        self._xprod.clear()
 
     def propose(self, universe: Universe, rng: Noise):
         reactions: list[Reaction] = []
@@ -368,6 +377,13 @@ class CombinatorPhysics:
 
         pop = list(universe.organizations.values())
         patches = self._build_patches(pop, rng) if self.n_patches > 0 else None
+        # exp022 "network" fitness needs each patch's class set to detect cross-
+        # production (a member producing another member) — the collective, non-self
+        # metabolic activity that no single replicator can maximize.
+        patch_classes = ([set(o.cls for o in m) for m in patches]
+                         if (patches is not None
+                             and (self.deme_fitness == "network" or self.measure_xprod))
+                         else None)
         if self.n_patches > 0 and patches is not None:
             # publish between-deme collective diversity: distinct deme "types"
             # (each deme's most-abundant class). Winnowing => collective selection.
@@ -393,13 +409,23 @@ class CombinatorPhysics:
                 product = normalize((f.state, x.state), self.fuel, self.max_size)
                 if product is None:
                     continue
-                if self.deme_fitness == "productivity" and patches is not None:
-                    # credit this deme with a viable construction event (its fitness).
-                    # identity lookup consumes no RNG, so non-productivity runs and
-                    # every other experiment stay byte-identical.
+                if patches is not None and (self.measure_xprod
+                        or self.deme_fitness in ("productivity", "network")):
+                    # credit this deme's fitness. identity lookup consumes no RNG, so
+                    # non-collective runs and every other experiment stay identical.
+                    # "productivity": any viable construction. cross-production
+                    # (_xprod): a member making a *different* member already in the
+                    # deme — irreducibly collective, measured whenever needed for
+                    # selection ("network") or just for the gauge (measure_xprod).
                     for pi in range(len(patches)):
                         if patches[pi] is members:
-                            self._deme_prod[pi] = self._deme_prod.get(pi, 0) + 1
+                            if self.deme_fitness == "productivity":
+                                self._deme_prod[pi] = self._deme_prod.get(pi, 0) + 1
+                            if self.deme_fitness == "network" or self.measure_xprod:
+                                pcls = canonical_cls(product)
+                                if pcls != f.cls and patch_classes is not None \
+                                        and pcls in patch_classes[pi]:
+                                    self._xprod[pi] = self._xprod.get(pi, 0) + 1
                             break
                 if self.mut_prob > 0.0 and rng.random() < self.mut_prob:
                     m = normalize(mutate(product, rng), self.fuel, self.max_size)
@@ -465,6 +491,11 @@ class CombinatorPhysics:
         if self.coop and pop:
             universe.gauges["coop_frac"] = (
                 sum(1 for o in pop if self._coop.get(o.uid, 0.0) >= 1.0) / len(pop))
+        if patches is not None and (self.deme_fitness == "network" or self.measure_xprod):
+            # mean internal cross-production per live deme — the emergent collective
+            # metabolism group selection is being asked to favor.
+            live = [self._xprod.get(i, 0) for i, m in enumerate(patches) if m]
+            universe.gauges["mean_cross_prod"] = (sum(live) / len(live)) if live else 0.0
         return reactions
 
 
@@ -491,6 +522,7 @@ def _make(seed, experiment, **overrides):
     physics.coop_benefit = float(overrides.get("coop_benefit", 0.0))
     physics.coop_mut = float(overrides.get("coop_mut", 0.0))
     physics.coop_init = float(overrides.get("coop_init", 0.5))
+    physics.measure_xprod = bool(overrides.get("measure_xprod", False))
     cfg = Config(
         experiment=experiment,
         seed=seed,
@@ -646,3 +678,28 @@ def build_cooperation(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("coop_mut", 0.02)
     overrides.setdefault("coop_init", 0.7)
     return _make(seed, "exp021", **overrides)
+
+
+@register("exp022")
+def build_network(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp022 — emergent collective (open problem). exp021's group trait was imposed;
+    here it must *emerge*. Deme fitness is `network`: a deme reproduces in proportion
+    to its internal *cross*-production — members producing *other* members (a class
+    making a different class already present). That is irreducibly collective: a
+    monoculture self-catalyst scores ~0; only a mutualistic/autocatalytic set scores
+    high, and no single replicator can maximize it. No copy channel, no coop bit —
+    the 'cooperation' is emergent membership in a cross-producing network.
+
+    Novel prediction (opposite of exp021's single-locus trait, which wanted *small*
+    propagules): a multi-member collective can only be inherited if the propagule
+    carries enough of the network, so there should be an *intermediate* propagule-size
+    optimum — a transmission threshold below which the collective cannot be passed on."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("local_feed", True)
+    overrides.setdefault("deme_fitness", "network")
+    overrides.setdefault("propagule_size", 8)
+    return _make(seed, "exp022", **overrides)

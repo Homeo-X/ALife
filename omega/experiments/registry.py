@@ -46,7 +46,7 @@ def _ensure_loaded() -> None:
         exp009_modules,
         exp010_copying,
         exp011_function,
-        exp012_combinator,  # also registers exp013/014/016/017/018/019/020/021 (evolution→cooperation)
+        exp012_combinator,  # also registers exp013..022 (evolution→cooperation→emergent network)
     )
 
 

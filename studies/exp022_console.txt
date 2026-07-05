@@ -1,0 +1,14 @@
+### propagule-size sweep: source vs mixed cross-production (4000t/5seed)
+ psize       source        mixed   ratio
+     2   6.55±0.16   6.64±0.16    0.99
+     4   6.92±0.12   6.51±0.34    1.06
+     8   7.00±0.27   5.94±0.32    1.18
+    16   6.94±0.20   5.63±0.36    1.23
+    24   6.94±0.20   4.72±0.37    1.47
+    40   6.94±0.20   4.70±0.59    1.48
+    60   6.94±0.20   5.23±0.14    1.33
+
+### decomposition: source-network vs source-size vs mixed (measure_xprod, 4000t/5seed)
+psize  source-network   source-size      mixed
+   16       6.94±0.20     6.49±0.26  5.63±0.36
+   24       6.94±0.20     6.49±0.26  4.72±0.37
