@@ -200,6 +200,19 @@ class CombinatorPhysics:
         # missing ingredient for recycle to lock *distinct* types into *distinct*
         # demes (individuation). "random" (default) leaves prior experiments untouched.
         self.founder_mode = "random"
+        # exp025 combinatorial identity: a deme's phenotype is its internal cross-
+        # production NETWORK SIGNATURE (the set of active producer->product class
+        # edges), not a single dominant class. Even with few member types the edge-set
+        # space is combinatorially large, so demes can hold distinct heritable
+        # identities that the class metric (exp024) could not resolve. _deme_edges is
+        # a per-patch {(f_cls, prod_cls): count} this generation; heredity of the
+        # signature is measured like the class-set heredity but on edge-sets.
+        self.track_signature = False
+        self.edge_threshold = 2
+        self._deme_edges: dict[int, dict] = {}
+        self._pending_edges: dict[int, frozenset] = {}
+        self._hered_edge_self: list = []
+        self._hered_edge_null: list = []
         # exp020 replicase: strength/fidelity of the explicit template-copy channel.
         # copy_rate=0 (default) leaves every earlier experiment untouched.
         self.copy_rate = 0.0
@@ -313,6 +326,13 @@ class CombinatorPhysics:
                 c = 1.0 - c                       # heritable variation (rare flip)
             self._coop[o.uid] = c
 
+    def _deme_signature(self, pi: int) -> frozenset:
+        """The deme's cross-production network signature: edges seen at least
+        edge_threshold times this generation (noise-filtered). exp025 uses this as
+        the deme's combinatorial identity in place of its single dominant class."""
+        return frozenset(e for e, n in self._deme_edges.get(pi, {}).items()
+                         if n >= self.edge_threshold)
+
     def _deme_reproduction(self, universe: Universe, rng: Noise) -> None:
         """Kill a fraction of demes and recolonize each from a propagule copied out
         of a surviving deme (productivity-weighted) — deme-level reproduction."""
@@ -335,6 +355,19 @@ class CombinatorPhysics:
                     self._hered_self.append(jac(child_set, src_set))
                     self._hered_null.append(jac(child_set, frozenset(o.cls for o in by_patch[r])))
         self._pending.clear()
+        # exp025: the same heredity test on the deme's NETWORK SIGNATURE (edge-set)
+        # rather than its class-set — does a founded deme inherit its source's
+        # cross-production network more than a random deme?
+        if self.track_signature:
+            for child_p, src_sig in list(self._pending_edges.items()):
+                child_sig = self._deme_signature(child_p)
+                if child_sig:
+                    others = [p for p in by_patch if p != child_p and by_patch[p]]
+                    if others:
+                        r = rng.choice(others)
+                        self._hered_edge_self.append(jac(child_sig, src_sig))
+                        self._hered_edge_null.append(jac(child_sig, self._deme_signature(r)))
+            self._pending_edges.clear()
 
         alive = [p for p, m in by_patch.items() if m]
         if len(alive) < 2:
@@ -376,8 +409,11 @@ class CombinatorPhysics:
                         self._coop[child.uid] = self._coop.get(o.uid, 0.0)
             if self.propagule_mode == "source":  # remember source for heredity check
                 self._pending[kp] = frozenset(o.cls for o in by_patch[src])
+                if self.track_signature:
+                    self._pending_edges[kp] = self._deme_signature(src)
         self._deme_prod.clear()  # start a fresh productivity window for next gen
         self._xprod.clear()
+        self._deme_edges.clear()
 
     def propose(self, universe: Universe, rng: Noise):
         reactions: list[Reaction] = []
@@ -437,7 +473,8 @@ class CombinatorPhysics:
         # metabolic activity that no single replicator can maximize.
         patch_classes = ([set(o.cls for o in m) for m in patches]
                          if (patches is not None
-                             and (self.deme_fitness == "network" or self.measure_xprod))
+                             and (self.deme_fitness == "network" or self.measure_xprod
+                                  or self.track_signature))
                          else None)
         if self.n_patches > 0 and patches is not None:
             # publish between-deme collective diversity: distinct deme "types"
@@ -464,23 +501,29 @@ class CombinatorPhysics:
                 product = normalize((f.state, x.state), self.fuel, self.max_size)
                 if product is None:
                     continue
-                if patches is not None and (self.measure_xprod
+                if patches is not None and (self.measure_xprod or self.track_signature
                         or self.deme_fitness in ("productivity", "network")):
                     # credit this deme's fitness. identity lookup consumes no RNG, so
                     # non-collective runs and every other experiment stay identical.
                     # "productivity": any viable construction. cross-production
                     # (_xprod): a member making a *different* member already in the
                     # deme — irreducibly collective, measured whenever needed for
-                    # selection ("network") or just for the gauge (measure_xprod).
+                    # selection ("network"), the gauge (measure_xprod), or the deme
+                    # network signature (track_signature, exp025).
                     for pi in range(len(patches)):
                         if patches[pi] is members:
                             if self.deme_fitness == "productivity":
                                 self._deme_prod[pi] = self._deme_prod.get(pi, 0) + 1
-                            if self.deme_fitness == "network" or self.measure_xprod:
+                            if (self.deme_fitness == "network" or self.measure_xprod
+                                    or self.track_signature):
                                 pcls = canonical_cls(product)
                                 if pcls != f.cls and patch_classes is not None \
                                         and pcls in patch_classes[pi]:
-                                    self._xprod[pi] = self._xprod.get(pi, 0) + 1
+                                    if self.deme_fitness == "network" or self.measure_xprod:
+                                        self._xprod[pi] = self._xprod.get(pi, 0) + 1
+                                    if self.track_signature:
+                                        edges = self._deme_edges.setdefault(pi, {})
+                                        edges[(f.cls, pcls)] = edges.get((f.cls, pcls), 0) + 1
                             break
                 if self.mut_prob > 0.0 and rng.random() < self.mut_prob:
                     m = normalize(mutate(product, rng), self.fuel, self.max_size)
@@ -560,6 +603,17 @@ class CombinatorPhysics:
             # metabolism group selection is being asked to favor.
             live = [self._xprod.get(i, 0) for i, m in enumerate(patches) if m]
             universe.gauges["mean_cross_prod"] = (sum(live) / len(live)) if live else 0.0
+        if self.track_signature and patches is not None:
+            # combinatorial deme identity: distinct network signatures across live
+            # demes, and their mean size. n_deme_signatures >> n_deme_types would mean
+            # the edge-set identity space is far richer than the dominant-class one.
+            sigs, sizes = [], []
+            for i, m in enumerate(patches):
+                if m:
+                    s = self._deme_signature(i)
+                    sigs.append(s); sizes.append(len(s))
+            universe.gauges["n_deme_signatures"] = float(len(set(sigs)))
+            universe.gauges["mean_signature_size"] = (sum(sizes) / len(sizes)) if sizes else 0.0
         return reactions
 
 
@@ -590,6 +644,8 @@ def _make(seed, experiment, **overrides):
     physics.feed_mode = str(overrides.get("feed_mode", "random"))
     physics.niche_window = int(overrides.get("niche_window", 64))
     physics.founder_mode = str(overrides.get("founder_mode", "random"))
+    physics.track_signature = bool(overrides.get("track_signature", False))
+    physics.edge_threshold = int(overrides.get("edge_threshold", 2))
     cfg = Config(
         experiment=experiment,
         seed=seed,
@@ -815,3 +871,25 @@ def build_individuation(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("deme_fitness", "network")
     overrides.setdefault("founder_mode", "monoculture")
     return _make(seed, "exp024", **overrides)
+
+
+@register("exp025")
+def build_network_identity(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp025 — combinatorial deme identity (open-problem track). exp024 showed
+    individuation is blocked because a deme's identity (its dominant class) draws
+    from only ~9 attractor types. This redefines identity as the deme's cross-
+    production NETWORK SIGNATURE (`track_signature`) — the set of active
+    producer->product edges — so a small member-type space still yields a
+    combinatorially large identity space. Decisive test: is that signature heritable
+    through the propagule (edge-set Jaccard self >> null, and >> the class-set
+    heredity), revealing collective individuation the class metric missed?"""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("deme_fitness", "network")
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    return _make(seed, "exp025", **overrides)

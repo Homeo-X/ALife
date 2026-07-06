@@ -1,0 +1,12 @@
+10 runs @ 4000 ticks, 5 seeds
+
+HEADLINE (source runs): is the network signature more heritable than the class?
+  edge-set heredity ratio (self/null): 1.59 ± 0.09
+  class-set heredity ratio (self/null): 1.47 ± 0.12
+  edge self/null raw: 0.178 / 0.112
+  seeds with edge_ratio > class_ratio: 4/5
+
+identity-space richness and novelty:
+   mode n_signatures n_deme_types  sig_size  novelty
+ source         18.7         16.2       2.3     1.86
+  mixed         16.8         15.6       2.1     2.07

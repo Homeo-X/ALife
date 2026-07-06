@@ -88,3 +88,15 @@ reachable in the small-expression SKI substrate. The next real move is a richer 
 space — either a substrate pivot, or (cheaper, and testable now) redefining deme
 identity combinatorially over cross-production networks so that a small per-member
 type space still yields many distinct collective phenotypes.
+
+---
+
+**Follow-up (see `EXP025_FINDINGS.md`).** exp025 built the combinatorial option:
+deme identity = its cross-production network signature (edge-set) instead of its
+dominant class. It partly softens this conclusion — the network signature is
+genuinely heritable and *more* heritable than the class (1.59× vs 1.47×, 4/5 seeds)
+and resolves a richer identity space (18.7 vs 16.2 distinct demes), so part of the
+"missing" individuation was a measurement artefact of the dominant-class metric. But
+it is bounded at ~1.6× (weak, not the strong self≫null of a discrete individual), so
+the substrate type-space limit is real: a *complete* transition still needs a
+broader space of stable types.

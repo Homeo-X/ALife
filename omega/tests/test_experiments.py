@@ -398,6 +398,27 @@ class TestScientificClaims(unittest.TestCase):
         # and demes never individuate into many distinct persistent types:
         self.assertLess(mean(g[-len(g) // 5:]), 22.0)
 
+    def test_exp025_network_signature_is_a_heritable_deme_identity(self):
+        # Ω-0.22: exp024 found individuation blocked because a deme's identity (its
+        # dominant class) draws from only ~9 attractor types. Redefining identity as
+        # the deme's cross-production NETWORK SIGNATURE (edge-set) recovers part of it:
+        # the signature is genuinely heritable through the propagule (a founded deme's
+        # network resembles its source more than a random deme), and it resolves a
+        # richer identity space than the dominant-class metric.
+        from statistics import mean
+
+        p, c = get_experiment("exp025")(seed=0, ticks=1000, n_patches=24,
+                                        propagule_mode="source")
+        r = run(p, c)
+        self.assertTrue(p._hered_edge_self and p._hered_edge_null)
+        # network signature is heritable: child resembles source > a random deme
+        self.assertGreater(mean(p._hered_edge_self), mean(p._hered_edge_null))
+        # and the signature identity space is richer than the dominant-class one
+        tail = r.metrics[-len(r.metrics) // 5:]
+        n_sigs = mean(m["gauges"].get("n_deme_signatures", 0.0) for m in tail)
+        n_types = mean(m["gauges"].get("n_deme_types", 0.0) for m in tail)
+        self.assertGreater(n_sigs, n_types)
+
     def test_combinator_reducer_correct(self):
         # the SKI reducer must implement the three rules correctly
         from omega.experiments.exp012_combinator import normalize
