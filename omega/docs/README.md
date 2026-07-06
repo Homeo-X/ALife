@@ -72,6 +72,17 @@ falsifiable program).
 | **exp028** transmission vs substrate | Is the ceiling fixable by better propagule transmission? | **No** — even transmitting the *whole* source deme caps at ~3×. The ceiling is **substrate-limited**: identical members ⇏ same network. |
 | **exp029** typed substrate | Does modular composition break the reproducibility ceiling? | **YES, but closes.** A typed substrate (morphisms + modular composition) makes networks breed true (self 0.10→0.24, ~5×) but is **closed** (novelty→0). The two substrates are opposite corners of one trade-off. |
 | **exp030** open-ended + modular | Can a substrate be *both* open-ended and modular? | **YES — the transition, completed in miniature.** Type **paths** composed by concatenation (modular *and* open-ended), with a tunable identity resolution, reach a **"both" corner**: strong reproducible collective heredity (self 0.22–0.28) **and** sustained novelty (0.1–0.4 > 0) **and** rich networks — which neither pure substrate could. |
+| **exp031** levels of organization | Does the transition *recurse* into a tower of levels? | **YES.** Each tier's stable heritable collectives become the next tier's atoms (`omega/levels/`): the tower stacks **mean depth 4, max 5** (physics→chemistry→biology→culture→…), every tier heritable *and* open-ended. Plus a distinct **culture** level — horizontal/Lamarckian motif transfer (~0.68× the vertical rate) that **accelerates innovation** (novelty 0.41→0.57). |
+
+### Levels of organization (physics → chemistry → biology → culture)
+
+The transition to collective individuality is a **recursive ladder**, not a single jump:
+a stable, heritable collective at level *N* is promoted to a single atom at level *N+1*,
+and the same modular+open-ended engine (exp030) runs one tier up. The four analogues —
+**physics** (kernel: atoms + conservation), **chemistry** (composition + reification),
+**biology** (deme reproduction/selection/heredity), **culture** (horizontal, Lamarckian
+transmission) — and the recursion are documented in [`LEVELS.md`](LEVELS.md), built by
+`omega/levels/stack.py`, and evidenced in `studies/EXP031_FINDINGS.md`.
 
 The headline is the **exp003 → exp004 → exp005 arc**: a bounded alphabet forces
 closure no matter how cleverly operators recombine (exp003); reifying persistent

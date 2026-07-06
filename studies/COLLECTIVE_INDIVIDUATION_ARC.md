@@ -85,9 +85,31 @@ many seeds, and that collective individuals begin composing into a *further* lev
 transition of transitions). The collective-individuality question is answered in
 miniature; the unboundedness question — the program's original one — is handed forward.
 
+## Coda — the transition recurses (exp031): multiple levels of organization
+
+exp030 completed *one* transition; exp031 shows it **recurses**. Because a modular +
+open-ended substrate lets a collective be heritable *and* open-ended, the same condition
+holds when a tier's collectives become the next tier's atoms. `omega/levels/stack.py`
+promotes each tier's stable heritable collectives to the next tier's alphabet and recurses:
+
+- **A self-sustaining tower** — mean depth ~4, max 5 (physics → chemistry → biology →
+  culture → meta-culture), *every* tier heritable (self > null) and open-ended (novelty
+  ~0.4–0.5, undiminished up the tower). "Tower depth" is a new open-endedness axis:
+  open-endedness *of levels*.
+- **A distinct culture apex** — horizontal, Lamarckian motif transfer between collectives
+  (~0.68× the vertical rate) that *accelerates innovation* (novelty 0.41→0.57), memes
+  recombining across collectives faster than reproduction.
+
+So organizational complexity in this substrate is a **recursive ladder of individuality**:
+physics → chemistry → biology → culture as successive outputs of one engine, each level's
+individuals composed of the level below. See `studies/EXP031_FINDINGS.md` and
+`omega/docs/LEVELS.md`.
+
 ## Reproduce
 
 Each `studies/exp0NN_*.py` runs its study (`PYTHONPATH=. python3 studies/exp0NN_*.py`);
 results are committed as `studies/exp0NN_results.json` / `_console.txt`. The registered
-builders are `exp017`…`exp030` in `omega/experiments/exp012_combinator.py`; every claim is
-pinned by a `test_exp0NN_*` in `omega/tests/test_experiments.py` (35 tests).
+builders are `exp017`…`exp030` plus `exp031_culture` in
+`omega/experiments/exp012_combinator.py`; the level tower is `omega/levels/stack.py`; every
+claim is pinned by a `test_exp0NN_*` / `test_exp031_*` in
+`omega/tests/test_experiments.py` (37 tests).

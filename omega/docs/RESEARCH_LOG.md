@@ -6,6 +6,49 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.16 — Multiple levels of organization: the transition recurses (exp031)
+
+**Date:** 2026-07-06 · **Status:** complete · **Verdict:** the major transition to
+collective individuality is not a single jump but a **recursive ladder** — each tier's
+stable, heritable collectives become the atoms of the next tier, building a
+physics → chemistry → biology → culture tower on one engine; and a distinct **culture**
+level (horizontal, Lamarckian transmission) sits on top. Detail: `studies/EXP031_FINDINGS.md`,
+`omega/docs/LEVELS.md`. All gated → exp001–030 byte-identical.
+
+### The recursion (a self-sustaining tower)
+Ω-0.15 (exp030) showed a substrate that is both **modular** and **open-ended** lets a
+collective be heritable *and* open-ended at once. Because that condition is not specific
+to one level, it should hold *again* if a tier's collectives become the next tier's
+individuals. `omega/levels/stack.py` tests this: run the exp030 `typed_path` substrate;
+promote each stable heritable collective (a deme with a non-trivial network signature) to
+a fresh symbol; make that set the next tier's alphabet; recurse. Result (up to 5 tiers, 5
+seeds): **tower depth mean 4.0, max 5, full 5-level stack in 4/5 seeds**, with *every*
+tier forming heritable collectives (`self > null`) and staying open-ended (novelty
+0.41–0.47, undiminished up the tower). Chemistry → biology → culture → meta-culture emerge
+as successive tiers of one recursive engine, with explicit nesting (a high-tier individual
+unfolds to the organizations it contains). **Tower depth** is a new open-endedness axis —
+open-endedness *of levels*, complementary to within-level novelty.
+
+### The culture level (a qualitatively distinct top tier)
+Lower tiers transmit *vertically* (propagule → offspring). Culture is *horizontal and
+Lamarckian*: a collective imitates a fitter collective's top motif within its lifetime
+(`horizontal_transfer`), decoupled from reproduction. With transfer on, a substantial
+horizontal channel opens (~0.68× the vertical rate) and — the signature of culture — it
+**accelerates innovation**: novelty rises 0.41 → 0.57 and distinct collective signatures
+13.5 → 17.0, as imported motifs recombine with each recipient's own faster than
+reproduction could.
+
+### Is / is not
+- **Is:** multiple levels of organization, in miniature — a 4–5 deep recursive tower each
+  tier heritable and open-ended, plus a distinct horizontal/cultural apex; the level
+  abstraction made first-class (`omega/levels/`, `omega/docs/LEVELS.md`).
+- **Is not:** proven **unbounded** (does depth grow without limit over 10⁵⁺ ticks?), nor
+  fully heterogeneous per-level physics (the tower is the self-similar typed_path engine
+  with culture layered on). The program's original unboundedness question now recurs at
+  every level.
+
+---
+
 ## Milestone Ω-0.15 — The collective-individuation arc: from inert machinery to a completed transition (exp018→exp030)
 
 **Date:** 2026-07-06 · **Status:** complete · **Verdict:** a major transition to

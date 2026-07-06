@@ -509,6 +509,26 @@ class TestScientificClaims(unittest.TestCase):
         self.assertGreater(types("B,C,W,T,V"), 3 * types(""))   # richer type space
         self.assertGreater(edge_ratio("B,C,W,T,V"), edge_ratio("") + 1.0)  # stronger heredity
 
+    def test_exp031_transition_recurses_into_a_level_tower(self):
+        # Ω-0.28: the major transition RECURSES. Each tier's stable heritable collectives
+        # become the atoms of the next tier (reification across levels of individuality),
+        # so physics → chemistry → biology → culture stack as tiers of one engine. The
+        # tower reaches multiple levels, each still forming heritable collectives.
+        from omega.levels.stack import run_stack
+        r = run_stack(max_tiers=3, seed=0, ticks=900)
+        self.assertGreaterEqual(r.tower_depth, 2)      # >=2 organizational levels stack
+        self.assertTrue(r.tiers[0].heritable)          # tier 0 forms heritable collectives
+        self.assertTrue(r.unfold)                       # promotion happened (nesting map)
+
+    def test_exp031_culture_horizontal_transfer(self):
+        # Ω-0.28: the culture level — horizontal, Lamarckian motif transfer between
+        # collectives (imitation), decoupled from reproduction, active and open-ended.
+        p, c = get_experiment("exp031_culture")(seed=0, ticks=1000, n_patches=24,
+                                                propagule_mode="source")
+        r = run(p, c)
+        self.assertGreater(p._meme_horizontal, 0)      # the horizontal channel is active
+        self.assertGreater(r.open_endedness["novelty_rate"], 0.0)  # and still open-ended
+
     def test_exp030_openended_modular_substrate_achieves_both(self):
         # Ω-0.27: the capstone. exp029 showed the transition needs a substrate that is
         # BOTH open-ended and modular. A typed-PATH substrate (variable-length type paths

@@ -46,7 +46,7 @@ def _ensure_loaded() -> None:
         exp009_modules,
         exp010_copying,
         exp011_function,
-        exp012_combinator,  # also registers exp013..030 (evolution→typed pivot→open-ended modular)
+        exp012_combinator,  # also registers exp013..030 + exp031_culture (levels of organization)
     )
 
 

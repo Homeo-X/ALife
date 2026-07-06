@@ -1,0 +1,326 @@
+{
+  "towers": [
+    {
+      "seed": 0,
+      "depth": 5,
+      "tiers": [
+        {
+          "tier": 0,
+          "level": "chemistry",
+          "alphabet": 32,
+          "collectives": 19,
+          "self": 0.252085225552528,
+          "null": 0.07437232386142467,
+          "novelty": 0.336,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "level": "biology",
+          "alphabet": 19,
+          "collectives": 24,
+          "self": 0.10985381213021289,
+          "null": 0.029256754231308493,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 2,
+          "level": "culture",
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 3,
+          "level": "meta-culture",
+          "alphabet": 23,
+          "collectives": 24,
+          "self": 0.156255370393202,
+          "null": 0.038228735679716075,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 4,
+          "level": "meta\u00b2-culture",
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "depth": 0,
+      "tiers": [
+        {
+          "tier": 0,
+          "level": "chemistry",
+          "alphabet": 32,
+          "collectives": 0,
+          "self": 0.6043083900226758,
+          "null": 0.05782312925170068,
+          "novelty": 0.004,
+          "heritable": true
+        }
+      ]
+    },
+    {
+      "seed": 2,
+      "depth": 5,
+      "tiers": [
+        {
+          "tier": 0,
+          "level": "chemistry",
+          "alphabet": 32,
+          "collectives": 24,
+          "self": 0.09759220377082434,
+          "null": 0.029772228800006576,
+          "novelty": 0.476,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "level": "biology",
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.1431600625005533,
+          "null": 0.04917328291020099,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 2,
+          "level": "culture",
+          "alphabet": 23,
+          "collectives": 22,
+          "self": 0.17852676940425286,
+          "null": 0.05363097535282966,
+          "novelty": 0.424,
+          "heritable": true
+        },
+        {
+          "tier": 3,
+          "level": "meta-culture",
+          "alphabet": 22,
+          "collectives": 23,
+          "self": 0.11510135152671627,
+          "null": 0.03170016402138182,
+          "novelty": 0.48,
+          "heritable": true
+        },
+        {
+          "tier": 4,
+          "level": "meta\u00b2-culture",
+          "alphabet": 23,
+          "collectives": 22,
+          "self": 0.17852676940425286,
+          "null": 0.05363097535282966,
+          "novelty": 0.424,
+          "heritable": true
+        }
+      ]
+    },
+    {
+      "seed": 3,
+      "depth": 5,
+      "tiers": [
+        {
+          "tier": 0,
+          "level": "chemistry",
+          "alphabet": 32,
+          "collectives": 22,
+          "self": 0.11767272747664817,
+          "null": 0.0233658748137251,
+          "novelty": 0.576,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "level": "biology",
+          "alphabet": 22,
+          "collectives": 23,
+          "self": 0.11816184457108311,
+          "null": 0.032221253524934504,
+          "novelty": 0.356,
+          "heritable": true
+        },
+        {
+          "tier": 2,
+          "level": "culture",
+          "alphabet": 23,
+          "collectives": 21,
+          "self": 0.10147430643473013,
+          "null": 0.031047317643762017,
+          "novelty": 0.48,
+          "heritable": true
+        },
+        {
+          "tier": 3,
+          "level": "meta-culture",
+          "alphabet": 21,
+          "collectives": 24,
+          "self": 0.12486308287599536,
+          "null": 0.03803016933019576,
+          "novelty": 0.38,
+          "heritable": true
+        },
+        {
+          "tier": 4,
+          "level": "meta\u00b2-culture",
+          "alphabet": 24,
+          "collectives": 24,
+          "self": 0.09700357064219303,
+          "null": 0.027148968135288824,
+          "novelty": 0.424,
+          "heritable": true
+        }
+      ]
+    },
+    {
+      "seed": 4,
+      "depth": 5,
+      "tiers": [
+        {
+          "tier": 0,
+          "level": "chemistry",
+          "alphabet": 32,
+          "collectives": 24,
+          "self": 0.20212234958772174,
+          "null": 0.05406607105235141,
+          "novelty": 0.66,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "level": "biology",
+          "alphabet": 24,
+          "collectives": 21,
+          "self": 0.10280733600559706,
+          "null": 0.026411616348284445,
+          "novelty": 0.372,
+          "heritable": true
+        },
+        {
+          "tier": 2,
+          "level": "culture",
+          "alphabet": 21,
+          "collectives": 24,
+          "self": 0.14131636334810196,
+          "null": 0.0414098330413788,
+          "novelty": 0.504,
+          "heritable": true
+        },
+        {
+          "tier": 3,
+          "level": "meta-culture",
+          "alphabet": 24,
+          "collectives": 21,
+          "self": 0.10280733600559706,
+          "null": 0.026411616348284445,
+          "novelty": 0.372,
+          "heritable": true
+        },
+        {
+          "tier": 4,
+          "level": "meta\u00b2-culture",
+          "alphabet": 21,
+          "collectives": 24,
+          "self": 0.14131636334810196,
+          "null": 0.0414098330413788,
+          "novelty": 0.504,
+          "heritable": true
+        }
+      ]
+    }
+  ],
+  "culture": [
+    {
+      "ht": 0.0,
+      "seed": 0,
+      "horizontal": 0,
+      "vertical": 868,
+      "n_signatures": 12.83,
+      "novelty": 0.336
+    },
+    {
+      "ht": 0.0,
+      "seed": 1,
+      "horizontal": 0,
+      "vertical": 868,
+      "n_signatures": 1.302,
+      "novelty": 0.004
+    },
+    {
+      "ht": 0.0,
+      "seed": 2,
+      "horizontal": 0,
+      "vertical": 868,
+      "n_signatures": 17.982,
+      "novelty": 0.476
+    },
+    {
+      "ht": 0.0,
+      "seed": 3,
+      "horizontal": 0,
+      "vertical": 868,
+      "n_signatures": 16.642,
+      "novelty": 0.576
+    },
+    {
+      "ht": 0.0,
+      "seed": 4,
+      "horizontal": 0,
+      "vertical": 868,
+      "n_signatures": 18.9,
+      "novelty": 0.66
+    },
+    {
+      "ht": 0.3,
+      "seed": 0,
+      "horizontal": 605,
+      "vertical": 868,
+      "n_signatures": 18.612,
+      "novelty": 0.688
+    },
+    {
+      "ht": 0.3,
+      "seed": 1,
+      "horizontal": 592,
+      "vertical": 868,
+      "n_signatures": 15.714,
+      "novelty": 0.448
+    },
+    {
+      "ht": 0.3,
+      "seed": 2,
+      "horizontal": 575,
+      "vertical": 868,
+      "n_signatures": 16.248,
+      "novelty": 0.536
+    },
+    {
+      "ht": 0.3,
+      "seed": 3,
+      "horizontal": 596,
+      "vertical": 868,
+      "n_signatures": 16.0,
+      "novelty": 0.448
+    },
+    {
+      "ht": 0.3,
+      "seed": 4,
+      "horizontal": 579,
+      "vertical": 868,
+      "n_signatures": 18.61,
+      "novelty": 0.744
+    }
+  ]
+}

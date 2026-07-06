@@ -1,0 +1,13 @@
+(A) recursive tower — how many organizational levels stack? (5 seeds)
+  tower depth: mean 4.0 ± 2.0, max 5, per-seed [5, 0, 5, 5, 5]
+  tier         level alphabet collectives   self   null novelty heritable
+     0     chemistry       32          18  0.255  0.048    0.41 5/5 heritable
+     1       biology       22          23  0.118  0.034    0.45 4/4 heritable
+     2       culture       23          22  0.137  0.038    0.47 4/4 heritable
+     3  meta-culture       22          23  0.125  0.034    0.46 4/4 heritable
+     4 meta²-culture       23          23  0.136  0.037    0.46 4/4 heritable
+
+(B) culture — horizontal (Lamarckian) transfer between collectives:
+   transfer horizontal  vertical   H/V n_signatures  novelty
+        0.0          0       868  0.00         13.5     0.41
+        0.3        589       868  0.68         17.0     0.57

@@ -337,6 +337,15 @@ class CombinatorPhysics:
         # their last N nodes (0 = unbounded) — the dial between reproducible/closed and
         # open/unreproducible.
         self.type_resolution = 0
+        # exp031 level stack: seed_states seeds a tier from a promoted set of lower-tier
+        # collectives (instead of random); horizontal_transfer is the CULTURE mechanism —
+        # a deme imports a high-value motif from a fitter deme within its lifetime
+        # (horizontal, Lamarckian), decoupled from vertical propagule reproduction.
+        # Both default off => exp012-030 byte-identical.
+        self.seed_states: list | None = None
+        self.horizontal_transfer = 0.0
+        self._meme_horizontal = 0      # motifs acquired horizontally (culture)
+        self._meme_vertical = 0        # motifs inherited vertically (propagule)
         # exp020 replicase: strength/fidelity of the explicit template-copy channel.
         # copy_rate=0 (default) leaves every earlier experiment untouched.
         self.copy_rate = 0.0
@@ -384,6 +393,12 @@ class CombinatorPhysics:
             self._coop[org.uid] = 1.0 if rng.random() < self.coop_init else 0.0
 
     def seed(self, universe: Universe, rng: Noise) -> None:
+        if self.seed_states:
+            # exp031: seed a tier from a promoted set of lower-tier collectives.
+            for _ in range(self.seed_pop):
+                org = universe.spawn(rng.choice(self.seed_states), kind="expr")
+                self._seed_coop(org, rng)
+            return
         if self.founder_mode == "monoculture" and self.n_patches > 0:
             # each patch = a distinct monoculture (its own founder class), pinned to
             # that patch, so demes begin in different basins (exp024 divergence).
@@ -565,9 +580,32 @@ class CombinatorPhysics:
                         self._coop[child.uid] = self._coop.get(o.uid, 0.0)
             if self.propagule_mode == "source":  # remember source for heredity check
                 self._pending[kp] = frozenset(o.cls for o in by_patch[src])
+                self._meme_vertical += 1          # a vertical (reproductive) transmission
                 if self.track_signature:
                     self._pending_edges[kp] = self._deme_signature(src)
                     self._pending_src[kp] = src
+        # exp031 CULTURE: horizontal, Lamarckian transfer between *surviving* demes — a
+        # deme imitates a fitter deme's top motif within its lifetime (not via
+        # reproduction), injecting that motif's product into its own recycle buffer.
+        if self.horizontal_transfer > 0.0:
+            rep_state: dict = {}
+            for m in by_patch.values():
+                for o in m:
+                    rep_state.setdefault(o.cls, o.state)
+            live = [p for p in survivors if by_patch.get(p)]
+            for rp in live:
+                if rng.random() >= self.horizontal_transfer:
+                    continue
+                donors = [p for p in live if p != rp and self._deme_edges.get(p)]
+                if not donors:
+                    continue
+                w = [len(self._deme_edges[p]) + self._breedtrue.get(p, 0.0) + 0.1
+                     for p in donors]
+                dp = rng.weighted_choice(donors, w)
+                (_f, p_cls), _ = max(self._deme_edges[dp].items(), key=lambda kv: kv[1])
+                if p_cls in rep_state:
+                    self._niche.setdefault(rp, []).append(rep_state[p_cls])
+                    self._meme_horizontal += 1
         self._deme_prod.clear()  # start a fresh productivity window for next gen
         self._xprod.clear()
         self._deme_edges.clear()
@@ -782,6 +820,9 @@ class CombinatorPhysics:
                     sigs.append(s); sizes.append(len(s))
             universe.gauges["n_deme_signatures"] = float(len(set(sigs)))
             universe.gauges["mean_signature_size"] = (sum(sizes) / len(sizes)) if sizes else 0.0
+        if self.horizontal_transfer > 0.0:
+            universe.gauges["meme_horizontal"] = float(self._meme_horizontal)
+            universe.gauges["meme_vertical"] = float(self._meme_vertical)
         return reactions
 
 
@@ -830,6 +871,12 @@ def _make(seed, experiment, **overrides):
     physics.type_resolution = int(overrides.get("type_resolution", 0))
     if physics.substrate in ("typed", "typed_path"):  # morphisms over n_types base types
         physics.atoms = tuple(f"y{i}" for i in range(physics.n_types))
+    # exp031 level stack: an explicit promoted alphabet (a tier's atoms ARE the lower
+    # tier's collectives), a seed set of promoted states, and the culture channel.
+    if overrides.get("explicit_atoms"):
+        physics.atoms = tuple(overrides["explicit_atoms"])
+    physics.seed_states = overrides.get("seed_states")
+    physics.horizontal_transfer = float(overrides.get("horizontal_transfer", 0.0))
     cfg = Config(
         experiment=experiment,
         seed=seed,
@@ -1202,3 +1249,26 @@ def build_openended_modular(seed: int = 0, **overrides) -> tuple[Physics, Config
     overrides.setdefault("n_types", 32)      # the "both" corner: strong heredity AND
     overrides.setdefault("type_resolution", 3)  # open-ended novelty AND rich networks
     return _make(seed, "exp030", **overrides)
+
+
+@register("exp031_culture")
+def build_culture(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp031 (culture level) — a qualitatively distinct top tier on the exp030 base.
+    Biology transmits *vertically* (propagule → offspring deme). Culture is *horizontal
+    and Lamarckian*: `horizontal_transfer` lets a deme imitate a fitter deme's top
+    network motif within its lifetime, decoupled from reproduction. The study contrasts
+    a motif's spread with vs without transfer, and horizontal vs vertical rate."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "network")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("horizontal_transfer", 0.3)
+    return _make(seed, "exp031_culture", **overrides)
