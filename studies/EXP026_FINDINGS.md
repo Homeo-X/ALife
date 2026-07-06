@@ -87,3 +87,14 @@ heredity should keep climbing from moderate (2.4×) toward strong. exp026 turns 
 exp024 "substrate wall" into a **tunable dial**: the transition to collective
 individuality appears reachable not by more multi-level machinery, but by paying for a
 richer substrate of interacting parts.
+
+---
+
+**Follow-up (see `EXP027_FINDINGS.md`).** exp027 swept the dial from 3 to 11
+combinators (adding T, V, and primed B'/C'/S'). Network-signature heredity keeps
+climbing to an arc-high **~3.3× at 7–8 combinators** (S,K,I,B,C,W,T,V) — moderate-
+strong, with novelty *rising* to ~4.5 — then **declines** at 11 combinators as the
+type space becomes too rich for networks to breed true. So the dial has a **Goldilocks
+optimum**, not an unbounded climb: individuation is real, emergent, and tunable, but
+bounded at ~3.3× by a type-diversity-vs-network-reproducibility trade-off, pointing
+past combinator bases toward typed/lambda substrates for a completed transition.

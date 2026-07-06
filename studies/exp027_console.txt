@@ -1,0 +1,16 @@
+basis dose-response: 35 runs @ 4000 ticks, 5 seeds
+
+       basis n_atoms  types  top9  edge heredity  n_sigs  novelty
+----------------------------------------------------------------------
+      SKI(3)       3    204  0.72     1.59 ± 0.09    18.7     1.86
+       +B(4)       4    598  0.48     2.18 ± 0.33    15.7     3.93
+      +BC(5)       5    969  0.38     2.60 ± 0.39    12.6     3.84
+     +BCW(6)       6   1144  0.34     2.42 ± 0.87    12.2     2.90
+       +T(7)       7   1261  0.32     3.27 ± 1.92    10.3     4.65
+       +V(8)       8   1625  0.30     3.27 ± 0.89     7.5     4.53
+ +primed(11)      11   2307  0.21     2.43 ± 0.67    10.7     4.57
+
+expr_size dial (basis fixed at BCW): edge heredity, novelty
+  expr_size= 5: 2.42 ± 0.87  (novelty 2.90)
+  expr_size= 8: 2.87 ± 0.43  (novelty 1.46)
+  expr_size=12: 2.72 ± 1.14  (novelty 2.29)

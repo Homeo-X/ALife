@@ -68,6 +68,20 @@ def _step(e):
         return ((f[0][1], x), f[1]), True          # C a b c -> a c b
     if isinstance(f, tuple) and f[0] == "W":
         return ((f[1], x), x), True                # W a b -> a b b
+    # exp027 further-extended basis (T/V + primed B'/C'/S'), same gating: inert unless
+    # the atom is present, so exp012-026 stay byte-identical. Standard, terminating,
+    # non-self-applying combinators — a bigger dial of distinct *interacting* types.
+    if isinstance(f, tuple) and f[0] == "T":
+        return (x, f[1]), True                     # T a b -> b a
+    if isinstance(f, tuple) and isinstance(f[0], tuple) and f[0][0] == "V":
+        return ((x, f[0][1]), f[1]), True          # V a b c -> c a b
+    if isinstance(f, tuple) and isinstance(f[0], tuple) and isinstance(f[0][0], tuple):
+        if f[0][0][0] == "B1":                     # B' k a b c -> k a (b c)
+            return ((f[0][0][1], f[0][1]), (f[1], x)), True
+        if f[0][0][0] == "C1":                     # C' k a b c -> k (a c) b
+            return ((f[0][0][1], (f[0][1], x)), f[1]), True
+        if f[0][0][0] == "S1":                     # S' k a b c -> k (a c) (b c)
+            return ((f[0][0][1], (f[0][1], x)), (f[1], x)), True
     f2, ch = _step(f)
     if ch:
         return (f2, x), True
@@ -238,6 +252,8 @@ class CombinatorPhysics:
         # *combinators* (B/C/W) — richer types that still act as functions. Kept as
         # ("S","K","I") => byte-identical.
         self.atoms = _ATOMS
+        # exp027 secondary dial: max size of random feed expressions (default 5).
+        self.expr_size = 5
         # exp020 replicase: strength/fidelity of the explicit template-copy channel.
         # copy_rate=0 (default) leaves every earlier experiment untouched.
         self.copy_rate = 0.0
@@ -268,7 +284,7 @@ class CombinatorPhysics:
 
     def _random_normal(self, rng: Noise):
         """A random expression, reduced to normal form (so the feed is behavioural)."""
-        e = self._random_expr(rng, rng.randint(1, 5))
+        e = self._random_expr(rng, rng.randint(1, self.expr_size))
         nf = normalize(e, self.fuel, self.max_size)
         return nf if nf is not None else rng.choice(self.atoms)
 
@@ -684,9 +700,16 @@ def _make(seed, experiment, **overrides):
     physics.founder_mode = str(overrides.get("founder_mode", "random"))
     physics.track_signature = bool(overrides.get("track_signature", False))
     physics.edge_threshold = int(overrides.get("edge_threshold", 2))
-    extra = str(overrides.get("extra_combinators", ""))
-    if extra:  # exp026 richer type space: SKI + extra *interacting* combinators (BCW)
-        physics.atoms = _ATOMS + tuple(a for a in ("B", "C", "W") if a in extra)
+    # richer type space (exp026/027): SKI + extra *interacting* combinators. Tokens
+    # are comma/space-separated (multi-char primed combinators need this); the legacy
+    # concatenated "BCW" form is still accepted for the single-char B/C/W.
+    raw = str(overrides.get("extra_combinators", ""))
+    tokens = [t for t in raw.replace(" ", ",").split(",") if t]
+    if len(tokens) == 1 and "," not in raw and all(ch in "BCW" for ch in tokens[0]):
+        tokens = list(tokens[0])  # "BCW" -> ["B","C","W"]
+    known = ("B", "C", "W", "T", "V", "B1", "C1", "S1")
+    physics.atoms = _ATOMS + tuple(t for t in known if t in tokens)
+    physics.expr_size = int(overrides.get("expr_size", 5))
     cfg = Config(
         experiment=experiment,
         seed=seed,
@@ -958,3 +981,25 @@ def build_strong_individuation(seed: int = 0, **overrides) -> tuple[Physics, Con
     overrides.setdefault("extra_combinators", "BCW")
     overrides.setdefault("deme_fitness", "breed_true")
     return _make(seed, "exp026", **overrides)
+
+
+@register("exp027")
+def build_substrate_dial(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp027 — how far does the substrate dial go? exp026 showed enriching the basis
+    with interacting combinators lifts network-signature heredity (1.6x -> 2.4x). This
+    exposes the *full* extended basis (S,K,I,B,C,W,T,V + primed B'/C'/S') so a study
+    can sweep basis richness (3 -> 11 combinators) and see whether collective
+    individuation keeps climbing toward strong (self >> null) or plateaus. Same exp025/
+    026 collective machinery (network signature + heredity, recycle feed, network
+    fitness, isolation); a secondary `expr_size` dial enlarges feed expressions."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "network")
+    overrides.setdefault("extra_combinators", "B,C,W,T,V,B1,C1,S1")
+    return _make(seed, "exp027", **overrides)

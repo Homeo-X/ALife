@@ -443,12 +443,52 @@ class TestScientificClaims(unittest.TestCase):
         self.assertGreater(bcw_s, bcw_n)          # signature still heritable
         self.assertGreater(bcw_r, ski_r + 0.3)    # richer basis strengthens it
 
+    def test_exp027_basis_richness_dials_up_individuation(self):
+        # Ω-0.24: the substrate dial. A richer *interacting* basis both enriches the
+        # type space and strengthens network-signature heredity — near the optimum
+        # (S,K,I,B,C,W,T,V), collective individuation reaches its arc-high (~3.3x self/
+        # null), far above SKI (~1.6x). (The full dose-response shows it peaks ~7-8
+        # combinators then declines as too-rich a type space stops networks breeding
+        # true — see EXP027_FINDINGS.md.)
+        from collections import Counter
+        from statistics import mean
+        from omega.experiments.exp012_combinator import canonical_cls
+        from omega.substrate.noise import Noise
+
+        def types(extra):
+            p, _ = get_experiment("exp027")(seed=0, n_patches=24, extra_combinators=extra)
+            rng = Noise(0)
+            return len(Counter(canonical_cls(p._random_normal(rng)) for _ in range(3000)))
+
+        def edge_ratio(extra):
+            p, c = get_experiment("exp027")(seed=0, ticks=1200, n_patches=24,
+                                            propagule_mode="source", extra_combinators=extra)
+            run(p, c)
+            return mean(p._hered_edge_self) / (mean(p._hered_edge_null) + 1e-9)
+
+        self.assertGreater(types("B,C,W,T,V"), 3 * types(""))   # richer type space
+        self.assertGreater(edge_ratio("B,C,W,T,V"), edge_ratio("") + 1.0)  # stronger heredity
+
     def test_combinator_reducer_correct(self):
         # the SKI reducer must implement the three rules correctly
         from omega.experiments.exp012_combinator import normalize
         self.assertEqual(normalize(("I", "K"), 50, 24), "K")               # I K -> K
         self.assertEqual(normalize((("K", "S"), "I"), 50, 24), "S")        # K S I -> S
         self.assertEqual(normalize(((("S", "K"), "K"), "I"), 50, 24), "I")  # S K K I -> I
+
+    def test_extended_combinator_rules_correct(self):
+        # exp027 extended basis (B/C/W/T/V and primed B'/C'/S'); a wrong rewrite would
+        # silently corrupt the richer-substrate experiments, so pin each rule.
+        from omega.experiments.exp012_combinator import normalize as N
+        self.assertEqual(N(((("B", "I"), "K"), "S"), 50, 24), ("K", "S"))   # B I K S -> I (K S) -> K S
+        self.assertEqual(N(((("C", "K"), "S"), "I"), 50, 24), "I")          # C K S I -> K I S -> I
+        self.assertEqual(N((("W", "K"), "S"), 50, 24), "S")                 # W K S -> K S S -> S
+        self.assertEqual(N(("T", "K"), 50, 24), ("T", "K"))                 # T K (partial) is normal
+        self.assertEqual(N((("T", "K"), "I"), 50, 24), "K")                # T K I -> I K -> K
+        self.assertEqual(N(((("V", "K"), "S"), "I"), 50, 24), ("K", "S"))   # V K S I -> I K S -> K S
+        self.assertEqual(N(((((("B1", "K"), "S"), "K"), "I")), 50, 24), "S")  # B' K S K I -> K S (K I) -> S
+        self.assertEqual(N(((((("C1", "K"), "I"), "S"), "K")), 50, 24), "K")  # C' K I S K -> K (I K) S -> K
+        self.assertEqual(N(((((("S1", "K"), "I"), "I"), "S")), 50, 24), "S")  # S' K I I S -> K (I S)(I S) -> S
 
 
 if __name__ == "__main__":
