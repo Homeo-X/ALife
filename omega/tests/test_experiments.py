@@ -443,6 +443,24 @@ class TestScientificClaims(unittest.TestCase):
         self.assertGreater(bcw_s, bcw_n)          # signature still heritable
         self.assertGreater(bcw_r, ski_r + 0.3)    # richer basis strengthens it
 
+    def test_exp028_individuation_ceiling_is_substrate_not_transmission(self):
+        # Ω-0.25: the ~3.3x network-heredity ceiling is substrate-limited, not
+        # transmission-limited. Even a network-biased propagule that transmits the
+        # source deme's whole network leaves the signature heritable-but-thin: the
+        # child resembles its source more than a random deme (self > null), yet the
+        # absolute overlap stays small (thin ~2-edge networks), so no strong, discrete
+        # collective individual forms. Better transmission cannot break the ceiling —
+        # motivating a typed/lambda substrate pivot (see EXP028_FINDINGS.md).
+        from statistics import mean
+
+        p, c = get_experiment("exp028")(seed=0, ticks=1500, n_patches=24,
+                                        propagule_mode="source")
+        run(p, c)
+        self.assertTrue(p._hered_edge_self and p._hered_edge_null)
+        self_j, null_j = mean(p._hered_edge_self), mean(p._hered_edge_null)
+        self.assertGreater(self_j, null_j)   # still weakly heritable
+        self.assertLess(self_j, 0.2)          # but thin — not strong individuation
+
     def test_exp027_basis_richness_dials_up_individuation(self):
         # Ω-0.24: the substrate dial. A richer *interacting* basis both enriches the
         # type space and strengthens network-signature heredity — near the optimum

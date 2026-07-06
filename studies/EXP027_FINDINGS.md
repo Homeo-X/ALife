@@ -84,3 +84,14 @@ compose modularly enough that large networks still breed true — e.g. **typed**
 rather than a fragile combinator tangle. exp027 leaves the transition to collective
 individuality demonstrated in miniature (~3.3× heritable collective identity) and its
 governing trade-off — type diversity vs network reproducibility — precisely located.
+
+---
+
+**Follow-up (see `EXP028_FINDINGS.md`).** exp028 tested whether the ~3.3× ceiling is
+fixable by better *transmission* (a network-biased propagule; up to copying the whole
+source deme) before pivoting substrates. It is not: even perfect member-set transmission
+leaves the signature heritable-but-thin (self Jaccard ~0.06, 0/30 runs strong), and
+network-biased propagules don't help while costing novelty. The ceiling is
+substrate-limited — the reduction dynamics don't re-form a deme's network even from
+identical members — which conclusively motivates the typed/lambda substrate pivot
+(exp029).

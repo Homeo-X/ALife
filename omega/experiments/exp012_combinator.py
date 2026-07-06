@@ -186,6 +186,13 @@ class CombinatorPhysics:
         self.deme_death_frac = 0.3
         self.propagule_size = 4
         self.propagule_mode = "source"
+        # exp028 network-biased propagule: when "network", found a deme preferentially
+        # from the source's *network-participant* members (classes in its cross-
+        # production signature) rather than random members — transmit the network, not
+        # a random sample. Tests whether the ~3.3x heredity ceiling (exp027) is limited
+        # by member-set reproducibility (fixable here) or by the substrate itself.
+        # "random" (default) leaves every prior experiment byte-identical.
+        self.propagule_bias = "random"
         # exp018 collective fitness: how a surviving deme's chance of founding a
         # propagule is set. "size" (the exp017 default) weights by deme headcount —
         # but the global reservoir cap pins every deme to ~the same size, so
@@ -454,7 +461,21 @@ class CombinatorPhysics:
                 pool = by_patch[src]
             else:  # "mixed" null — propagule from the whole survivor pool
                 pool = [o for s in survivors for o in by_patch[s]]
-            for o in rng.sample(pool, min(self.propagule_size, len(pool))):
+            k = min(self.propagule_size, len(pool))
+            if (self.propagule_bias == "network" and self.propagule_mode == "source"
+                    and self.track_signature):
+                # prioritize members whose class participates in the source deme's
+                # cross-production signature, so the network (not a random sample) is
+                # what founds the child deme.
+                parts = {c for e in self._deme_signature(src) for c in e}
+                participants = [o for o in pool if o.cls in parts]
+                others = [o for o in pool if o.cls not in parts]
+                rng.shuffle(participants)
+                rng.shuffle(others)
+                propagule = (participants + others)[:k]
+            else:
+                propagule = rng.sample(pool, k)
+            for o in propagule:
                 child = universe.spawn(o.state, "expr")
                 if child is not None:
                     self._patch[child.uid] = kp
@@ -685,6 +706,7 @@ def _make(seed, experiment, **overrides):
     physics.deme_death_frac = float(overrides.get("deme_death_frac", 0.3))
     physics.propagule_size = int(overrides.get("propagule_size", 4))
     physics.propagule_mode = str(overrides.get("propagule_mode", "source"))
+    physics.propagule_bias = str(overrides.get("propagule_bias", "random"))
     physics.deme_fitness = str(overrides.get("deme_fitness", "size"))
     physics.local_feed = bool(overrides.get("local_feed", False))
     physics.copy_rate = float(overrides.get("copy_rate", 0.0))
@@ -1003,3 +1025,29 @@ def build_substrate_dial(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("deme_fitness", "network")
     overrides.setdefault("extra_combinators", "B,C,W,T,V,B1,C1,S1")
     return _make(seed, "exp027", **overrides)
+
+
+@register("exp028")
+def build_reproducible(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp028 — is the ~3.3x individuation ceiling reproducibility-limited or
+    substrate-limited? exp027 found network-signature heredity peaks at ~3.3x (basis
+    S,K,I,B,C,W,T,V) then falls as the type space grows too rich for a random propagule
+    to re-sample the deme's network. This tests the fix: `propagule_bias="network"`
+    founds a child deme from the source's *network-participant* members (transmit the
+    network, not random members), at the exp027 optimum basis with breed-true
+    selection. The study sweeps bias x propagule_size. If edge-set heredity crosses
+    from ~3.3x toward strong, the ceiling was reproducibility (fixable in-substrate);
+    if it plateaus, the ceiling is the substrate itself (motivating a typed/lambda
+    pivot)."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 16)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "breed_true")
+    overrides.setdefault("extra_combinators", "B,C,W,T,V")
+    overrides.setdefault("propagule_bias", "network")
+    return _make(seed, "exp028", **overrides)
