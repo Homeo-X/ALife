@@ -1,0 +1,11 @@
+combinator (exp027 BCWTV) vs typed (exp029), source, 5 seeds:
+        arm  edge self  edge null  self/null  x-prod  sig_size  novelty
+ combinator      0.099      0.033       3.27     2.6      0.54     4.53
+      typed      0.241      0.050       5.34     1.0      0.20     0.00
+
+typed substrate, n_types sweep (ratio climbs but networks thin, novelty~0):
+ n_types  edge self  self/null  x-prod  sig_size  novelty
+       6      0.231       4.03     1.9      0.39     0.00
+      12      0.241       5.34     1.0      0.20     0.00
+      24      0.231 82653065.33     0.5      0.10     0.02
+      48      0.206 41666671.62     0.4      0.06     0.05

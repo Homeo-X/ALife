@@ -46,7 +46,7 @@ def _ensure_loaded() -> None:
         exp009_modules,
         exp010_copying,
         exp011_function,
-        exp012_combinator,  # also registers exp013..028 (evolution→substrate dial→network transmission)
+        exp012_combinator,  # also registers exp013..029 (evolution→network transmission→typed substrate pivot)
     )
 
 

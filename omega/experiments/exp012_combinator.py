@@ -47,6 +47,20 @@ def _size(e) -> int:
     return _size(e[0]) + _size(e[1])
 
 
+def compose(fs, xs, max_size):
+    """exp029 typed-morphism substrate. A morphism is a 2-tuple ``(in_type, out_type)``
+    and interaction is **modular composition**: ``(a->b) ∘ (b->c) = (a->c)`` iff the
+    types match. Unlike combinator reduction, the product is a deterministic function
+    of the two members' types — so a deme's cross-production network is reproducible
+    from its member set (the property exp028 showed the combinator dynamics lack)."""
+    if not (isinstance(fs, tuple) and isinstance(xs, tuple)
+            and len(fs) == 2 and len(xs) == 2):
+        return None
+    if fs[1] == xs[0]:
+        return (fs[0], xs[1])
+    return None
+
+
 def _step(e):
     """One leftmost-outermost reduction; returns (expr, changed)."""
     if isinstance(e, str):
@@ -261,6 +275,11 @@ class CombinatorPhysics:
         self.atoms = _ATOMS
         # exp027 secondary dial: max size of random feed expressions (default 5).
         self.expr_size = 5
+        # exp029 substrate pivot: "combinator" (default, byte-identical) vs "typed" —
+        # morphisms (in_type,out_type) that interact by modular composition, so a
+        # deme's network is reproducible from its members. n_types base types.
+        self.substrate = "combinator"
+        self.n_types = 12
         # exp020 replicase: strength/fidelity of the explicit template-copy channel.
         # copy_rate=0 (default) leaves every earlier experiment untouched.
         self.copy_rate = 0.0
@@ -290,7 +309,10 @@ class CombinatorPhysics:
         return (self._random_expr(rng, left), self._random_expr(rng, size - left))
 
     def _random_normal(self, rng: Noise):
-        """A random expression, reduced to normal form (so the feed is behavioural)."""
+        """A random behaviour to feed. Combinator: a random expression's normal form.
+        Typed (exp029): a random morphism ``(in_type, out_type)``."""
+        if self.substrate == "typed":
+            return (rng.choice(self.atoms), rng.choice(self.atoms))
         e = self._random_expr(rng, rng.randint(1, self.expr_size))
         nf = normalize(e, self.fuel, self.max_size)
         return nf if nf is not None else rng.choice(self.atoms)
@@ -573,7 +595,10 @@ class CombinatorPhysics:
                     x = rng.choice(pop)
                 if f.uid == x.uid:
                     continue
-                product = normalize((f.state, x.state), self.fuel, self.max_size)
+                if self.substrate == "typed":
+                    product = compose(f.state, x.state, self.max_size)
+                else:
+                    product = normalize((f.state, x.state), self.fuel, self.max_size)
                 if product is None:
                     continue
                 if patches is not None and (self.measure_xprod or self.track_signature
@@ -732,6 +757,10 @@ def _make(seed, experiment, **overrides):
     known = ("B", "C", "W", "T", "V", "B1", "C1", "S1")
     physics.atoms = _ATOMS + tuple(t for t in known if t in tokens)
     physics.expr_size = int(overrides.get("expr_size", 5))
+    physics.substrate = str(overrides.get("substrate", "combinator"))
+    physics.n_types = int(overrides.get("n_types", 12))
+    if physics.substrate == "typed":  # exp029: morphisms over n_types base types
+        physics.atoms = tuple(f"y{i}" for i in range(physics.n_types))
     cfg = Config(
         experiment=experiment,
         seed=seed,
@@ -1051,3 +1080,29 @@ def build_reproducible(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("extra_combinators", "B,C,W,T,V")
     overrides.setdefault("propagule_bias", "network")
     return _make(seed, "exp028", **overrides)
+
+
+@register("exp029")
+def build_typed_substrate(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp029 — the substrate pivot. exp028 proved the ~3.3x individuation ceiling is
+    substrate-limited: the combinator reduction dynamics do not re-form a deme's
+    cross-production network even from identical members. This pivots to a **typed
+    substrate** (`substrate="typed"`): organizations are morphisms (in_type,out_type)
+    and interaction is modular composition ((a->b)∘(b->c)=(a->c)), so a deme's network
+    is a deterministic function of its member set — reproducible by construction. Runs
+    the exp025-027 collective machinery (network signature + heredity, recycle feed,
+    network fitness, isolation) on the new substrate. Prediction: network-signature
+    heredity crosses from thin/weak (~3x ratio, self~0.06) into strong (self >> null
+    with substantial overlap) — a completed transition to collective individuality."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "network")
+    overrides.setdefault("substrate", "typed")
+    overrides.setdefault("n_types", 12)
+    return _make(seed, "exp029", **overrides)

@@ -443,6 +443,28 @@ class TestScientificClaims(unittest.TestCase):
         self.assertGreater(bcw_s, bcw_n)          # signature still heritable
         self.assertGreater(bcw_r, ski_r + 0.3)    # richer basis strengthens it
 
+    def test_exp029_modular_substrate_reproduces_networks_but_closes(self):
+        # Ω-0.26: the substrate pivot confirms exp028's diagnosis and reveals the deep
+        # trade-off. A typed substrate (morphisms + modular composition) makes a deme's
+        # network reproducible from its members: child-source network overlap roughly
+        # triples vs the combinator substrate (self ~0.24 vs ~0.10) — the reproducibility
+        # ceiling breaks. But the typed substrate is CLOSED: novelty collapses to ~0,
+        # while the combinator substrate stays open-ended. Neither achieves both.
+        from statistics import mean
+
+        def probe(exp, **kw):
+            p, c = get_experiment(exp)(seed=0, ticks=1500, n_patches=24,
+                                       propagule_mode="source", **kw)
+            r = run(p, c)
+            self_j = mean(p._hered_edge_self) if p._hered_edge_self else 0.0
+            return self_j, r.open_endedness["novelty_rate"]
+
+        comb_self, comb_nov = probe("exp027", extra_combinators="B,C,W,T,V")
+        typ_self, typ_nov = probe("exp029")
+        self.assertGreater(typ_self, comb_self + 0.1)   # modularity reproduces networks
+        self.assertLess(typ_nov, 1.0)                    # ...but the typed substrate closes
+        self.assertGreater(comb_nov, 1.0)                # while the combinator stays open
+
     def test_exp028_individuation_ceiling_is_substrate_not_transmission(self):
         # Ω-0.25: the ~3.3x network-heredity ceiling is substrate-limited, not
         # transmission-limited. Even a network-biased propagule that transmits the

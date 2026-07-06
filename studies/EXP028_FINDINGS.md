@@ -82,3 +82,13 @@ carry network-signature heredity from thin/weak (~3× ratio, self ~0.06) into st
 individuality. exp028 turns "try a pivot" from a hunch into the evidenced next step: the
 ceiling is the reduction dynamics' failure to reproduce networks, and only a substrate
 that composes modularly can remove it.
+
+---
+
+**Follow-up (see `EXP029_FINDINGS.md`).** exp029 built the pivot — a typed substrate
+(morphisms + modular composition). It confirms this finding: modular composition makes
+networks reproducible, roughly tripling the child-source overlap (self 0.10 → 0.24,
+ratio 3.3× → 5.3×) and breaking the ceiling. But it exposes the deeper trade-off — the
+typed substrate is *closed* (novelty → 0). Combinator = open-ended but unreproducible;
+typed = reproducible but closed. A completed transition needs both, pointing to typed
+combinators / typed lambda terms (open-ended *and* modular) as the final frontier.
