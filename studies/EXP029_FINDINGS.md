@@ -79,3 +79,14 @@ substrate the exp025–029 machinery should yield network-signature heredity tha
 **both strong (self ≫ null) and open-ended (novelty > 0)** — a completed major transition
 to collective individuality. exp029 turns that from an aspiration into the one remaining
 engineering problem, with the trade-off it must resolve precisely measured.
+
+---
+
+**Follow-up (see `EXP030_FINDINGS.md`).** exp030 built that substrate — variable-length
+type **paths** composed by concatenation (modular *and* open-ended), with a
+`type_resolution` dial between the two corners. At the "both" corner (n_types 32–64,
+resolution 2–3) it delivers all three at once: strong reproducible collective heredity
+(self 0.22–0.28, matching/exceeding the typed substrate), sustained novelty (0.1–0.4 > 0,
+unlike closed typed), and richer networks than either baseline (x-prod 4–7). The
+open-ended-vs-modular trade-off, absolute in exp029, becomes *graded* — a completed
+transition to collective individuality in miniature.

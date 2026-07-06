@@ -61,6 +61,58 @@ def compose(fs, xs, max_size):
     return None
 
 
+def _path_nodes(state) -> list:
+    """Flatten a typed-path morphism (right-nested tuple of type atoms) to a list."""
+    nodes = []
+    cur = state
+    while isinstance(cur, tuple) and len(cur) == 2:
+        nodes.append(cur[0])
+        cur = cur[1]
+    nodes.append(cur)
+    return nodes
+
+
+def _path_build(nodes: list):
+    """Build a right-nested tuple morphism from a list of >=2 type nodes."""
+    state = nodes[-1]
+    for n in reversed(nodes[:-1]):
+        state = (n, state)
+    return state
+
+
+def compose_path(fs, xs, max_size, resolution=0):
+    """exp030 open-ended AND modular substrate. A morphism is a variable-length type
+    *path* (t0->t1->...->tk). Composition is concatenation when endpoints match:
+    (a..b) ∘ (b..c) = (a..b..c) — deterministic in the members (modular, reproducible),
+    yet the path (and its class) grows unboundedly (open-ended). ``resolution`` truncates
+    the product to its last N nodes (0 = unbounded): the dial between the exp029 closed/
+    reproducible corner (small N) and the combinator open-but-unreproducible corner."""
+    fn, xn = _path_nodes(fs), _path_nodes(xs)
+    if fn[-1] != xn[0]:
+        return None
+    nodes = fn + xn[1:]
+    if resolution and len(nodes) > resolution:
+        nodes = nodes[-resolution:]
+    if len(nodes) > max_size:
+        return None
+    return _path_build(nodes)
+
+
+def _mutate_path(state, rng, atoms):
+    """Point-mutation for a typed path: change / insert / delete one node (keeping
+    length >= 2). Heritable variation for the typed_path substrate."""
+    nodes = _path_nodes(state)
+    roll = rng.random()
+    i = rng.randint(0, len(nodes) - 1)
+    if roll < 0.7 or len(nodes) <= 2:
+        nodes[i] = rng.choice(atoms)                 # substitute
+    elif roll < 0.85:
+        nodes.insert(i, rng.choice(atoms))           # grow
+    else:
+        del nodes[i]                                 # shrink
+    return _path_build(nodes)
+
+
 def _step(e):
     """One leftmost-outermost reduction; returns (expr, changed)."""
     if isinstance(e, str):
@@ -280,6 +332,11 @@ class CombinatorPhysics:
         # deme's network is reproducible from its members. n_types base types.
         self.substrate = "combinator"
         self.n_types = 12
+        # exp030 typed_path: morphisms are variable-length type paths, composed by
+        # concatenation (modular + open-ended). type_resolution truncates products to
+        # their last N nodes (0 = unbounded) — the dial between reproducible/closed and
+        # open/unreproducible.
+        self.type_resolution = 0
         # exp020 replicase: strength/fidelity of the explicit template-copy channel.
         # copy_rate=0 (default) leaves every earlier experiment untouched.
         self.copy_rate = 0.0
@@ -313,6 +370,9 @@ class CombinatorPhysics:
         Typed (exp029): a random morphism ``(in_type, out_type)``."""
         if self.substrate == "typed":
             return (rng.choice(self.atoms), rng.choice(self.atoms))
+        if self.substrate == "typed_path":
+            L = rng.randint(2, max(2, self.expr_size))
+            return _path_build([rng.choice(self.atoms) for _ in range(L)])
         e = self._random_expr(rng, rng.randint(1, self.expr_size))
         nf = normalize(e, self.fuel, self.max_size)
         return nf if nf is not None else rng.choice(self.atoms)
@@ -597,6 +657,9 @@ class CombinatorPhysics:
                     continue
                 if self.substrate == "typed":
                     product = compose(f.state, x.state, self.max_size)
+                elif self.substrate == "typed_path":
+                    product = compose_path(f.state, x.state, self.max_size,
+                                           self.type_resolution)
                 else:
                     product = normalize((f.state, x.state), self.fuel, self.max_size)
                 if product is None:
@@ -626,9 +689,14 @@ class CombinatorPhysics:
                                         edges[(f.cls, pcls)] = edges.get((f.cls, pcls), 0) + 1
                             break
                 if self.mut_prob > 0.0 and rng.random() < self.mut_prob:
-                    m = normalize(mutate(product, rng, self.atoms), self.fuel, self.max_size)
-                    if m is not None:
-                        product = m
+                    if self.substrate == "typed_path":
+                        product = _mutate_path(product, rng, self.atoms)
+                    elif self.substrate == "typed":
+                        product = mutate(product, rng, self.atoms)
+                    else:
+                        m = normalize(mutate(product, rng, self.atoms), self.fuel, self.max_size)
+                        if m is not None:
+                            product = m
                 if self.suppress and canonical_cls(product) in self.suppress:
                     continue  # never (re)construct a knocked-out class
                 # f is catalytic (a function keeps acting); x (the argument) is
@@ -759,7 +827,8 @@ def _make(seed, experiment, **overrides):
     physics.expr_size = int(overrides.get("expr_size", 5))
     physics.substrate = str(overrides.get("substrate", "combinator"))
     physics.n_types = int(overrides.get("n_types", 12))
-    if physics.substrate == "typed":  # exp029: morphisms over n_types base types
+    physics.type_resolution = int(overrides.get("type_resolution", 0))
+    if physics.substrate in ("typed", "typed_path"):  # morphisms over n_types base types
         physics.atoms = tuple(f"y{i}" for i in range(physics.n_types))
     cfg = Config(
         experiment=experiment,
@@ -1106,3 +1175,30 @@ def build_typed_substrate(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("substrate", "typed")
     overrides.setdefault("n_types", 12)
     return _make(seed, "exp029", **overrides)
+
+
+@register("exp030")
+def build_openended_modular(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp030 — the capstone: an OPEN-ENDED *and* MODULAR substrate. exp029 found the
+    two substrates are opposite corners of one trade-off (combinator: open-ended but
+    networks unreproducible; typed: modular/reproducible but closed). This uses
+    variable-length type PATHS composed by concatenation (`substrate="typed_path"`):
+    composition is deterministic (modular → networks reproducible) yet paths grow
+    unboundedly (open-ended → novelty > 0). `type_resolution` truncates products to
+    their last N nodes — the dial between the two corners. The study sweeps it to test
+    whether an intermediate regime gives BOTH strong network heredity AND sustained
+    novelty (a completed transition to collective individuality) or whether the
+    frontier is a strict trade-off."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "network")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)      # the "both" corner: strong heredity AND
+    overrides.setdefault("type_resolution", 3)  # open-ended novelty AND rich networks
+    return _make(seed, "exp030", **overrides)

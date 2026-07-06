@@ -6,6 +6,77 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.15 — The collective-individuation arc: from inert machinery to a completed transition (exp018→exp030)
+
+**Date:** 2026-07-06 · **Status:** complete · **Verdict:** a major transition to
+collective individuality is achievable *in miniature* — collectives that are
+heritable, selectable, and reproducible in an open-ended world — once the substrate
+is both **modular** and **open-ended**. Collective selection was never the
+bottleneck; the substrate was. Full detail per experiment in `studies/EXP0NN_FINDINGS.md`
+and the synthesis `studies/COLLECTIVE_INDIVIDUATION_ARC.md`; all changes are gated so
+exp001–017 stay byte-identical.
+
+### Phase 1 — the multi-level machinery is inert on its own (exp018–020)
+Extending exp017's deme reproduction (source = collective heredity vs a well-mixed
+`mixed` null): adding heritable between-deme **fitness variance** (exp018), a
+**patch-local feed** (exp019), and an explicit strong **replicase** (exp020) each
+failed to make selection act on the collective. In every case `source` ≈ `mixed`; the
+only diversity drops were population collapse, and strong replicators won *as
+individuals* (colonizing every deme). **Diagnosis:** nothing group-selectable emerges
+— every between-deme trait is individual-level.
+
+### Phase 2 — supply a group trait; find what individuation needs (exp021–024)
+An *imposed* cooperation trait (individually costly, collectively beneficial) makes
+group selection work — textbook Price/Hamilton (exp021) — proving the machinery is
+sound and the trait was missing. An *emergent* group trait, a deme's internal
+**cross-production network**, is genuinely heritable and selectable (exp022). Niche
+construction (recycling a deme's own products as feed) first lifts within-deme
+dominance but homogenizes globally (exp023). Combining every lever plus forced
+monoculture founding still does not individuate demes, and reveals a **substrate
+type-space wall**: small SKI expressions reduce to only ~9 attractor normal forms, so
+24 demes cannot hold distinct identities (exp024).
+
+### Phase 3 — represent identity right, then fix the substrate (exp025–030)
+Defining a deme's identity as its **network signature** (edge-set) rather than a
+dominant class is more heritable and richer (exp025) — part of the "missing"
+individuation was a measurement artefact. A richer *interacting* combinator basis
+(B/C/W; inert data atoms were rejected — they kill cross-production) lifts heredity
+1.6×→2.4× with novelty rising (exp026); a dose-response over the basis (3→11
+combinators) finds a **Goldilocks optimum** ~3.3× that then declines as too-rich a
+type space stops networks breeding true (exp027). The ceiling is **substrate-limited,
+not transmission-limited**: a network-biased propagule that transmits the *whole*
+source deme still caps at ~3× (exp028) — given identical members, combinator reduction
+does not re-form the same network. Pivoting to a **typed substrate** (morphisms +
+modular composition) makes networks reproducible (self 0.10→0.24, ~5×) but **closes**
+the world (novelty→0) — the two substrates are opposite corners of one trade-off
+(exp029). Finally, an **open-ended AND modular** substrate — variable-length type
+**paths** composed by concatenation, with a tunable identity resolution — reaches the
+**"both" corner** (exp030): strong reproducible collective heredity (self 0.22–0.28)
+*and* sustained novelty (0.1–0.4 > 0) *and* rich networks (cross-production 4–7),
+which neither pure substrate could.
+
+### The deep result
+The transition needs a collective phenotype that is at once **heritable** (so selection
+can act on it) and **open-ended** (so the world does not close). On the combinator
+substrate networks are open-ended but unreproducible; on the pure typed substrate they
+are reproducible but closed. Modular *and* open-ended composition (path-morphisms with
+bounded resolution) satisfies both — the heredity-vs-diversity tension (Ω-0.14) becomes
+*graded* rather than *absolute*, and a heritable collective individual coexists with an
+open-ended world.
+
+### Is / is not
+- **Is:** a completed major transition to collective individuality, *in miniature* —
+  demes as heritable, selectable, reproducible collective individuals with open-ended
+  novelty; the substrate condition (modular + open-ended) that makes it possible,
+  precisely located and dialable.
+- **Is not:** proven **unbounded** — that collective heredity *and* novelty both persist
+  over 10⁵⁺ ticks and many seeds at the "both" corner is untested; nor a *transition of
+  transitions* (collective individuals composing into a further level). This is the
+  frontier the arc hands forward — the program's original unboundedness question, now at
+  a higher level of organization.
+
+---
+
 ## Milestone Ω-0.14 — A major transition, in miniature: selection acts on the collective
 
 **Date:** 2026-07-04 · **Status:** complete · **Verdict:** collective-level

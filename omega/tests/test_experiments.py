@@ -509,6 +509,32 @@ class TestScientificClaims(unittest.TestCase):
         self.assertGreater(types("B,C,W,T,V"), 3 * types(""))   # richer type space
         self.assertGreater(edge_ratio("B,C,W,T,V"), edge_ratio("") + 1.0)  # stronger heredity
 
+    def test_exp030_openended_modular_substrate_achieves_both(self):
+        # Ω-0.27: the capstone. exp029 showed the transition needs a substrate that is
+        # BOTH open-ended and modular. A typed-PATH substrate (variable-length type paths
+        # composed by concatenation, with a bounded identity resolution) provides it: at
+        # the "both" corner it gives strong, reproducible network heredity (self >> the
+        # combinator ~0.10) AND sustained novelty > 0 (unlike the closed typed substrate)
+        # AND rich cross-production networks — a completed transition to collective
+        # individuality in miniature.
+        from statistics import mean
+
+        p, c = get_experiment("exp030")(seed=0, ticks=1500, n_patches=24,
+                                        propagule_mode="source")
+        r = run(p, c)
+        self_j = mean(p._hered_edge_self) if p._hered_edge_self else 0.0
+        self.assertGreater(self_j, 0.15)                       # strong collective heredity
+        self.assertGreater(r.open_endedness["novelty_rate"], 0.05)  # AND still open-ended
+
+    def test_compose_path_correct(self):
+        # exp030 modular composition (path concatenation) and resolution truncation
+        from omega.experiments.exp012_combinator import compose_path, _path_nodes
+        self.assertEqual(_path_nodes(compose_path(("a", "b"), ("b", "c"), 24, 0)),
+                         ["a", "b", "c"])                       # a->b ∘ b->c = a->b->c
+        self.assertIsNone(compose_path(("a", "b"), ("c", "d"), 24, 0))  # endpoint mismatch
+        self.assertEqual(_path_nodes(compose_path(("a", ("b", "c")), ("c", "d"), 24, 2)),
+                         ["c", "d"])                            # resolution=2 keeps last 2
+
     def test_combinator_reducer_correct(self):
         # the SKI reducer must implement the three rules correctly
         from omega.experiments.exp012_combinator import normalize
