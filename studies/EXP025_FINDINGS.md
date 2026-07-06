@@ -78,3 +78,14 @@ weakly) distinct and heritable. The two clean next moves remain:
 - **the real unlock:** a richer-type-space substrate (larger/typed combinators or
   lambda terms with a broad, flat normal-form distribution), then re-run the exp022–025
   machinery to test whether network individuation crosses from weak (~1.6×) to strong.
+
+---
+
+**Follow-up (see `EXP026_FINDINGS.md`).** exp026 pursued both next moves together. The
+substrate lever is the decisive one: adding *interacting* combinators (B/C/W — inert
+data atoms were tried and rejected because they kill cross-production) lifts network
+heredity from weak **1.59× → 2.42×** while *improving* novelty, turning exp024's
+substrate wall into a tunable dial. The breed-true selection lever adds a further,
+more consistent push only on the rich substrate (2.42 → 2.65×) at the cost of a
+canalized identity space (18 → 8 signatures), and backfires on the poor SKI substrate.
+Direction found: richer interacting type spaces strengthen collective individuation.

@@ -59,6 +59,15 @@ def _step(e):
     if isinstance(f, tuple) and isinstance(f[0], tuple) and f[0][0] == "S":
         a, b, c = f[0][1], f[1], x                 # S a b c -> (a c)(b c)
         return ((a, c), (b, c)), True
+    # exp026 extended basis: B/C/W combinators — richer *interacting* types (they are
+    # functions, unlike inert data). Inert unless an expression contains these atoms,
+    # so every prior experiment (alphabet S/K/I) is byte-identical.
+    if isinstance(f, tuple) and isinstance(f[0], tuple) and f[0][0] == "B":
+        return (f[0][1], (f[1], x)), True          # B a b c -> a (b c)
+    if isinstance(f, tuple) and isinstance(f[0], tuple) and f[0][0] == "C":
+        return ((f[0][1], x), f[1]), True          # C a b c -> a c b
+    if isinstance(f, tuple) and f[0] == "W":
+        return ((f[1], x), x), True                # W a b -> a b b
     f2, ch = _step(f)
     if ch:
         return (f2, x), True
@@ -97,15 +106,16 @@ def _set_at(e, path, val):
     return (f, _set_at(x, path[1:], val))
 
 
-def mutate(e, rng):
-    """Point-mutation: change one random atom to a different combinator. Heritable
-    variation without which selection can only converge, never evolve open-endedly."""
+def mutate(e, rng, atoms=_ATOMS):
+    """Point-mutation: change one random atom to another symbol from ``atoms``.
+    Heritable variation without which selection can only converge, never evolve
+    open-endedly. ``atoms`` may include exp026 inert data symbols."""
     positions = list(_atoms_positions(e))
     if not positions:
         return e
     p = rng.choice(positions)
     cur = e if isinstance(e, str) else None
-    new_atom = rng.choice(_ATOMS)
+    new_atom = rng.choice(atoms)
     return _set_at(e, p, new_atom) if p else new_atom
 
 
@@ -211,8 +221,23 @@ class CombinatorPhysics:
         self.edge_threshold = 2
         self._deme_edges: dict[int, dict] = {}
         self._pending_edges: dict[int, frozenset] = {}
+        self._pending_src: dict[int, int] = {}
         self._hered_edge_self: list = []
         self._hered_edge_null: list = []
+        # exp026 breed-true fitness: per-patch EMA of realized signature heredity —
+        # how faithfully a deme's propagules reproduced its network signature. Used
+        # to *select* demes whose collective identity breeds true (deme_fitness=
+        # "breed_true"), directly pushing the weak (~1.6x) signature heredity higher.
+        self._breedtrue: dict[int, float] = {}
+        # exp026 richer type space: the alphabet random expressions are built from.
+        # Default is the 3 SKI combinators; adding inert "data" atoms (which no
+        # reduction rule touches) makes normal forms carry distinguishable content,
+        # broadening/flattening the type distribution beyond the ~9 attractors that
+        # capped individuation in exp024. Inert *data* atoms enrich types but kill
+        # cross-production (they don't interact); exp026 instead adds extra
+        # *combinators* (B/C/W) — richer types that still act as functions. Kept as
+        # ("S","K","I") => byte-identical.
+        self.atoms = _ATOMS
         # exp020 replicase: strength/fidelity of the explicit template-copy channel.
         # copy_rate=0 (default) leaves every earlier experiment untouched.
         self.copy_rate = 0.0
@@ -237,7 +262,7 @@ class CombinatorPhysics:
 
     def _random_expr(self, rng: Noise, size: int) -> object:
         if size <= 1:
-            return rng.choice(_ATOMS)
+            return rng.choice(self.atoms)
         left = rng.randint(1, size - 1)
         return (self._random_expr(rng, left), self._random_expr(rng, size - left))
 
@@ -245,7 +270,7 @@ class CombinatorPhysics:
         """A random expression, reduced to normal form (so the feed is behavioural)."""
         e = self._random_expr(rng, rng.randint(1, 5))
         nf = normalize(e, self.fuel, self.max_size)
-        return nf if nf is not None else rng.choice(_ATOMS)
+        return nf if nf is not None else rng.choice(self.atoms)
 
     def _seed_coop(self, org, rng: Noise) -> None:
         # exp021: only the founding population carries cooperators; the feed is all
@@ -365,9 +390,18 @@ class CombinatorPhysics:
                     others = [p for p in by_patch if p != child_p and by_patch[p]]
                     if others:
                         r = rng.choice(others)
-                        self._hered_edge_self.append(jac(child_sig, src_sig))
+                        js = jac(child_sig, src_sig)
+                        self._hered_edge_self.append(js)
                         self._hered_edge_null.append(jac(child_sig, self._deme_signature(r)))
+                        # exp026 breed-true: credit the SOURCE deme with how faithfully
+                        # this child reproduced its signature (EMA), so demes whose
+                        # networks breed true are selected to reproduce more.
+                        sp = self._pending_src.get(child_p)
+                        if sp is not None:
+                            prev = self._breedtrue.get(sp, js)
+                            self._breedtrue[sp] = 0.7 * prev + 0.3 * js
             self._pending_edges.clear()
+            self._pending_src.clear()
 
         alive = [p for p, m in by_patch.items() if m]
         if len(alive) < 2:
@@ -385,6 +419,9 @@ class CombinatorPhysics:
                     weights = [self._deme_prod.get(s, 0) + 1 for s in survivors]
                 elif self.deme_fitness == "network":
                     weights = [self._xprod.get(s, 0) + 1 for s in survivors]
+                elif self.deme_fitness == "breed_true":
+                    # select demes whose network signature reproduces faithfully
+                    weights = [self._breedtrue.get(s, 0.2) + 0.05 for s in survivors]
                 else:
                     weights = [len(by_patch[s]) for s in survivors]
                 if self.coop:
@@ -411,6 +448,7 @@ class CombinatorPhysics:
                 self._pending[kp] = frozenset(o.cls for o in by_patch[src])
                 if self.track_signature:
                     self._pending_edges[kp] = self._deme_signature(src)
+                    self._pending_src[kp] = src
         self._deme_prod.clear()  # start a fresh productivity window for next gen
         self._xprod.clear()
         self._deme_edges.clear()
@@ -526,7 +564,7 @@ class CombinatorPhysics:
                                         edges[(f.cls, pcls)] = edges.get((f.cls, pcls), 0) + 1
                             break
                 if self.mut_prob > 0.0 and rng.random() < self.mut_prob:
-                    m = normalize(mutate(product, rng), self.fuel, self.max_size)
+                    m = normalize(mutate(product, rng, self.atoms), self.fuel, self.max_size)
                     if m is not None:
                         product = m
                 if self.suppress and canonical_cls(product) in self.suppress:
@@ -580,7 +618,7 @@ class CombinatorPhysics:
                     continue                       # cooperators replicate slower
                 state = t.state
                 if self.copy_mut > 0.0 and rng.random() < self.copy_mut:
-                    m = normalize(mutate(state, rng), self.fuel, self.max_size)
+                    m = normalize(mutate(state, rng, self.atoms), self.fuel, self.max_size)
                     if m is not None:
                         state = m
                 if self.suppress and canonical_cls(state) in self.suppress:
@@ -646,6 +684,9 @@ def _make(seed, experiment, **overrides):
     physics.founder_mode = str(overrides.get("founder_mode", "random"))
     physics.track_signature = bool(overrides.get("track_signature", False))
     physics.edge_threshold = int(overrides.get("edge_threshold", 2))
+    extra = str(overrides.get("extra_combinators", ""))
+    if extra:  # exp026 richer type space: SKI + extra *interacting* combinators (BCW)
+        physics.atoms = _ATOMS + tuple(a for a in ("B", "C", "W") if a in extra)
     cfg = Config(
         experiment=experiment,
         seed=seed,
@@ -893,3 +934,27 @@ def build_network_identity(seed: int = 0, **overrides) -> tuple[Physics, Config]
     overrides.setdefault("feed_mode", "recycle")
     overrides.setdefault("track_signature", True)
     return _make(seed, "exp025", **overrides)
+
+
+@register("exp026")
+def build_strong_individuation(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp026 — push weak (~1.6x) network individuation toward strong, via two levers
+    at once. (1) Richer type space: `extra_combinators="BCW"` adds B/C/W combinators —
+    more distinct types that still *interact* (inert data atoms enrich types but kill
+    cross-production). (2) Selection for high-fidelity collective reproduction:
+    `deme_fitness="breed_true"` weights a deme's reproduction by how faithfully its
+    propagules reproduced its network signature. Built on exp025 (signature identity +
+    recycle feed). The study runs the 2x2 {SKI,BCW} x {network,breed_true} to isolate
+    each lever and their combination; success = edge-set heredity crossing from weak
+    (~1.6x) toward strong (self >> null)."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("extra_combinators", "BCW")
+    overrides.setdefault("deme_fitness", "breed_true")
+    return _make(seed, "exp026", **overrides)

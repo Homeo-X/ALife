@@ -1,0 +1,16 @@
+20 runs @ 4000 ticks, 5 seeds/cell
+
+type space (feed distribution, 5000 draws):
+  SKI: distinct normal forms 204, top-9 cover 0.72
+  BCW: distinct normal forms 1144, top-9 cover 0.34
+
+substrate     fitness  edge heredity n_signatures  novelty  x-prod
+--------------------------------------------------------------------
+      SKI     network     1.59 ± 0.09         18.7     1.86    10.9
+      SKI  breed_true     1.41 ± 0.06         18.5     1.95     0.0
+      BCW     network     2.42 ± 0.87         12.2     2.90     8.2
+      BCW  breed_true     2.65 ± 0.27          8.5     2.66     0.0
+
+lever effects on edge-set heredity (self/null):
+  substrate SKI->BCW (network fitness): 1.59 -> 2.42
+  fitness network->breed_true (BCW): 2.42 -> 2.65 (novelty 2.90 -> 2.66)

@@ -46,7 +46,7 @@ def _ensure_loaded() -> None:
         exp009_modules,
         exp010_copying,
         exp011_function,
-        exp012_combinator,  # also registers exp013..025 (evolution→individuation→network identity)
+        exp012_combinator,  # also registers exp013..026 (evolution→network identity→strong individuation)
     )
 
 

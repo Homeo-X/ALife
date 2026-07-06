@@ -419,6 +419,30 @@ class TestScientificClaims(unittest.TestCase):
         n_types = mean(m["gauges"].get("n_deme_types", 0.0) for m in tail)
         self.assertGreater(n_sigs, n_types)
 
+    def test_exp026_richer_interacting_basis_strengthens_network_heredity(self):
+        # Ω-0.23: exp024/025 capped network individuation at ~1.6x because the SKI
+        # type space collapses to ~9 attractors. Enriching the basis with extra
+        # *interacting* combinators (B/C/W) — not inert data, which would kill cross-
+        # production — broadens the type space AND strengthens the heritability of a
+        # deme's cross-production network signature. The richer substrate gives a
+        # strictly higher edge-set heredity ratio than SKI alone.
+        from statistics import mean
+
+        def edge_heredity(extra):
+            p, c = get_experiment("exp026")(seed=0, ticks=1200, n_patches=24,
+                                            propagule_mode="source",
+                                            extra_combinators=extra,
+                                            deme_fitness="network")
+            run(p, c)
+            self_j = mean(p._hered_edge_self) if p._hered_edge_self else 0.0
+            null_j = mean(p._hered_edge_null) if p._hered_edge_null else 1e-9
+            return self_j, null_j, self_j / null_j
+
+        ski_s, ski_n, ski_r = edge_heredity("")
+        bcw_s, bcw_n, bcw_r = edge_heredity("BCW")
+        self.assertGreater(bcw_s, bcw_n)          # signature still heritable
+        self.assertGreater(bcw_r, ski_r + 0.3)    # richer basis strengthens it
+
     def test_combinator_reducer_correct(self):
         # the SKI reducer must implement the three rules correctly
         from omega.experiments.exp012_combinator import normalize
