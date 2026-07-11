@@ -1,0 +1,23 @@
+exp035 — tree-grafting law (1500 ticks, 3 seeds)
+
+(A) does the NEW law reach the both corner? (self>null AND novelty>0)
+                 law   self   null  ratio  novelty  both?
+           tree res2  0.048  0.016   3.10    0.033    yes
+           tree res3  0.032  0.011   2.85   10.371    yes
+           tree res4  0.030  0.008   3.67   12.709    yes
+   path (exp030 ref)  0.346  0.071   4.91    0.398    yes
+
+(B) does the new law RECURSE in a heterogeneous tower (path <-> tree)?
+              recipe  depth(mean±sd)  boundaries survived
+    homogeneous_path     2.7 ± 1.9                      0
+       alt_path_tree     2.7 ± 1.9                      6
+  alt_path_tree seed 0 per-tier:
+    tier0 [path] coll= 18 self=0.308 null=0.109 nov=0.39 heritable
+    tier1 [tree] coll= 22 self=0.070 null=0.026 nov=0.00 heritable
+    tier2 [path] coll= 23 self=0.186 null=0.044 nov=0.78 heritable
+    tier3 [tree] coll= 24 self=0.054 null=0.022 nov=0.00 heritable
+
+  Verdict: the both-corner CONDITION is substrate-general — a branching law
+  unlike all three type substrates also yields heritable+open collectives and
+  recurses in the tower — though linear concatenation (exp030) reaches a
+  markedly STRONGER heredity than the branching law.

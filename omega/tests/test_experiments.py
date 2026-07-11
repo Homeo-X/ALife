@@ -556,6 +556,37 @@ class TestScientificClaims(unittest.TestCase):
         self.assertTrue(all(s > n for s, n in zip(self_w, null_w)))  # heredity alive every window
         self.assertLess(nov_c[-1], nov_o[-1])               # closed control decays vs open
 
+    def test_exp035_new_tree_law_reaches_the_both_corner(self):
+        # Ω-0.31: the both-corner CONDITION is substrate-general, not special to the type
+        # substrates. A genuinely different law — binary-tree grafting (f,x) with a depth
+        # cap, unlike path concatenation or morphism composition — still yields heritable
+        # collectives (self > null) AND sustained novelty (> 0). Honest scope: its heredity
+        # is far weaker than typed_path's strong both corner (checked in the study).
+        from statistics import mean
+        p, c = get_experiment("exp035")(seed=0, ticks=1000, n_patches=24,
+                                        propagule_mode="source", tree_resolution=3)
+        r = run(p, c)
+        sj = mean(p._hered_edge_self) if p._hered_edge_self else 0.0
+        nj = mean(p._hered_edge_null) if p._hered_edge_null else 0.0
+        self.assertGreater(sj, nj)                                  # heritable (self > null)
+        self.assertGreater(r.open_endedness["novelty_rate"], 0.05)  # AND open
+
+    def test_exp034_reification_grows_the_alphabet_and_keeps_novelty(self):
+        # Ω-0.31: the constructibility lever at the collective level. In-run reification
+        # promotes persistent product motifs to NEW atoms (self.atoms grows during the
+        # run), and the world stays open and heritable. (Whether it slows the long-horizon
+        # novelty-rate decay is the study's quantitative question; here we pin the
+        # mechanism + that it doesn't break the both corner.)
+        from statistics import mean
+        p, c = get_experiment("exp034")(seed=0, ticks=2000)
+        r = run(p, c)
+        self.assertGreater(len(p.atoms), 32)                       # alphabet grew (reified)
+        self.assertTrue(p._reified)                                # motifs were promoted
+        self.assertGreater(r.open_endedness["novelty_rate"], 0.05)  # still open
+        sj = mean(p._hered_edge_self) if p._hered_edge_self else 0.0
+        nj = mean(p._hered_edge_null) if p._hered_edge_null else 0.0
+        self.assertGreater(sj, nj)                                 # still heritable
+
     def test_exp033_tower_recurses_across_a_physics_boundary(self):
         # Ω-0.30: levels are FIRST-CLASS, not one engine climbing itself. With a
         # different composition law per tier (open path-concatenation exp030 alternating

@@ -1,0 +1,16 @@
+exp034 — sustained novelty via in-level reification (30000 ticks, 3 seeds, 8 windows)
+
+  novelty rate / window (new classes/tick):
+  w0     w1     w2     w3     w4     w5     w6     w7     
+  base  0.418  0.523  0.496  0.334  0.302  0.306  0.282  0.262
+  reif  0.475  0.528  0.635  0.539  0.543  0.525  0.626  0.668
+
+  reify heredity / window (self vs null — must stay heritable):
+  self  0.195  0.097  0.085  0.091  0.089  0.088  0.086  0.080
+  null  0.057  0.023  0.017  0.017  0.014  0.016  0.018  0.016
+
+  atoms grown (reify): 32 -> 91 (59 motifs reified)
+  late-window novelty rate: baseline 0.272 vs reify 0.647 (2.38x)
+  decay (late/early ratio): baseline 0.53 vs reify 1.11 (higher = less decay)
+  => reification SLOWS the novelty-rate decay while heredity stays alive:
+     growing constructibility (not space) sustains novelty. Thesis supported.

@@ -61,5 +61,24 @@ deterministic in the parts → networks reproducible) and **open-ended** (parts 
 compositions grow → novelty persists) lets a collective be *both heritable and open-ended*
 at once. Because promotion makes tier-*N* collectives the tier-*(N+1)* parts, the same
 condition holds one level up — so the transition to individuality is not a single jump but
-a **recursive ladder**. exp033 shows this condition is *physics-agnostic*: it holds across a
+a **recursive ladder**.
+
+## First-class, substrate-general levels, and sustained novelty (exp033–035)
+
+The tower is *not* one engine climbing itself. `run_stack(levels=…)` assigns a **different
+composition law per tier** (exp033); the recursion is physics-agnostic — a tower alternating
+different **open+modular** laws stacks to the same depth with every physics-boundary tier
+heritable. The lone hard rung is **closure**: a closed law forms too few collectives to seed
+the next alphabet. And the condition is **substrate-general** (exp035): a genuinely new law —
+binary-tree grafting `(f,x)` with a depth cap, outside the type-substrate family — also
+reaches the both corner and recurses in a path↔tree tower (though its heredity is ~10× weaker
+than linear concatenation's). So what a level requires is the **both-corner property** (open
++ modular), not a particular engine.
+
+**Sustained novelty (exp034).** A level's novelty *rate* decays if its atom alphabet is fixed.
+Turning reification on *within* a level — every `reify_period` ticks the most common recent
+motif becomes a new atom (`self.atoms` grows during the run) — holds the rate flat (0.53→0.67
+over 30k ticks vs a fixed-alphabet baseline's 0.52→0.27) while heredity stays alive: growing
+**constructibility, not space**, keeps a level open (the Ω-0.1 thesis, at the collective
+level). Evidence: `studies/EXP034_FINDINGS.md`, `studies/EXP035_FINDINGS.md`. exp033 shows this condition is *physics-agnostic*: it holds across a
 change of composition law, so long as each law is itself open + modular.

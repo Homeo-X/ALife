@@ -46,6 +46,53 @@ Lamarckian**).
 
 ---
 
+## Milestone Ω-0.19 — The two open frontiers, closed: sustained novelty (reification) and a substrate-general both corner (exp034, exp035)
+
+**Date:** 2026-07-11 · **Status:** complete · **Verdict:** the two frontiers Ω-0.17/0.18
+handed forward are both answered. **(exp034)** The novelty-rate decay left open by Ω-0.17 is
+*eliminated* by turning the constructibility lever on within a level — growing the atom
+alphabet during the run holds the novelty rate flat while heredity stays alive. **(exp035)** A
+genuinely new composition law (binary-tree grafting, outside the type-substrate family)
+reaches the both corner and recurses in the tower — so what a level needs is the both-corner
+*condition*, not a specific engine. Detail: `studies/EXP034_FINDINGS.md`,
+`studies/EXP035_FINDINGS.md`. Both gated; exp001–033 byte-identical.
+
+### exp034 — sustained novelty via in-level reification (the founding thesis, confirmed)
+Ω-0.17's honest edge was that the both-corner's novelty *rate* drifts down over a long horizon
+because its atom alphabet is fixed. exp034 applies the Ω-0.1 constructibility lever *inside*
+the collective substrate: every 500 ticks the most common recent product motif is promoted to
+a new atom (grows `self.atoms` during the run; no RNG → `reify_period=0` byte-identical). Over
+30k ticks, 3 seeds: the fixed-alphabet **baseline** novelty rate decays 0.52 → 0.27 (late/early
+ratio **0.53**, roughly halving), while the **reifying** run goes 0.53 → **0.67** (ratio
+**1.11** — flat to rising, no decay; **2.38× the baseline** late), the alphabet grows 32 → 91
+atoms (59 motifs reified), and collective heredity stays alive every window (self ≈ 4–5× null).
+So the decay was **not** intrinsic to the deme dynamics — it was the fixed alphabet. Growing
+*constructibility* (not space) sustains the novelty rate: "infinite constructibility, not
+infinite space" (Ω-0.1), now shown at the collective level, at the place it was most in doubt.
+
+### exp035 — a new level law: the both corner is substrate-general
+Ω-0.18 crossed physics boundaries among three *type* substrates and found the hard requirement
+is the both corner. exp035 adds a law unlike all three — organizations are binary **trees**,
+composition grafts them into a node `(f,x)` with a depth cap (the branching analogue of path
+truncation). It **reaches the both corner** (self > null with novelty > 0 at every resolution,
+a closed↔open dial like typed_path) and **recurses in the tower** (a path↔tree tower reaches
+the same depth as the homogeneous one, 6/6 path/tree boundaries survived). So a level needs the
+both-corner *property*, not a particular law. Honest qualifier: the tree law's heredity is an
+**order of magnitude weaker** than linear paths (self ~0.03–0.05 vs ~0.35) — the condition
+generalizes, but linear concatenation is a specially strong instance, so a level's *law* still
+sets the *quality* of individuality it attains.
+
+### Is / is not
+- **Is:** the Ω-0.17 novelty-decay edge closed (reification sustains the rate); the Ω-0.18
+  first-class-levels result generalized beyond the type-substrate family (a genuinely new law
+  works). The founding constructibility thesis confirmed at the collective level.
+- **Is not:** a proof that reification sustains novelty *forever* (30k ticks, alphabet capped
+  at 256; the 10⁶-tick behaviour and any late cost of unbounded alphabet growth are open), nor
+  that all open+modular laws are equally good (tree heredity is weak). A fully heterogeneous
+  *per-level-physics* tower with strong non-type laws remains the standing ambition.
+
+---
+
 ## Milestone Ω-0.17 — Unboundedness, tested at scale: sustained within a level, no depth ceiling of levels (exp032)
 
 **Date:** 2026-07-11 · **Status:** complete · **Verdict:** the program's original open

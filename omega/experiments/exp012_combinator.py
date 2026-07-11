@@ -113,6 +113,50 @@ def _mutate_path(state, rng, atoms):
     return _path_build(nodes)
 
 
+def _tree_leftmost(t):
+    while isinstance(t, tuple):
+        t = t[0]
+    return t
+
+
+def _tree_truncate(t, depth):
+    """Bound a tree's identity: collapse subtrees deeper than ``depth`` to their leftmost
+    atom. The branching analogue of ``compose_path``'s node truncation."""
+    if isinstance(t, str):
+        return t
+    if depth <= 1:
+        return _tree_leftmost(t)
+    return (_tree_truncate(t[0], depth - 1), _tree_truncate(t[1], depth - 1))
+
+
+def graft(fs, xs, max_size, resolution=0):
+    """exp035 tree substrate — a genuinely NEW composition law (not a type substrate).
+    Organizations are binary trees; composition **grafts** them into a new node ``(f, x)``
+    (a non-associative, non-commutative branching combination), then caps depth to
+    ``resolution`` (collapsing subtrees deeper than the cap to their leftmost atom).
+    Deterministic in the two parts (modular → a deme's cross-production network is
+    reproducible) yet trees grow (open-ended); the depth cap bounds identity so products
+    fall back into existing classes (closed loops → heredity). The branching analogue of
+    typed_path's path-length truncation, and distinct from both linear concatenation
+    (associative) and morphism composition (endpoint-matched)."""
+    result = (fs, xs)
+    if resolution:
+        result = _tree_truncate(result, resolution)
+    if _size(result) > max_size:
+        return None
+    return result
+
+
+def _mutate_tree(state, rng, atoms):
+    """Point-mutation for a tree: descend one random root-to-leaf path, substitute that
+    leaf with a random atom. Heritable variation for the tree substrate."""
+    if isinstance(state, str):
+        return rng.choice(atoms)
+    if rng.random() < 0.5:
+        return (_mutate_tree(state[0], rng, atoms), state[1])
+    return (state[0], _mutate_tree(state[1], rng, atoms))
+
+
 def _step(e):
     """One leftmost-outermost reduction; returns (expr, changed)."""
     if isinstance(e, str):
@@ -346,6 +390,20 @@ class CombinatorPhysics:
         self.horizontal_transfer = 0.0
         self._meme_horizontal = 0      # motifs acquired horizontally (culture)
         self._meme_vertical = 0        # motifs inherited vertically (propagule)
+        # exp034 in-level reification (the constructibility lever at the collective level):
+        # every reify_period ticks, promote the most common recent non-trivial product to a
+        # NEW atom appended to self.atoms — growing the generative base *during* the run.
+        # Tests whether growing constructibility (not space) keeps the novelty RATE from
+        # decaying at long horizon. reify_period=0 (default) => exp012-033 byte-identical.
+        self.reify_period = 0
+        self.reify_max_atoms = 0       # cap on grown alphabet (0 = uncapped)
+        self._reified: dict = {}       # new atom symbol -> the state it stands for
+        self._reify_seen: dict = {}    # product class -> [count, state] this period
+        self._reified_cls: set = set()
+        self._reify_next = 0
+        # exp035 tree substrate: a new composition law (graft at leftmost leaf, depth-capped
+        # by tree_resolution). substrate != "tree" => byte-identical.
+        self.tree_resolution = 0
         # exp020 replicase: strength/fidelity of the explicit template-copy channel.
         # copy_rate=0 (default) leaves every earlier experiment untouched.
         self.copy_rate = 0.0
@@ -382,6 +440,8 @@ class CombinatorPhysics:
         if self.substrate == "typed_path":
             L = rng.randint(2, max(2, self.expr_size))
             return _path_build([rng.choice(self.atoms) for _ in range(L)])
+        if self.substrate == "tree":
+            return self._random_expr(rng, rng.randint(2, max(2, self.expr_size)))
         e = self._random_expr(rng, rng.randint(1, self.expr_size))
         nf = normalize(e, self.fuel, self.max_size)
         return nf if nf is not None else rng.choice(self.atoms)
@@ -610,6 +670,30 @@ class CombinatorPhysics:
         self._xprod.clear()
         self._deme_edges.clear()
 
+    def _reify_promote(self) -> None:
+        """exp034: promote the most common recent non-trivial product to a NEW atom,
+        appended to ``self.atoms`` (an opaque primitive standing for that motif — Axiom-5
+        reification, applied *within* a level and *during* the run). Deterministic (no
+        RNG): the constructive base grows, so novelty need not dilute. The per-period
+        tally is cleared so it tracks the *moving* frontier of common motifs."""
+        if self.reify_max_atoms and len(self.atoms) >= self.reify_max_atoms:
+            self._reify_seen = {}
+            return
+        best, best_n = None, self.edge_threshold
+        for pc, (n, st) in self._reify_seen.items():
+            if pc in self._reified_cls or not isinstance(st, tuple):
+                continue                       # only composites (non-atomic) are reifiable
+            if n > best_n:
+                best_n, best = n, (pc, st)
+        self._reify_seen = {}
+        if best is None:
+            return
+        sym = f"R{self._reify_next}"
+        self._reify_next += 1
+        self.atoms = tuple(self.atoms) + (sym,)
+        self._reified[sym] = best[1]
+        self._reified_cls.add(best[0])
+
     def propose(self, universe: Universe, rng: Noise):
         reactions: list[Reaction] = []
 
@@ -656,6 +740,12 @@ class CombinatorPhysics:
                 reactions.append(Reaction(inputs=(), consume=(),
                                           outputs=((nf, "expr"),), via="feed"))
 
+        # exp034 in-level reification: on its own cadence, promote a persistent motif to a
+        # new primitive (grows self.atoms). No RNG consumed => reify_period=0 byte-identical.
+        if (self.reify_period and universe.tick > 0
+                and universe.tick % self.reify_period == 0):
+            self._reify_promote()
+
         # deme-level reproduction round (multi-level selection)
         if (self.deme_gen and self.n_patches > 0 and universe.tick > 0
                 and universe.tick % self.deme_gen == 0):
@@ -698,10 +788,19 @@ class CombinatorPhysics:
                 elif self.substrate == "typed_path":
                     product = compose_path(f.state, x.state, self.max_size,
                                            self.type_resolution)
+                elif self.substrate == "tree":
+                    product = graft(f.state, x.state, self.max_size, self.tree_resolution)
                 else:
                     product = normalize((f.state, x.state), self.fuel, self.max_size)
                 if product is None:
                     continue
+                if self.reify_period:            # exp034: tally products for reification
+                    pc = canonical_cls(product)
+                    seen = self._reify_seen.get(pc)
+                    if seen is None:
+                        self._reify_seen[pc] = [1, product]
+                    else:
+                        seen[0] += 1
                 if patches is not None and (self.measure_xprod or self.track_signature
                         or self.deme_fitness in ("productivity", "network")):
                     # credit this deme's fitness. identity lookup consumes no RNG, so
@@ -729,6 +828,8 @@ class CombinatorPhysics:
                 if self.mut_prob > 0.0 and rng.random() < self.mut_prob:
                     if self.substrate == "typed_path":
                         product = _mutate_path(product, rng, self.atoms)
+                    elif self.substrate == "tree":
+                        product = _mutate_tree(product, rng, self.atoms)
                     elif self.substrate == "typed":
                         product = mutate(product, rng, self.atoms)
                     else:
@@ -869,7 +970,10 @@ def _make(seed, experiment, **overrides):
     physics.substrate = str(overrides.get("substrate", "combinator"))
     physics.n_types = int(overrides.get("n_types", 12))
     physics.type_resolution = int(overrides.get("type_resolution", 0))
-    if physics.substrate in ("typed", "typed_path"):  # morphisms over n_types base types
+    physics.tree_resolution = int(overrides.get("tree_resolution", 0))
+    physics.reify_period = int(overrides.get("reify_period", 0))
+    physics.reify_max_atoms = int(overrides.get("reify_max_atoms", 0))
+    if physics.substrate in ("typed", "typed_path", "tree"):  # atoms over n_types base types
         physics.atoms = tuple(f"y{i}" for i in range(physics.n_types))
     # exp031 level stack: an explicit promoted alphabet (a tier's atoms ARE the lower
     # tier's collectives), a seed set of promoted states, and the culture channel.
@@ -1272,3 +1376,53 @@ def build_culture(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("type_resolution", 3)
     overrides.setdefault("horizontal_transfer", 0.3)
     return _make(seed, "exp031_culture", **overrides)
+
+
+@register("exp034")
+def build_reification(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp034 — sustained novelty via in-level REIFICATION (the constructibility lever).
+    exp032 found the both-corner's novelty *rate* drifts down over 120k ticks (its atom
+    alphabet is fixed). This turns the constructibility lever back on *within* a level:
+    every `reify_period` ticks the most common recent product motif is promoted to a new
+    atom (grows `self.atoms` during the run), testing the program's core thesis — that
+    growing constructibility (not space) keeps the novelty rate from decaying. Same
+    exp030 both-corner base; `reify_period=0` recovers exp030 exactly."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "network")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("reify_period", 500)
+    overrides.setdefault("reify_max_atoms", 256)
+    return _make(seed, "exp034", **overrides)
+
+
+@register("exp035")
+def build_tree(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp035 — a genuinely NEW level law (not a type substrate). Organizations are binary
+    TREES; composition grafts x at f's leftmost leaf, depth-capped by `tree_resolution`
+    (the branching analogue of typed_path's path truncation). Tests whether a law unlike
+    all three type substrates still reaches the exp030 "both corner" (strong reproducible
+    heredity AND sustained novelty) — i.e. whether the both-corner condition, not the
+    specific concatenation law, is what makes a level work. Runs the same collective
+    machinery as exp030."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "network")
+    overrides.setdefault("substrate", "tree")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("tree_resolution", 2)
+    return _make(seed, "exp035", **overrides)

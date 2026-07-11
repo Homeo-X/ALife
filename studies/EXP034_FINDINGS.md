@@ -1,0 +1,65 @@
+# exp034 — Sustained novelty via in-level reification (the constructibility lever)
+
+exp032 (Ω-0.17) left one honest edge: at the both corner, collective heredity is flat and
+robust, but the novelty **rate** drifts down over a long horizon (~0.45→0.16 across 120k
+ticks). The both-corner substrate has a **fixed** atom alphabet — so as the accessible
+type-space around current structures gets explored, the rate of genuinely-new discovery
+slows. The program's founding thesis (Ω-0.1) is that open-ended complexity needs infinite
+**constructibility**, not infinite space: reification (exp004) — promoting a persistent
+motif to a *new primitive* — was the mechanism that kept an individual-level world open.
+This applies that lever *inside* the collective both-corner substrate.
+
+## Mechanism
+
+Every `reify_period` ticks (default 500), the most common recent product motif is promoted
+to a **new atom** appended to `self.atoms` — an opaque primitive standing for that motif
+(Axiom-5 reification, applied within a level and *during* the run). The per-period tally is
+cleared so it tracks the *moving frontier* of common motifs. It consumes no RNG, so
+`reify_period=0` recovers exp030 byte-identically. Same both-corner base otherwise
+(`typed_path`, n_types 32, resolution 3).
+
+## Result — the novelty-rate decay is not just slowed, it is eliminated
+
+30 000 ticks, 3 seeds, 8 temporal windows (rate per window, not cumulative):
+
+| window | w0 | w1 | w2 | w3 | w4 | w5 | w6 | w7 |
+|--------|----|----|----|----|----|----|----|----|
+| novelty rate — **baseline** (exp030, fixed alphabet) | 0.418 | 0.523 | 0.496 | 0.334 | 0.302 | 0.306 | 0.282 | 0.262 |
+| novelty rate — **reify** (exp034) | 0.475 | 0.528 | 0.635 | 0.539 | 0.543 | 0.525 | 0.626 | **0.668** |
+| reify heredity self | 0.195 | 0.097 | 0.085 | 0.091 | 0.089 | 0.088 | 0.086 | 0.080 |
+| reify heredity null | 0.057 | 0.023 | 0.017 | 0.017 | 0.014 | 0.016 | 0.018 | 0.016 |
+
+- **Baseline** novelty rate decays from ~0.52 (w1) to **0.27** (w7) — a late/early ratio of
+  **0.53** (it roughly halves), exactly the drift exp032 flagged.
+- **Reify** novelty rate goes from ~0.53 (w1) to **0.67** (w7) — a late/early ratio of
+  **1.11**: *flat to slightly rising*, no decay at all. The late-window rate is **2.38× the
+  baseline**.
+- The alphabet grew **32 → 91 atoms** (59 motifs reified), and collective **heredity stayed
+  alive every window** (self ≈ 4–5× null throughout) — reification sustains novelty *without*
+  eroding the reproducibility that makes collectives individuals.
+
+## Interpretation — constructibility, not space
+
+This is the program's founding hypothesis, confirmed at the collective level and at the
+place it was most in doubt. The both-corner's novelty decay was **not** an intrinsic limit
+of the deme dynamics; it was the fixed alphabet. Feeding persistent structure back as new
+primitives — growing *constructibility*, while the material/space is unchanged — turns a
+decaying novelty rate into a sustained (here, non-decaying) one. "Infinite constructibility,
+not infinite space" is the lever, exactly as Ω-0.1 conjectured and exp004 first showed for
+individuals.
+
+## Honest scope
+- **Horizon.** 30k ticks — long enough that the baseline clearly decays (0.53×) and reify
+  clearly does not (1.11×). It is not a proof of *forever*: it shows reification removes the
+  decay over the horizon where the fixed-alphabet baseline exhibits it. Whether the rate
+  holds across 10⁶⁺ ticks (and whether unbounded alphabet growth has its own late cost) is
+  the next horizon; `reify_max_atoms` caps growth at 256 here.
+- **What it is not.** Not a new substrate — it is exp030 plus a periodic reification hook.
+  The reified atom is opaque during composition (its motif is recorded but not re-expanded),
+  which is the point (a promoted primitive), not a limitation.
+
+## Reproduce
+`PYTHONPATH=. python3 studies/exp034_reification.py 30000 3` → the table above; committed as
+`studies/exp034_results.json` / `_console.txt`. Claim pinned by
+`test_exp034_reification_grows_the_alphabet_and_keeps_novelty` in
+`omega/tests/test_experiments.py`.

@@ -124,6 +124,20 @@ few collectives to seed the next alphabet and caps the tower — so each level's
 be open **and** modular. The exp030 "both corner" condition governs not just the first
 transition but the composition of levels. See `studies/EXP033_FINDINGS.md`.
 
+## Coda 3 — the two open edges closed (exp034/035, Ω-0.19)
+
+The two frontiers Ω-0.17/0.18 handed forward are both answered. **exp034** closes the
+novelty-rate edge by turning the *constructibility* lever on within a level: in-run
+reification (persistent motifs → new atoms, alphabet 32→91) converts a baseline novelty rate
+that halves over 30k ticks (0.52→0.27) into a non-decaying one (0.53→0.67, 2.38× baseline
+late) with heredity intact — growing constructibility, not space, sustains novelty (the Ω-0.1
+thesis, confirmed at the collective level). **exp035** shows the both corner is
+**substrate-general**: a genuinely new law (binary-tree grafting, outside the type-substrate
+family) also reaches self>null with novelty>0 and recurses in a path↔tree tower (same depth,
+6/6 boundaries survived) — a level needs the *condition*, not a specific engine, though the
+tree law's heredity is ~10× weaker than linear concatenation's. See `studies/EXP034_FINDINGS.md`
+and `studies/EXP035_FINDINGS.md`.
+
 ## Reproduce
 
 Each `studies/exp0NN_*.py` runs its study (`PYTHONPATH=. python3 studies/exp0NN_*.py`);
@@ -131,4 +145,4 @@ results are committed as `studies/exp0NN_results.json` / `_console.txt`. The reg
 builders are `exp017`…`exp030` plus `exp031_culture` in
 `omega/experiments/exp012_combinator.py`; the level tower is `omega/levels/stack.py`; every
 claim is pinned by a `test_exp0NN_*` / `test_exp031_*` in
-`omega/tests/test_experiments.py` (40 tests).
+`omega/tests/test_experiments.py` (42 tests).
