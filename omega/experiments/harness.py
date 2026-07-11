@@ -55,7 +55,8 @@ class RunResult:
         )
 
 
-def run(physics: Physics, config: Config, *, novelty_window: int | None = None) -> RunResult:
+def run(physics: Physics, config: Config, *, novelty_window: int | None = None,
+        record_stride: int = 1) -> RunResult:
     # The rate-measurement window must be long enough to *resolve* a slow but
     # sustained discovery rate. A fixed 50-tick window quantizes a ~0.05/tick rate
     # to zero over long runs and reports a spurious CLOSED verdict (the mirror of
@@ -77,9 +78,13 @@ def run(physics: Physics, config: Config, *, novelty_window: int | None = None) 
     metrics_series: list[dict[str, Any]] = []
 
     def recorder(u: Universe, report: TickReport) -> None:
+        # novelty/construction must record every tick (they measure per-tick rates);
+        # only the (heavier) metrics snapshot is subsampled to bound memory on very
+        # long horizons. record_stride=1 (default) records every tick, unchanged.
         novelty.record(u)
         construction.record(u)
-        metrics_series.append(snapshot_metrics(u).as_dict())
+        if record_stride <= 1 or u.tick % record_stride == 0:
+            metrics_series.append(snapshot_metrics(u).as_dict())
 
     scheduler.add_recorder(recorder)
     scheduler.run(config.ticks)
