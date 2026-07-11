@@ -39,6 +39,21 @@ open-endedness axis: open-endedness *of levels*, complementary to within-level n
 (the OEI). Measured result: mean depth ~4, max 5, with each tier heritable **and**
 open-ended (`studies/EXP031_FINDINGS.md`).
 
+## First-class levels — heterogeneous per-tier physics (exp033)
+
+By default every tier runs the same exp030 `typed_path` engine. `run_stack(levels=(...))`
+makes the per-tier physics **first-class**: a sequence of registered engines (cycled to
+`max_tiers`), so different levels can run *different composition laws* — e.g.
+`('exp030','exp029','exp031_culture')`. `levels=None` (default) keeps the self-similar
+exp030 tower, byte-identical. Result (`studies/EXP033_FINDINGS.md`): the transition **recurses
+across a physics boundary** — a tower alternating two *different open laws* (path concatenation
+↔ concatenation+horizontal-transfer) stacks to the *same* depth as the self-similar baseline
+with **8/8 boundary crossings heritable**, so the ladder does not depend on one engine climbing
+itself. The one hard rung is **closure**: a *closed* law (exp029) forms too few collectives to
+seed the next alphabet and caps the tower — so each level's law must itself be open **and**
+modular. The exp030 "both corner" condition governs not only the first transition but the
+composition of levels.
+
 ## Why it recurses
 
 The exp030 result is that a substrate which is both **modular** (composition is
@@ -46,4 +61,5 @@ deterministic in the parts → networks reproducible) and **open-ended** (parts 
 compositions grow → novelty persists) lets a collective be *both heritable and open-ended*
 at once. Because promotion makes tier-*N* collectives the tier-*(N+1)* parts, the same
 condition holds one level up — so the transition to individuality is not a single jump but
-a **recursive ladder**.
+a **recursive ladder**. exp033 shows this condition is *physics-agnostic*: it holds across a
+change of composition law, so long as each law is itself open + modular.

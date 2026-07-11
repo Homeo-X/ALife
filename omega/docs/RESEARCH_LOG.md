@@ -6,6 +6,46 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.18 — First-class levels: the transition recurses across *different* physics (exp033)
+
+**Date:** 2026-07-11 · **Status:** complete · **Verdict:** the recursive tower does **not**
+depend on one engine climbing itself. With a *different composition law per tier*, the major
+transition still recurses across the physics boundary — **provided each level's law is itself
+open + modular**. The one hard rung is **closure**, not difference. Detail:
+`studies/EXP033_FINDINGS.md`. Gated (`run_stack(levels=…)`, default `None` byte-identical);
+exp001–032 unchanged.
+
+### Why / what was done
+exp031/032 stacked a tower but ran the *same* exp030 `typed_path` engine at every tier — the
+last "is not" in Ω-0.16/0.17 was that levels were not first-class. `omega/levels/stack.py`
+now takes `levels=(...)`, a per-tier sequence of registered engines that share the type-atom
+interface but apply different laws: exp029 (morphism composition, **closed**), exp030 (path
+concatenation, **open**), exp031_culture (concatenation + horizontal transfer, **open +
+Lamarckian**).
+
+### The result splits cleanly (1500 ticks/tier, max_tiers=5, 3 seeds)
+- **Crossing a boundary is free.** A tower alternating *two different open laws* (exp030 ↔
+  exp031_culture) has **per-seed depth identical to the self-similar baseline** ([5, 0, 5])
+  and **8/8 physics-boundary crossings survive** — a tier forms heritable collectives from
+  the collectives of a tier that ran a *different law*. The recursion is a property of the
+  both-corner condition, not of self-similarity. **Levels are first-class.**
+- **The cost is closure, not heterogeneity.** Every tower containing the **closed** law
+  (exp029) caps at depth 1: the closed tier forms only 1 collective (< 2), starving the
+  promoted alphabet. `alt_two_open` crosses just as many boundaries with no penalty, so the
+  culprit is closure — the exp030 **"both corner" condition reappears at every level
+  boundary**: each level's law must itself be open + modular for the tower to continue.
+
+### Is / is not
+- **Is:** the level abstraction first-class — heterogeneous per-tier physics, the transition
+  recurses across different composition laws (including the cultural law atop the biological),
+  with the default tower kept byte-identical. One principle (open + modular) governs both the
+  first transition and the composition of levels.
+- **Is not:** proof that *any* law composes — a closed law is a terminal rung; the
+  heterogeneity shown healthy is open-law × open-law across three type-atom engines. A
+  genuinely new non-substrate level law remains future work.
+
+---
+
 ## Milestone Ω-0.17 — Unboundedness, tested at scale: sustained within a level, no depth ceiling of levels (exp032)
 
 **Date:** 2026-07-11 · **Status:** complete · **Verdict:** the program's original open

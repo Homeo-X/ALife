@@ -1,0 +1,402 @@
+{
+  "ticks": 1500,
+  "max_tiers": 5,
+  "rows": [
+    {
+      "recipe": "homogeneous_open",
+      "seed": 0,
+      "depth": 5,
+      "tiers": [
+        {
+          "tier": 0,
+          "physics": "exp030",
+          "collectives": 18,
+          "self": 0.30753605027060404,
+          "null": 0.10889724310776942,
+          "novelty": 0.38666666666666666,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "physics": "exp030",
+          "collectives": 23,
+          "self": 0.12462533572321617,
+          "null": 0.03143300739454585,
+          "novelty": 0.5333333333333333,
+          "heritable": true
+        },
+        {
+          "tier": 2,
+          "physics": "exp030",
+          "collectives": 21,
+          "self": 0.22387920258174743,
+          "null": 0.055610819440606675,
+          "novelty": 0.68,
+          "heritable": true
+        },
+        {
+          "tier": 3,
+          "physics": "exp030",
+          "collectives": 24,
+          "self": 0.18343435609286013,
+          "null": 0.05676752499343238,
+          "novelty": 0.7266666666666667,
+          "heritable": true
+        },
+        {
+          "tier": 4,
+          "physics": "exp030",
+          "collectives": 23,
+          "self": 0.14615443642491963,
+          "null": 0.026004272946219955,
+          "novelty": 0.47333333333333333,
+          "heritable": true
+        }
+      ],
+      "crossings": 0,
+      "survived": 0
+    },
+    {
+      "recipe": "homogeneous_open",
+      "seed": 1,
+      "depth": 0,
+      "tiers": [
+        {
+          "tier": 0,
+          "physics": "exp030",
+          "collectives": 1,
+          "self": 0.6170483460559797,
+          "null": 0.0648854961832061,
+          "novelty": 0.0,
+          "heritable": true
+        }
+      ],
+      "crossings": 0,
+      "survived": 0
+    },
+    {
+      "recipe": "homogeneous_open",
+      "seed": 2,
+      "depth": 5,
+      "tiers": [
+        {
+          "tier": 0,
+          "physics": "exp030",
+          "collectives": 23,
+          "self": 0.11412256135092246,
+          "null": 0.03786541472711685,
+          "novelty": 0.8066666666666666,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "physics": "exp030",
+          "collectives": 20,
+          "self": 0.2395436736504022,
+          "null": 0.0832175944704947,
+          "novelty": 0.38,
+          "heritable": true
+        },
+        {
+          "tier": 2,
+          "physics": "exp030",
+          "collectives": 22,
+          "self": 0.12887688437123293,
+          "null": 0.021300997522436513,
+          "novelty": 0.4666666666666667,
+          "heritable": true
+        },
+        {
+          "tier": 3,
+          "physics": "exp030",
+          "collectives": 24,
+          "self": 0.13419725817358633,
+          "null": 0.04169007324869515,
+          "novelty": 0.68,
+          "heritable": true
+        },
+        {
+          "tier": 4,
+          "physics": "exp030",
+          "collectives": 24,
+          "self": 0.17902337720758774,
+          "null": 0.07059265880318512,
+          "novelty": 0.6733333333333333,
+          "heritable": true
+        }
+      ],
+      "crossings": 0,
+      "survived": 0
+    },
+    {
+      "recipe": "alt_two_open",
+      "seed": 0,
+      "depth": 5,
+      "tiers": [
+        {
+          "tier": 0,
+          "physics": "exp030",
+          "collectives": 18,
+          "self": 0.30753605027060404,
+          "null": 0.10889724310776942,
+          "novelty": 0.38666666666666666,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "physics": "exp031_culture",
+          "collectives": 24,
+          "self": 0.16593409532316578,
+          "null": 0.04258590526865381,
+          "novelty": 0.6466666666666666,
+          "heritable": true
+        },
+        {
+          "tier": 2,
+          "physics": "exp030",
+          "collectives": 23,
+          "self": 0.14615443642491963,
+          "null": 0.026004272946219955,
+          "novelty": 0.47333333333333333,
+          "heritable": true
+        },
+        {
+          "tier": 3,
+          "physics": "exp031_culture",
+          "collectives": 24,
+          "self": 0.2864121482272167,
+          "null": 0.1187912227295789,
+          "novelty": 0.43333333333333335,
+          "heritable": true
+        },
+        {
+          "tier": 4,
+          "physics": "exp030",
+          "collectives": 23,
+          "self": 0.14615443642491963,
+          "null": 0.026004272946219955,
+          "novelty": 0.47333333333333333,
+          "heritable": true
+        }
+      ],
+      "crossings": 4,
+      "survived": 4
+    },
+    {
+      "recipe": "alt_two_open",
+      "seed": 1,
+      "depth": 0,
+      "tiers": [
+        {
+          "tier": 0,
+          "physics": "exp030",
+          "collectives": 1,
+          "self": 0.6170483460559797,
+          "null": 0.0648854961832061,
+          "novelty": 0.0,
+          "heritable": true
+        }
+      ],
+      "crossings": 0,
+      "survived": 0
+    },
+    {
+      "recipe": "alt_two_open",
+      "seed": 2,
+      "depth": 5,
+      "tiers": [
+        {
+          "tier": 0,
+          "physics": "exp030",
+          "collectives": 23,
+          "self": 0.11412256135092246,
+          "null": 0.03786541472711685,
+          "novelty": 0.8066666666666666,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "physics": "exp031_culture",
+          "collectives": 23,
+          "self": 0.3066289736198203,
+          "null": 0.1270513239620791,
+          "novelty": 0.3933333333333333,
+          "heritable": true
+        },
+        {
+          "tier": 2,
+          "physics": "exp030",
+          "collectives": 20,
+          "self": 0.2395436736504022,
+          "null": 0.0832175944704947,
+          "novelty": 0.38,
+          "heritable": true
+        },
+        {
+          "tier": 3,
+          "physics": "exp031_culture",
+          "collectives": 24,
+          "self": 0.14918800719246222,
+          "null": 0.03533692990331106,
+          "novelty": 0.4866666666666667,
+          "heritable": true
+        },
+        {
+          "tier": 4,
+          "physics": "exp030",
+          "collectives": 24,
+          "self": 0.17902337720758774,
+          "null": 0.07059265880318512,
+          "novelty": 0.6733333333333333,
+          "heritable": true
+        }
+      ],
+      "crossings": 4,
+      "survived": 4
+    },
+    {
+      "recipe": "alt_open_closed",
+      "seed": 0,
+      "depth": 1,
+      "tiers": [
+        {
+          "tier": 0,
+          "physics": "exp030",
+          "collectives": 18,
+          "self": 0.30753605027060404,
+          "null": 0.10889724310776942,
+          "novelty": 0.38666666666666666,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "physics": "exp029",
+          "collectives": 1,
+          "self": 0.17647058823529413,
+          "null": 0.0,
+          "novelty": 0.013333333333333334,
+          "heritable": true
+        }
+      ],
+      "crossings": 1,
+      "survived": 0
+    },
+    {
+      "recipe": "alt_open_closed",
+      "seed": 1,
+      "depth": 0,
+      "tiers": [
+        {
+          "tier": 0,
+          "physics": "exp030",
+          "collectives": 1,
+          "self": 0.6170483460559797,
+          "null": 0.0648854961832061,
+          "novelty": 0.0,
+          "heritable": true
+        }
+      ],
+      "crossings": 0,
+      "survived": 0
+    },
+    {
+      "recipe": "alt_open_closed",
+      "seed": 2,
+      "depth": 1,
+      "tiers": [
+        {
+          "tier": 0,
+          "physics": "exp030",
+          "collectives": 23,
+          "self": 0.11412256135092246,
+          "null": 0.03786541472711685,
+          "novelty": 0.8066666666666666,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "physics": "exp029",
+          "collectives": 0,
+          "self": 0.0,
+          "null": 0.0,
+          "novelty": 0.013333333333333334,
+          "heritable": false
+        }
+      ],
+      "crossings": 1,
+      "survived": 0
+    },
+    {
+      "recipe": "progression",
+      "seed": 0,
+      "depth": 1,
+      "tiers": [
+        {
+          "tier": 0,
+          "physics": "exp030",
+          "collectives": 18,
+          "self": 0.30753605027060404,
+          "null": 0.10889724310776942,
+          "novelty": 0.38666666666666666,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "physics": "exp029",
+          "collectives": 1,
+          "self": 0.17647058823529413,
+          "null": 0.0,
+          "novelty": 0.013333333333333334,
+          "heritable": true
+        }
+      ],
+      "crossings": 1,
+      "survived": 0
+    },
+    {
+      "recipe": "progression",
+      "seed": 1,
+      "depth": 0,
+      "tiers": [
+        {
+          "tier": 0,
+          "physics": "exp030",
+          "collectives": 1,
+          "self": 0.6170483460559797,
+          "null": 0.0648854961832061,
+          "novelty": 0.0,
+          "heritable": true
+        }
+      ],
+      "crossings": 0,
+      "survived": 0
+    },
+    {
+      "recipe": "progression",
+      "seed": 2,
+      "depth": 1,
+      "tiers": [
+        {
+          "tier": 0,
+          "physics": "exp030",
+          "collectives": 23,
+          "self": 0.11412256135092246,
+          "null": 0.03786541472711685,
+          "novelty": 0.8066666666666666,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "physics": "exp029",
+          "collectives": 0,
+          "self": 0.0,
+          "null": 0.0,
+          "novelty": 0.013333333333333334,
+          "heritable": false
+        }
+      ],
+      "crossings": 1,
+      "survived": 0
+    }
+  ]
+}

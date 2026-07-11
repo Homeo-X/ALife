@@ -1,0 +1,36 @@
+exp033 — heterogeneous per-level physics (1500 ticks/tier, max_tiers=5, 3 seeds)
+
+             recipe  depth(mean±sd)  max  boundary crossings  survived
+   homogeneous_open     3.3 ± 2.4      5                   0         0
+       alt_two_open     3.3 ± 2.4      5                   8         8
+    alt_open_closed     0.7 ± 0.5      1                   2         0
+        progression     0.7 ± 0.5      1                   2         0
+
+  per-tier detail (physics / heritable / open), seed 0:
+  homogeneous_open (depth 5):
+    tier0 [   open-concat] coll= 18 self=0.308 null=0.109 nov=0.39 heritable open
+    tier1 [   open-concat] coll= 23 self=0.125 null=0.031 nov=0.53 heritable open
+    tier2 [   open-concat] coll= 21 self=0.224 null=0.056 nov=0.68 heritable open
+    tier3 [   open-concat] coll= 24 self=0.183 null=0.057 nov=0.73 heritable open
+    tier4 [   open-concat] coll= 23 self=0.146 null=0.026 nov=0.47 heritable open
+  alt_two_open (depth 5):
+    tier0 [   open-concat] coll= 18 self=0.308 null=0.109 nov=0.39 heritable open
+    tier1 [  open+culture] coll= 24 self=0.166 null=0.043 nov=0.65 heritable open
+    tier2 [   open-concat] coll= 23 self=0.146 null=0.026 nov=0.47 heritable open
+    tier3 [  open+culture] coll= 24 self=0.286 null=0.119 nov=0.43 heritable open
+    tier4 [   open-concat] coll= 23 self=0.146 null=0.026 nov=0.47 heritable open
+  alt_open_closed (depth 1):
+    tier0 [   open-concat] coll= 18 self=0.308 null=0.109 nov=0.39 heritable open
+    tier1 [closed-compose] coll=  1 self=0.176 null=0.000 nov=0.01 heritable closed
+  progression (depth 1):
+    tier0 [   open-concat] coll= 18 self=0.308 null=0.109 nov=0.39 heritable open
+    tier1 [closed-compose] coll=  1 self=0.176 null=0.000 nov=0.01 heritable closed
+
+  (1) different-OPEN-law tower vs self-similar baseline: depth 3.3 vs 3.3 (identical per-seed), boundaries survived 8/8.
+      => crossing a physics boundary is FREE: the transition recurses across a
+         DIFFERENT composition law with no depth penalty — levels are first-class,
+         not one engine climbing itself.
+  (2) towers containing the CLOSED law (exp029): depth 0.7 (caps at the closed rung).
+      => the cost is CLOSURE, not heterogeneity: a closed law forms too few
+         collectives to seed the next alphabet, so each level must itself be
+         open+modular (the exp030 'both corner' condition, now AT every boundary).

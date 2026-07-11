@@ -556,6 +556,23 @@ class TestScientificClaims(unittest.TestCase):
         self.assertTrue(all(s > n for s, n in zip(self_w, null_w)))  # heredity alive every window
         self.assertLess(nov_c[-1], nov_o[-1])               # closed control decays vs open
 
+    def test_exp033_tower_recurses_across_a_physics_boundary(self):
+        # Ω-0.30: levels are FIRST-CLASS, not one engine climbing itself. With a
+        # different composition law per tier (open path-concatenation exp030 alternating
+        # with open+culture exp031_culture), the transition still recurses ACROSS the
+        # physics boundary: a tier built from the collectives of a tier that ran a
+        # *different law* still forms heritable collectives. Uses two both-open laws so
+        # the claim isolates "crossing a boundary" from the closed law's known weakness.
+        from omega.levels.stack import run_stack
+        r = run_stack(max_tiers=3, seed=0, ticks=900,
+                      levels=("exp030", "exp031_culture"))
+        self.assertGreaterEqual(r.tower_depth, 2)          # stacks despite law changes
+        self.assertNotEqual(r.tiers[1].physics, r.tiers[0].physics)  # tier1 is a boundary
+        self.assertTrue(r.tiers[1].heritable)              # heritable across the boundary
+        # default (levels=None) stays the self-similar exp030 tower — back-compatible.
+        self.assertEqual(run_stack(max_tiers=2, seed=0, ticks=500).tiers[0].physics,
+                         "exp030")
+
     def test_exp032_tower_depth_not_ceiling_limited(self):
         # Ω-0.29: unboundedness (of levels). Lifting the tier cap, the recursive tower
         # climbs well past exp031's depth-5 observation — depth is limited by compute,

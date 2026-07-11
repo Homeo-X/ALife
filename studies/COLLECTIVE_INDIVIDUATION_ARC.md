@@ -112,6 +112,18 @@ physics → chemistry → biology → culture as successive outputs of one engin
 individuals composed of the level below. See `studies/EXP031_FINDINGS.md` and
 `omega/docs/LEVELS.md`.
 
+## Coda 2 — the ladder is not one engine climbing itself (exp033): first-class levels
+
+exp031/032 ran the *same* exp030 engine at every tier. exp033 makes the per-tier physics
+**first-class** (`run_stack(levels=…)`) and finds the recursion is *physics-agnostic*: a tower
+that alternates **two different open laws** (path concatenation ↔ concatenation+horizontal
+transfer) stacks to the **same depth as the self-similar baseline** with **8/8 boundary
+crossings heritable** — a tier forms heritable collectives from the collectives of a tier that
+ran a *different law*. The lone hard rung is **closure**: a *closed* law (exp029) forms too
+few collectives to seed the next alphabet and caps the tower — so each level's law must itself
+be open **and** modular. The exp030 "both corner" condition governs not just the first
+transition but the composition of levels. See `studies/EXP033_FINDINGS.md`.
+
 ## Reproduce
 
 Each `studies/exp0NN_*.py` runs its study (`PYTHONPATH=. python3 studies/exp0NN_*.py`);
@@ -119,4 +131,4 @@ results are committed as `studies/exp0NN_results.json` / `_console.txt`. The reg
 builders are `exp017`…`exp030` plus `exp031_culture` in
 `omega/experiments/exp012_combinator.py`; the level tower is `omega/levels/stack.py`; every
 claim is pinned by a `test_exp0NN_*` / `test_exp031_*` in
-`omega/tests/test_experiments.py` (39 tests).
+`omega/tests/test_experiments.py` (40 tests).

@@ -43,6 +43,7 @@ class TierResult:
     novelty: float
     classes_ever: int
     heritable: bool            # self > null: the tier supports heritable collectives
+    physics: str = "exp030"    # which registered engine ran this tier (exp033: may vary)
 
 
 @dataclass
@@ -70,13 +71,23 @@ def _stable_collectives(physics) -> list:
 
 def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
               base_n_types: int = 32, resolution: int = 3,
-              min_collectives: int = 2) -> StackResult:
-    """Run the recursive tower; return per-tier results and the unfold map."""
+              min_collectives: int = 2, levels: tuple | None = None) -> StackResult:
+    """Run the recursive tower; return per-tier results and the unfold map.
+
+    ``levels`` makes the per-tier physics **first-class** (exp033): a sequence of
+    registered builder names, one per tier (cycled if shorter than ``max_tiers``), so
+    different levels can run *different composition laws* — e.g. ``('exp029','exp030',
+    'exp031_culture')`` is a closed→open→culture tower rather than the self-similar
+    ``exp030`` engine climbing itself. All three share the type-atom interface (each
+    ingests the promoted alphabet via ``explicit_atoms`` and exposes deme signatures),
+    so the promotion bridge is physics-agnostic. ``levels=None`` (default) runs
+    ``exp030`` at every tier — byte-identical to the pre-exp033 tower."""
     alphabet = [f"y{i}" for i in range(base_n_types)]          # tier-0 base types
     tiers: list = []
     unfold: dict = {}
     for tier in range(max_tiers):
-        physics, cfg = get_experiment('exp030')(
+        builder = 'exp030' if not levels else levels[tier % len(levels)]
+        physics, cfg = get_experiment(builder)(
             seed=seed, ticks=ticks, n_patches=24, propagule_mode='source',
             explicit_atoms=tuple(alphabet), n_types=len(alphabet),
             type_resolution=resolution)
@@ -88,7 +99,7 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
             tier=tier, level=LEVEL_NAMES[min(tier, len(LEVEL_NAMES) - 1)],
             alphabet_size=len(alphabet), n_collectives=len(collectives),
             hered_self=hs, hered_null=hn, novelty=res.open_endedness["novelty_rate"],
-            classes_ever=res.final_classes_total, heritable=hs > hn))
+            classes_ever=res.final_classes_total, heritable=hs > hn, physics=builder))
         # promote this tier's collectives to the next tier's alphabet (reification)
         if len(collectives) < min_collectives or hs <= hn:
             break
