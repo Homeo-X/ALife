@@ -77,13 +77,20 @@ Collective selection was never the bottleneck; the bottleneck was a substrate th
 make a deme's collective phenotype **both heritable and open-ended**. A modular,
 open-ended substrate (path-morphisms with bounded identity resolution) provides it.
 
-## What remains
+## What remains — now measured (exp032, Ω-0.17)
 
-The same frontier the whole program shares (Ω-0.1, Ω-0.10, Ω-0.14): show it **unbounded** —
-that at the "both" corner collective heredity and novelty both persist over 10⁵⁺ ticks and
-many seeds, and that collective individuals begin composing into a *further* level (a
-transition of transitions). The collective-individuality question is answered in
-miniature; the unboundedness question — the program's original one — is handed forward.
+The frontier the whole program shares (Ω-0.1, Ω-0.10, Ω-0.14) — show it **unbounded** — was
+tested at scale in exp032 and comes out **affirmative in miniature on both axes**, with honest
+edges. *Within a level:* at the both corner, collective heredity persists robustly (self ≫
+null, flat, to **120k ticks**) and novelty stays open (> 0 every window vs the closed
+control's exact zero) — sustained, not transient; the one open edge is whether the novelty
+*rate* holds a positive floor or dilutes very slowly (unsettled even at 120k). *Of levels:*
+the recursive tower has **no intrinsic depth ceiling up to 15** (a self-sustaining
+fixed-point alphabet; 8/9 seeds reach the cap regardless of base), tempered by a stochastic
+early-tier failure that can abort a tower. See `studies/EXP032_FINDINGS.md`. The
+collective-individuality question is answered in miniature, and its unboundedness — the
+program's original question — is now answered *in miniature* too, with the remaining edges
+(a strictly non-decaying novelty rate; guaranteed tower formation) named rather than hidden.
 
 ## Coda — the transition recurses (exp031): multiple levels of organization
 
@@ -112,4 +119,4 @@ results are committed as `studies/exp0NN_results.json` / `_console.txt`. The reg
 builders are `exp017`…`exp030` plus `exp031_culture` in
 `omega/experiments/exp012_combinator.py`; the level tower is `omega/levels/stack.py`; every
 claim is pinned by a `test_exp0NN_*` / `test_exp031_*` in
-`omega/tests/test_experiments.py` (37 tests).
+`omega/tests/test_experiments.py` (39 tests).

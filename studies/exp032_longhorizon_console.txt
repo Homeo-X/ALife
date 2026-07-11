@@ -1,0 +1,26 @@
+exp032 Part A — within-level persistence at the 'both corner'
+  open = exp030 (typed_path, open+modular); closed = exp029 (typed, modular-only)
+  40000 ticks, 3 seeds, 8 temporal windows
+
+  novelty rate/window (new classes/tick):
+  w0      w1      w2      w3      w4      w5      w6      w7      
+  open  0.389  0.575  0.364  0.308  0.287  0.268  0.315  0.359
+  clsd  0.028  0.000  0.000  0.000  0.000  0.000  0.000  0.000
+
+  collective heredity/window (edge-set Jaccard, self vs null):
+  w0      w1      w2      w3      w4      w5      w6      w7      
+  self  0.150  0.083  0.089  0.090  0.087  0.087  0.089  0.084
+  null  0.038  0.019  0.016  0.019  0.018  0.017  0.018  0.018
+
+  open-corner novelty rate > 0 across ALL windows : True
+  open-corner heredity self > null across ALL windows: True
+  closed control novelty collapses vs open           : True (closed last window 0.000 vs open 0.359)
+  => SUSTAINED: the 'both corner' persists at long horizon (not a transient).
+
+  stability (open): final pop 197±9, pop range over run [158,229], reservoir_pressure_last 0.147
+
+  stretch run — exp030 seed 0 to 120000 ticks (39788 heredity events):
+  novelty  0.454  0.276  0.389  0.353  0.268  0.207  0.175  0.164
+  self     0.113  0.093  0.077  0.096  0.087  0.091  0.085  0.085
+  null     0.027  0.020  0.013  0.020  0.018  0.020  0.019  0.018
+  stretch verdict: novelty_alive=True heredity_alive=True (final_classes=34274, final_pop=183)

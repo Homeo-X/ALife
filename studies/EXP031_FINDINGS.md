@@ -73,9 +73,14 @@ each level's individuals composed of the level below.
 ## Status and what remains
 - **Multiple levels of organization: achieved in miniature** — a 4–5 deep recursive
   tower, each tier heritable and open-ended, plus a distinct horizontal/cultural level.
-- **What remains** (the program's original frontier, now at every level): proving it
-  **unbounded** — that the tower keeps climbing (does depth grow with more ticks/larger
-  base?) and that each level's heredity *and* novelty persist over 10⁵⁺ ticks; and
-  making the level abstraction fully first-class (per-level physics, not only the
-  self-similar typed_path engine). exp031 turns "introduce multiple levels" from an
-  aspiration into a working, measured recursive tower with a cultural apex.
+- **What remains — now measured (exp032, Ω-0.17):** the unboundedness questions this doc
+  handed forward were tested at scale. *Within-level persistence:* the both corner sustains
+  novelty (> 0 every window vs a closed control's exact zero) **and** heredity (self ≫ null,
+  flat) out to **120k ticks** — sustained, not transient (open edge: whether the novelty
+  *rate* holds a positive floor or dilutes very slowly is unsettled even at 120k).
+  *Tower-depth scaling:* **no intrinsic depth ceiling up to 15** — the promotion map has a
+  self-sustaining ~fixed-point alphabet (~23 collectives/tier, undiminished), so 8/9 seeds
+  reach the `max_tiers` cap regardless of base; depth is compute-limited, not
+  ceiling-limited (open edge: a stochastic early-tier failure can abort a tower). See
+  `studies/EXP032_FINDINGS.md`. Still open: making the level abstraction fully first-class
+  (per-level heterogeneous physics, not only the self-similar typed_path engine).

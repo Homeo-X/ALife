@@ -6,6 +6,58 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.17 — Unboundedness, tested at scale: sustained within a level, no depth ceiling of levels (exp032)
+
+**Date:** 2026-07-11 · **Status:** complete · **Verdict:** the program's original open
+question — **unboundedness** — comes out **affirmative in miniature on both axes**, with the
+honest edges named. Within a level the "both corner" is *sustained* (not a transient) to
+120k ticks; the level tower shows **no intrinsic depth ceiling** up to 15 tiers. Detail:
+`studies/EXP032_FINDINGS.md`. Analysis-only on the existing engine (one gated harness hook,
+`record_stride`, to bound memory); exp001–031 stay byte-identical.
+
+### Why this milestone
+Every result before this was a bounded-horizon burst (400–4000 ticks); the log kept flagging
+that the OEI falsification test had **never been run at long horizon**, exactly where the
+program's two past false positives (exp003 cumulative counter, exp005 fix) lived. exp032
+runs it, with the guardrails mandatory: **rates in temporal windows, not cumulatives; matched
+controls; honest verdict either way.**
+
+### Within a level — sustained (exp030 both corner, 40k×3 seeds + one 120k stretch)
+Against a matched **closed** control (exp029, novelty→0): the open corner keeps novelty rate
+**> 0 in every window** (0.27–0.58 at 40k) while the closed control collapses to **exactly
+0.000** from window 1; collective heredity stays **self ≫ null (≈4–5×), flat**, across 40k
+and out to **120k** (39 788 heredity events, 34 274 classes discovered), with stable
+population (no collapse). **Heredity is the robust half — no erosion.** The one honest edge:
+the novelty *rate* drifts down over the 120k stretch (~0.45→~0.16); it stays firmly above the
+closed zero (open-vs-closed is decisive), but whether it holds a **positive floor** or is a
+very slow dilution is **still not settled even at 120k** (the same asymptote caveat as Ω-0.2).
+Absolute self-Jaccard is also lower in the sustained large-network regime (~0.085) than in the
+short-horizon burst (~0.25) — the heritability *signal* persists though its magnitude shrinks
+as networks grow.
+
+### Of levels — no ceiling found (tower depth, 2500 ticks/tier)
+Lifting the tier cap: a `max_tiers=15` tower **climbs to the full 15** whenever it survives
+its early tiers, with a **self-sustaining ~fixed-point alphabet** — collectives/tier ≈ 23–24
+*undiminished from tier 1 to 14*, self > null and novelty 0.49–0.60 at every tier. A base
+sweep confirms depth is set by the **cap, not the base**: **8 of 9 seeds reach the cap**
+across base ∈ {16, 32, 64}. So the promotion map has an attractor that keeps the alphabet
+from starving — **depth is compute-limited, not ceiling-limited**, the strongest
+open-endedness-*of-levels* evidence so far. Honest edge: a **stochastic early-tier failure**
+(~1 seed in 3: deep [15,**0**], base-32 [8,**0**,8]) can abort a tower before it starts —
+tower formation is per-seed stochastic, though conditional on surviving tier 0 it climbs to
+whatever cap it is given.
+
+### Is / is not
+- **Is:** the sustained-horizon unboundedness test, run at last — collective heredity
+  demonstrably persists (self ≫ null to 120k) and novelty stays open (vs a closed control's
+  exact zero), and the recursive tower has no intrinsic depth ceiling up to 15.
+- **Is not:** a proof of a *strictly non-decaying* novelty rate (the 120k rate drifts down;
+  positive-floor vs slow-dilution unresolved), nor a guarantee that a tower forms on every
+  seed (early-tier stochastic failure). Unbounded-in-principle is evidenced; unbounded-forever
+  would need horizons beyond 120k and a resolved novelty-rate asymptote.
+
+---
+
 ## Milestone Ω-0.16 — Multiple levels of organization: the transition recurses (exp031)
 
 **Date:** 2026-07-06 · **Status:** complete · **Verdict:** the major transition to

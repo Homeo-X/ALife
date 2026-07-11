@@ -1,0 +1,824 @@
+{
+  "ticks": 2500,
+  "deep": [
+    {
+      "tag": "deep",
+      "seed": 0,
+      "base": 32,
+      "depth": 15,
+      "tiers": [
+        {
+          "tier": 0,
+          "alphabet": 32,
+          "collectives": 19,
+          "self": 0.252085225552528,
+          "null": 0.07437232386142467,
+          "novelty": 0.336,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "alphabet": 19,
+          "collectives": 24,
+          "self": 0.10985381213021289,
+          "null": 0.029256754231308493,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 2,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 3,
+          "alphabet": 23,
+          "collectives": 24,
+          "self": 0.156255370393202,
+          "null": 0.038228735679716075,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 4,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 5,
+          "alphabet": 23,
+          "collectives": 24,
+          "self": 0.156255370393202,
+          "null": 0.038228735679716075,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 6,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 7,
+          "alphabet": 23,
+          "collectives": 24,
+          "self": 0.156255370393202,
+          "null": 0.038228735679716075,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 8,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 9,
+          "alphabet": 23,
+          "collectives": 24,
+          "self": 0.156255370393202,
+          "null": 0.038228735679716075,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 10,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 11,
+          "alphabet": 23,
+          "collectives": 24,
+          "self": 0.156255370393202,
+          "null": 0.038228735679716075,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 12,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 13,
+          "alphabet": 23,
+          "collectives": 24,
+          "self": 0.156255370393202,
+          "null": 0.038228735679716075,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 14,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        }
+      ]
+    },
+    {
+      "tag": "deep",
+      "seed": 1,
+      "base": 32,
+      "depth": 0,
+      "tiers": [
+        {
+          "tier": 0,
+          "alphabet": 32,
+          "collectives": 0,
+          "self": 0.6043083900226758,
+          "null": 0.05782312925170068,
+          "novelty": 0.004,
+          "heritable": true
+        }
+      ]
+    }
+  ],
+  "sweep": [
+    {
+      "tag": "sweep",
+      "seed": 0,
+      "base": 16,
+      "depth": 8,
+      "tiers": [
+        {
+          "tier": 0,
+          "alphabet": 16,
+          "collectives": 24,
+          "self": 0.12073233740165429,
+          "null": 0.02997340536179124,
+          "novelty": 0.428,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 2,
+          "alphabet": 23,
+          "collectives": 24,
+          "self": 0.156255370393202,
+          "null": 0.038228735679716075,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 3,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 4,
+          "alphabet": 23,
+          "collectives": 24,
+          "self": 0.156255370393202,
+          "null": 0.038228735679716075,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 5,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 6,
+          "alphabet": 23,
+          "collectives": 24,
+          "self": 0.156255370393202,
+          "null": 0.038228735679716075,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 7,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        }
+      ]
+    },
+    {
+      "tag": "sweep",
+      "seed": 1,
+      "base": 16,
+      "depth": 8,
+      "tiers": [
+        {
+          "tier": 0,
+          "alphabet": 16,
+          "collectives": 21,
+          "self": 0.10711838614307839,
+          "null": 0.028488200122923888,
+          "novelty": 0.416,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "alphabet": 21,
+          "collectives": 24,
+          "self": 0.1195605384855129,
+          "null": 0.026831763108378048,
+          "novelty": 0.568,
+          "heritable": true
+        },
+        {
+          "tier": 2,
+          "alphabet": 24,
+          "collectives": 22,
+          "self": 0.1649928036169647,
+          "null": 0.038361612287786784,
+          "novelty": 0.46,
+          "heritable": true
+        },
+        {
+          "tier": 3,
+          "alphabet": 22,
+          "collectives": 24,
+          "self": 0.12876305120799653,
+          "null": 0.026831465739239904,
+          "novelty": 0.648,
+          "heritable": true
+        },
+        {
+          "tier": 4,
+          "alphabet": 24,
+          "collectives": 22,
+          "self": 0.1649928036169647,
+          "null": 0.038361612287786784,
+          "novelty": 0.46,
+          "heritable": true
+        },
+        {
+          "tier": 5,
+          "alphabet": 22,
+          "collectives": 24,
+          "self": 0.12876305120799653,
+          "null": 0.026831465739239904,
+          "novelty": 0.648,
+          "heritable": true
+        },
+        {
+          "tier": 6,
+          "alphabet": 24,
+          "collectives": 22,
+          "self": 0.1649928036169647,
+          "null": 0.038361612287786784,
+          "novelty": 0.46,
+          "heritable": true
+        },
+        {
+          "tier": 7,
+          "alphabet": 22,
+          "collectives": 24,
+          "self": 0.12876305120799653,
+          "null": 0.026831465739239904,
+          "novelty": 0.648,
+          "heritable": true
+        }
+      ]
+    },
+    {
+      "tag": "sweep",
+      "seed": 2,
+      "base": 16,
+      "depth": 8,
+      "tiers": [
+        {
+          "tier": 0,
+          "alphabet": 16,
+          "collectives": 20,
+          "self": 0.1227478137442123,
+          "null": 0.033395777974859604,
+          "novelty": 0.272,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "alphabet": 20,
+          "collectives": 24,
+          "self": 0.11613534060103886,
+          "null": 0.021411345697625,
+          "novelty": 0.468,
+          "heritable": true
+        },
+        {
+          "tier": 2,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.1431600625005533,
+          "null": 0.04917328291020099,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 3,
+          "alphabet": 23,
+          "collectives": 22,
+          "self": 0.17852676940425286,
+          "null": 0.05363097535282966,
+          "novelty": 0.424,
+          "heritable": true
+        },
+        {
+          "tier": 4,
+          "alphabet": 22,
+          "collectives": 23,
+          "self": 0.11510135152671627,
+          "null": 0.03170016402138182,
+          "novelty": 0.48,
+          "heritable": true
+        },
+        {
+          "tier": 5,
+          "alphabet": 23,
+          "collectives": 22,
+          "self": 0.17852676940425286,
+          "null": 0.05363097535282966,
+          "novelty": 0.424,
+          "heritable": true
+        },
+        {
+          "tier": 6,
+          "alphabet": 22,
+          "collectives": 23,
+          "self": 0.11510135152671627,
+          "null": 0.03170016402138182,
+          "novelty": 0.48,
+          "heritable": true
+        },
+        {
+          "tier": 7,
+          "alphabet": 23,
+          "collectives": 22,
+          "self": 0.17852676940425286,
+          "null": 0.05363097535282966,
+          "novelty": 0.424,
+          "heritable": true
+        }
+      ]
+    },
+    {
+      "tag": "sweep",
+      "seed": 0,
+      "base": 32,
+      "depth": 8,
+      "tiers": [
+        {
+          "tier": 0,
+          "alphabet": 32,
+          "collectives": 19,
+          "self": 0.252085225552528,
+          "null": 0.07437232386142467,
+          "novelty": 0.336,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "alphabet": 19,
+          "collectives": 24,
+          "self": 0.10985381213021289,
+          "null": 0.029256754231308493,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 2,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 3,
+          "alphabet": 23,
+          "collectives": 24,
+          "self": 0.156255370393202,
+          "null": 0.038228735679716075,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 4,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 5,
+          "alphabet": 23,
+          "collectives": 24,
+          "self": 0.156255370393202,
+          "null": 0.038228735679716075,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 6,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 7,
+          "alphabet": 23,
+          "collectives": 24,
+          "self": 0.156255370393202,
+          "null": 0.038228735679716075,
+          "novelty": 0.6,
+          "heritable": true
+        }
+      ]
+    },
+    {
+      "tag": "sweep",
+      "seed": 1,
+      "base": 32,
+      "depth": 0,
+      "tiers": [
+        {
+          "tier": 0,
+          "alphabet": 32,
+          "collectives": 0,
+          "self": 0.6043083900226758,
+          "null": 0.05782312925170068,
+          "novelty": 0.004,
+          "heritable": true
+        }
+      ]
+    },
+    {
+      "tag": "sweep",
+      "seed": 2,
+      "base": 32,
+      "depth": 8,
+      "tiers": [
+        {
+          "tier": 0,
+          "alphabet": 32,
+          "collectives": 24,
+          "self": 0.09759220377082434,
+          "null": 0.029772228800006576,
+          "novelty": 0.476,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.1431600625005533,
+          "null": 0.04917328291020099,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 2,
+          "alphabet": 23,
+          "collectives": 22,
+          "self": 0.17852676940425286,
+          "null": 0.05363097535282966,
+          "novelty": 0.424,
+          "heritable": true
+        },
+        {
+          "tier": 3,
+          "alphabet": 22,
+          "collectives": 23,
+          "self": 0.11510135152671627,
+          "null": 0.03170016402138182,
+          "novelty": 0.48,
+          "heritable": true
+        },
+        {
+          "tier": 4,
+          "alphabet": 23,
+          "collectives": 22,
+          "self": 0.17852676940425286,
+          "null": 0.05363097535282966,
+          "novelty": 0.424,
+          "heritable": true
+        },
+        {
+          "tier": 5,
+          "alphabet": 22,
+          "collectives": 23,
+          "self": 0.11510135152671627,
+          "null": 0.03170016402138182,
+          "novelty": 0.48,
+          "heritable": true
+        },
+        {
+          "tier": 6,
+          "alphabet": 23,
+          "collectives": 22,
+          "self": 0.17852676940425286,
+          "null": 0.05363097535282966,
+          "novelty": 0.424,
+          "heritable": true
+        },
+        {
+          "tier": 7,
+          "alphabet": 22,
+          "collectives": 23,
+          "self": 0.11510135152671627,
+          "null": 0.03170016402138182,
+          "novelty": 0.48,
+          "heritable": true
+        }
+      ]
+    },
+    {
+      "tag": "sweep",
+      "seed": 0,
+      "base": 64,
+      "depth": 8,
+      "tiers": [
+        {
+          "tier": 0,
+          "alphabet": 64,
+          "collectives": 23,
+          "self": 0.09507195672851762,
+          "null": 0.024107437336918853,
+          "novelty": 0.812,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "alphabet": 23,
+          "collectives": 24,
+          "self": 0.156255370393202,
+          "null": 0.038228735679716075,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 2,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 3,
+          "alphabet": 23,
+          "collectives": 24,
+          "self": 0.156255370393202,
+          "null": 0.038228735679716075,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 4,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 5,
+          "alphabet": 23,
+          "collectives": 24,
+          "self": 0.156255370393202,
+          "null": 0.038228735679716075,
+          "novelty": 0.6,
+          "heritable": true
+        },
+        {
+          "tier": 6,
+          "alphabet": 24,
+          "collectives": 23,
+          "self": 0.12563675669244892,
+          "null": 0.02424542120992344,
+          "novelty": 0.488,
+          "heritable": true
+        },
+        {
+          "tier": 7,
+          "alphabet": 23,
+          "collectives": 24,
+          "self": 0.156255370393202,
+          "null": 0.038228735679716075,
+          "novelty": 0.6,
+          "heritable": true
+        }
+      ]
+    },
+    {
+      "tag": "sweep",
+      "seed": 1,
+      "base": 64,
+      "depth": 8,
+      "tiers": [
+        {
+          "tier": 0,
+          "alphabet": 64,
+          "collectives": 20,
+          "self": 0.11060075906336604,
+          "null": 0.026641950437589712,
+          "novelty": 0.564,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "alphabet": 20,
+          "collectives": 24,
+          "self": 0.12946360776571708,
+          "null": 0.02243286660700233,
+          "novelty": 0.4,
+          "heritable": true
+        },
+        {
+          "tier": 2,
+          "alphabet": 24,
+          "collectives": 22,
+          "self": 0.1649928036169647,
+          "null": 0.038361612287786784,
+          "novelty": 0.46,
+          "heritable": true
+        },
+        {
+          "tier": 3,
+          "alphabet": 22,
+          "collectives": 24,
+          "self": 0.12876305120799653,
+          "null": 0.026831465739239904,
+          "novelty": 0.648,
+          "heritable": true
+        },
+        {
+          "tier": 4,
+          "alphabet": 24,
+          "collectives": 22,
+          "self": 0.1649928036169647,
+          "null": 0.038361612287786784,
+          "novelty": 0.46,
+          "heritable": true
+        },
+        {
+          "tier": 5,
+          "alphabet": 22,
+          "collectives": 24,
+          "self": 0.12876305120799653,
+          "null": 0.026831465739239904,
+          "novelty": 0.648,
+          "heritable": true
+        },
+        {
+          "tier": 6,
+          "alphabet": 24,
+          "collectives": 22,
+          "self": 0.1649928036169647,
+          "null": 0.038361612287786784,
+          "novelty": 0.46,
+          "heritable": true
+        },
+        {
+          "tier": 7,
+          "alphabet": 22,
+          "collectives": 24,
+          "self": 0.12876305120799653,
+          "null": 0.026831465739239904,
+          "novelty": 0.648,
+          "heritable": true
+        }
+      ]
+    },
+    {
+      "tag": "sweep",
+      "seed": 2,
+      "base": 64,
+      "depth": 8,
+      "tiers": [
+        {
+          "tier": 0,
+          "alphabet": 64,
+          "collectives": 23,
+          "self": 0.2799280490821439,
+          "null": 0.049595982920336366,
+          "novelty": 1.06,
+          "heritable": true
+        },
+        {
+          "tier": 1,
+          "alphabet": 23,
+          "collectives": 22,
+          "self": 0.17852676940425286,
+          "null": 0.05363097535282966,
+          "novelty": 0.424,
+          "heritable": true
+        },
+        {
+          "tier": 2,
+          "alphabet": 22,
+          "collectives": 23,
+          "self": 0.11510135152671627,
+          "null": 0.03170016402138182,
+          "novelty": 0.48,
+          "heritable": true
+        },
+        {
+          "tier": 3,
+          "alphabet": 23,
+          "collectives": 22,
+          "self": 0.17852676940425286,
+          "null": 0.05363097535282966,
+          "novelty": 0.424,
+          "heritable": true
+        },
+        {
+          "tier": 4,
+          "alphabet": 22,
+          "collectives": 23,
+          "self": 0.11510135152671627,
+          "null": 0.03170016402138182,
+          "novelty": 0.48,
+          "heritable": true
+        },
+        {
+          "tier": 5,
+          "alphabet": 23,
+          "collectives": 22,
+          "self": 0.17852676940425286,
+          "null": 0.05363097535282966,
+          "novelty": 0.424,
+          "heritable": true
+        },
+        {
+          "tier": 6,
+          "alphabet": 22,
+          "collectives": 23,
+          "self": 0.11510135152671627,
+          "null": 0.03170016402138182,
+          "novelty": 0.48,
+          "heritable": true
+        },
+        {
+          "tier": 7,
+          "alphabet": 23,
+          "collectives": 22,
+          "self": 0.17852676940425286,
+          "null": 0.05363097535282966,
+          "novelty": 0.424,
+          "heritable": true
+        }
+      ]
+    }
+  ]
+}
