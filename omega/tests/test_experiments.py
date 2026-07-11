@@ -529,6 +529,45 @@ class TestScientificClaims(unittest.TestCase):
         self.assertGreater(p._meme_horizontal, 0)      # the horizontal channel is active
         self.assertGreater(r.open_endedness["novelty_rate"], 0.0)  # and still open-ended
 
+    def test_exp032_both_corner_persists_across_windows(self):
+        # Ω-0.29: unboundedness (within-level). Over successive temporal WINDOWS the
+        # open+modular "both corner" (exp030) keeps BOTH its novelty rate and its
+        # collective heredity (self > null) alive — not a startup transient — while the
+        # matched CLOSED control (exp029) lets novelty collapse toward zero. Rates in
+        # windows, not cumulatives (the program's two false positives were cumulative).
+        from statistics import mean
+
+        def windows(xs, k):
+            n = len(xs)
+            return [xs[(w * n) // k:((w + 1) * n) // k] for w in range(k)]
+
+        po, co = get_experiment("exp030")(seed=0, ticks=2000, n_patches=24,
+                                          propagule_mode="source")
+        ro = run(po, co)
+        pc, cc = get_experiment("exp029")(seed=0, ticks=2000, n_patches=24,
+                                          propagule_mode="source")
+        rc = run(pc, cc)
+        # skip window 0 (the initial discovery burst); test the sustained regime.
+        nov_o = [mean(w) for w in windows(ro.novelty_new_per_tick, 5)][1:]
+        nov_c = [mean(w) for w in windows(rc.novelty_new_per_tick, 5)][1:]
+        self_w = [mean(w) for w in windows(po._hered_edge_self, 5)][1:]
+        null_w = [mean(w) for w in windows(po._hered_edge_null, 5)][1:]
+        self.assertTrue(all(v > 0 for v in nov_o))          # open: novelty alive every window
+        self.assertTrue(all(s > n for s, n in zip(self_w, null_w)))  # heredity alive every window
+        self.assertLess(nov_c[-1], nov_o[-1])               # closed control decays vs open
+
+    def test_exp032_tower_depth_not_ceiling_limited(self):
+        # Ω-0.29: unboundedness (of levels). Lifting the tier cap, the recursive tower
+        # climbs well past exp031's depth-5 observation — depth is limited by compute,
+        # not an intrinsic ceiling — because each tier's collective count is ~a fixed
+        # point, so the promoted alphabet does not starve as depth grows.
+        from omega.levels.stack import run_stack
+        r = run_stack(max_tiers=10, seed=0, ticks=500)
+        self.assertGreater(r.tower_depth, 5)                # beats the exp031 cap
+        deep = r.tiers[-1]
+        self.assertTrue(deep.heritable)                     # deepest tier still heritable
+        self.assertGreaterEqual(deep.n_collectives, 2)      # alphabet has not starved
+
     def test_exp030_openended_modular_substrate_achieves_both(self):
         # Ω-0.27: the capstone. exp029 showed the transition needs a substrate that is
         # BOTH open-ended and modular. A typed-PATH substrate (variable-length type paths
