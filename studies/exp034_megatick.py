@@ -57,9 +57,15 @@ def main() -> None:
     # in-progress arm. Most-informative arm first: uncapped (keeps constructing) then capped
     # (constructs then stops) then baseline (never constructs). Two workers keep two cores
     # each on a 4-core box; a single long arm is CPU-bound anyway.
+    # A LOW cap (64) makes the "constructs then stops" arm reach its ceiling early (~15-20k
+    # ticks), so the post-cap regime — the decisive comparison — dominates the run without
+    # needing a 10^6 horizon (open-ended novelty grows the class registry unboundedly, so a
+    # literal 10^6 run is memory-bound on a 16GB box; this is the same experiment at a
+    # feasible, memory-safe horizon).
+    cap = int(sys.argv[2]) if len(sys.argv) > 2 else 64
     jobs = [
         ("uncapped", "exp034", {"reify_max_atoms": 0}, ticks, stride),
-        ("capped",   "exp034", {"reify_max_atoms": 256}, ticks, stride),
+        ("capped",   "exp034", {"reify_max_atoms": cap}, ticks, stride),
         ("baseline", "exp030", {}, ticks, stride),
     ]
     rows = []
@@ -76,9 +82,10 @@ def main() -> None:
         return  # partial (reclaimed); results.json holds completed arms
 
     win_ticks = ticks // NWIN
-    print(f"exp034 — 10^6-tick horizon: does sustained novelty need CONTINUING construction?")
-    print(f"  {ticks} ticks, seed 0, {NWIN} windows of {win_ticks} ticks "
-          f"(capped alphabet fills ~112k ~ window {112000 // win_ticks})\n")
+    cap_reified = by["capped"]["reified"]
+    print(f"exp034 — long-horizon: does sustained novelty need CONTINUING construction?")
+    print(f"  {ticks} ticks, seed 0, {NWIN} windows of {win_ticks} ticks; the capped arm "
+          f"stopped growing at {by['capped']['atoms_final']} atoms ({cap_reified} reified)\n")
     hdr = "  " + "".join(f"w{w:<6}" for w in range(NWIN))
     print("  novelty rate / window (new classes/tick):")
     print(hdr)
