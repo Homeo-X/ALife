@@ -21,7 +21,7 @@ this is one deep trajectory, not a distribution. Run:
 """
 from __future__ import annotations
 import json, sys
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from statistics import mean
 
 from omega.experiments.registry import get_experiment
@@ -53,16 +53,27 @@ def _run(args: tuple) -> dict:
 def main() -> None:
     ticks = int(sys.argv[1]) if len(sys.argv) > 1 else 1_000_000
     stride = max(1, ticks // 800)
+    # Run arms SEQUENTIALLY and persist after EACH so a container reclaim only loses the
+    # in-progress arm. Most-informative arm first: uncapped (keeps constructing) then capped
+    # (constructs then stops) then baseline (never constructs). Two workers keep two cores
+    # each on a 4-core box; a single long arm is CPU-bound anyway.
     jobs = [
-        ("baseline", "exp030", {}, ticks, stride),
-        ("capped",   "exp034", {"reify_max_atoms": 256}, ticks, stride),
         ("uncapped", "exp034", {"reify_max_atoms": 0}, ticks, stride),
+        ("capped",   "exp034", {"reify_max_atoms": 256}, ticks, stride),
+        ("baseline", "exp030", {}, ticks, stride),
     ]
+    rows = []
     with ProcessPoolExecutor(max_workers=3) as ex:
-        rows = list(ex.map(_run, jobs))
+        futs = [ex.submit(_run, j) for j in jobs]
+        for f in as_completed(futs):
+            rows.append(f.result())
+            json.dump({"ticks": ticks, "nwin": NWIN, "rows": rows},
+                      open("studies/exp034_megatick_results.json", "w"), indent=2)
+            print(f"[done {rows[-1]['tag']}] atoms={rows[-1]['atoms_final']} "
+                  f"classes={rows[-1]['classes']}", flush=True)
     by = {r["tag"]: r for r in rows}
-    json.dump({"ticks": ticks, "nwin": NWIN, "rows": rows},
-              open("studies/exp034_megatick_results.json", "w"), indent=2)
+    if not all(t in by for t in ("baseline", "capped", "uncapped")):
+        return  # partial (reclaimed); results.json holds completed arms
 
     win_ticks = ticks // NWIN
     print(f"exp034 — 10^6-tick horizon: does sustained novelty need CONTINUING construction?")
