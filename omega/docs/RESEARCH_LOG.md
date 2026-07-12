@@ -46,6 +46,41 @@ Lamarckian**).
 
 ---
 
+## Milestone Ω-0.20 — Sustained novelty needs *continuing* construction, not a bigger fixed alphabet (exp034, 250k ticks)
+
+**Date:** 2026-07-12 · **Status:** complete · **Verdict:** the sharpest form of the founding
+thesis. Ω-0.19 showed in-run reification sustains the novelty rate; this asks whether a
+*one-time* alphabet enlargement suffices or whether construction must **keep running**. A
+three-arm long-horizon run answers decisively: **only continuing construction sustains
+novelty.** Detail: `studies/EXP034_FINDINGS.md`.
+
+### The three arms (250k ticks, seed 0, 10 windows of 25k)
+- **baseline** (exp030, never constructs): novelty rate 0.33 → 0.15, late/early **0.51** — halves.
+- **capped** (exp034, low cap 64, alphabet freezes ~16k ticks): 0.42 → 0.25, late/early **0.67**
+  — once the alphabet stops growing, the rate **resumes decaying**. A one-time construction
+  bump *delays* but does not stop closure.
+- **uncapped** (exp034, grows to 531 atoms / 499 reified): 0.64 → **0.80**, late/early **1.16**
+  — flat to rising across every window, collective heredity alive throughout (self ≈ 0.085 ≫
+  null ≈ 0.015).
+
+### What it means
+Constructibility is a **rate, not a stock**. The capped arm has a permanently *enlarged* fixed
+alphabet and still closes; only the arm that keeps reifying stays open. So "infinite
+constructibility, not infinite space" (Ω-0.1) sharpens to: open-endedness is sustained by the
+**ongoing act of construction**, not by any fixed amount of it, however large. This is the
+cleanest statement of the program's thesis to date, and it is a *falsifiable* one — the capped
+arm is the matched control that shows a bigger fixed space is not enough.
+
+### Is / is not
+- **Is:** a decisive separation of one-time vs continuing construction — the capped/baseline
+  arms are matched controls (stops / never), the uncapped arm holds its rate; heredity intact.
+- **Is not:** a literal 10⁶-tick run (genuinely open-ended novelty grows the class registry
+  ~unboundedly → memory-bound on a 16GB box; the early-filling cap puts the decisive post-cap
+  regime inside a feasible 250k horizon), nor multi-seed (one deep trajectory). Whether the
+  uncapped rate holds across 10⁶⁺ ticks, and the cost of unbounded alphabet growth, remain open.
+
+---
+
 ## Milestone Ω-0.19 — The two open frontiers, closed: sustained novelty (reification) and a substrate-general both corner (exp034, exp035)
 
 **Date:** 2026-07-11 · **Status:** complete · **Verdict:** the two frontiers Ω-0.17/0.18

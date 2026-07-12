@@ -80,5 +80,8 @@ Turning reification on *within* a level — every `reify_period` ticks the most 
 motif becomes a new atom (`self.atoms` grows during the run) — holds the rate flat (0.53→0.67
 over 30k ticks vs a fixed-alphabet baseline's 0.52→0.27) while heredity stays alive: growing
 **constructibility, not space**, keeps a level open (the Ω-0.1 thesis, at the collective
-level). Evidence: `studies/EXP034_FINDINGS.md`, `studies/EXP035_FINDINGS.md`. exp033 shows this condition is *physics-agnostic*: it holds across a
+level). And it must **keep going**: a 250k three-arm run shows an arm that constructs then
+*stops* (a low cap, frozen ~16k ticks) resumes decaying (late/early 0.67), while one that keeps
+constructing (→531 atoms) stays flat/rising (1.16) — constructibility is a **rate, not a
+stock**. Evidence: `studies/EXP034_FINDINGS.md`, `studies/EXP035_FINDINGS.md`. exp033 shows this condition is *physics-agnostic*: it holds across a
 change of composition law, so long as each law is itself open + modular.

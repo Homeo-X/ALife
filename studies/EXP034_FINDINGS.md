@@ -58,8 +58,42 @@ individuals.
   The reified atom is opaque during composition (its motif is recorded but not re-expanded),
   which is the point (a promoted primitive), not a limitation.
 
+## Follow-up (250k ticks) — sustained novelty needs *continuing* construction
+
+The 30k result leaves a sharper question: is it a **one-time** alphabet enlargement that
+sustains novelty, or **ongoing** construction? A three-arm run separates them — baseline
+(never constructs), **capped** (constructs then *stops*: a low cap of 64 atoms, filled by
+~16k ticks), **uncapped** (keeps constructing). 250k ticks, seed 0, 10 windows of 25k (so
+windows 1–9 are all *post-cap* for the capped arm):
+
+| window | w0 | w1 | w2 | w3 | w4 | w5 | w6 | w7 | w8 | w9 | late/early |
+|--------|----|----|----|----|----|----|----|----|----|----|:---------:|
+| **baseline** (never constructs) | 0.391 | 0.327 | 0.325 | 0.192 | 0.167 | 0.199 | 0.195 | 0.162 | 0.185 | 0.152 | **0.51** |
+| **capped** (constructs, stops ~16k) | 0.562 | 0.420 | 0.331 | 0.315 | 0.294 | 0.262 | 0.267 | 0.265 | 0.248 | 0.247 | **0.67** |
+| **uncapped** (keeps constructing) | 0.554 | 0.637 | 0.690 | 0.700 | 0.781 | 0.779 | 0.645 | 0.739 | 0.763 | 0.803 | **1.16** |
+
+- **Baseline** halves (ratio 0.51), as before.
+- **Capped** — once its alphabet freezes at 64 atoms (32 reified), its novelty rate **resumes
+  decaying** (0.42 → 0.25, ratio 0.67): a one-time construction bump *delays* but does **not**
+  stop the decay.
+- **Uncapped** — growing to **531 atoms (499 reified)** — the novelty rate is **flat to
+  rising** (0.64 → 0.80, ratio 1.16) across all 10 windows, with collective heredity alive
+  throughout (self ≈ 0.085 ≫ null ≈ 0.015).
+
+**So sustained novelty requires *continuing* construction, not a larger fixed alphabet.** This
+is the sharpest form of the Ω-0.1 thesis: what keeps a world open is not a bigger fixed space
+(the capped arm has a permanently enlarged one and still closes) but the **ongoing act of
+construction itself** — reification must keep running. Constructibility is a *rate*, not a
+*stock*.
+
+*(A literal 10⁶-tick run is memory-bound on a 16 GB box — genuinely open-ended novelty grows
+the class registry with cumulative new classes, ~GB/arm — so this uses an early-filling cap to
+put the decisive post-cap regime inside a feasible 250k horizon. Single seed: one deep
+trajectory, not a distribution.)*
+
 ## Reproduce
-`PYTHONPATH=. python3 studies/exp034_reification.py 30000 3` → the table above; committed as
-`studies/exp034_results.json` / `_console.txt`. Claim pinned by
-`test_exp034_reification_grows_the_alphabet_and_keeps_novelty` in
+`PYTHONPATH=. python3 studies/exp034_reification.py 30000 3` → the 30k table; and
+`PYTHONPATH=. python3 studies/exp034_megatick.py 250000 64` → the three-arm continuing-vs-
+one-time table (committed as `studies/exp034_megatick_results.json` / `_console.txt`).
+Claim pinned by `test_exp034_reification_grows_the_alphabet_and_keeps_novelty` in
 `omega/tests/test_experiments.py`.
