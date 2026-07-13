@@ -46,6 +46,33 @@ Lamarckian**).
 
 ---
 
+## Milestone Ω-0.26 — Coherence is selectable and emergent — but single-objective selection trades off (exp038)
+
+**Date:** 2026-07-13 · **Status:** complete · **Verdict:** a positive with an honest negative.
+Third rung of the self-improvement roadmap. Detail: `studies/EXP038_FINDINGS.md`. Gated;
+exp001–035 byte-identical (55 tests green).
+
+exp037 showed evolvable architecture amplifies *whatever* is selected (Goodhart toward openness).
+exp038 tries a better-aligned, **emergent** target: **autocatalytic closure** — the self-producing
+fraction of a deme's cross-production network (a class both produced-by and itself-a-producer: a
+self-maintaining loop), read off the real network, not imposed (contrast exp021's coop bit).
+Result (6000 ticks, 3 seeds): (1) **coherence is selectable** — `deme_fitness="closure"` raises
+closure 0.064 > network 0.046 > size 0.028 (clean ordering); an emergent collective property
+selection can grip. (2) **But it trades off against heredity** — closure-selected demes have
+collective heredity self 0.102 vs 0.209 under direct network selection. Closure (short
+self-maintaining loops) and heredity (faithful reproduction of the whole network) are **competing
+axes**; a single scalar fitness buys one by spending the other.
+
+**The design constraint this exposes:** alignment is **multi-objective**. Every single proxy tried
+now Goodharts — network → runaway openness (exp037), closure → low heredity (exp038). A
+self-improving collective needs closure AND heredity AND intrinsic function *at once*, and no
+scalar fitness yields the package. So the churn/short-life fix is **not** achieved by closure
+selection alone; it needs combined, aligned selection — which is exactly what the capstone
+(exp039/040) must confront: whether a *combined* objective plus exp037's per-collective evolvable
+state produces collectives that compound rather than trade off.
+
+---
+
 ## Milestone Ω-0.25 — Per-collective evolvable internal state: architecture *can* now evolve (exp037)
 
 **Date:** 2026-07-13 · **Status:** complete · **Verdict:** a **weak positive** — the engine piece

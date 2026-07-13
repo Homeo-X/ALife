@@ -588,6 +588,26 @@ class TestScientificClaims(unittest.TestCase):
         self.assertGreaterEqual(len(set(res)), 2)             # it diversified across demes
         self.assertGreater(r.open_endedness["novelty_rate"], 0.0)   # still an open world
 
+    def test_exp038_closure_is_emergent_and_selectable(self):
+        # Ω-0.26: coherence made an emergent, selectable target. Autocatalytic closure (the
+        # self-producing fraction of a deme's real cross-production network) is read off the
+        # network (emergent, not imposed like exp021's coop bit), and selecting for it raises
+        # it above a no-network-selection baseline. (That it TRADES OFF against heredity under
+        # single-objective selection is the study's honest negative — EXP038_FINDINGS.md.)
+        from statistics import mean
+
+        def mean_closure(fit):
+            p, c = get_experiment("exp038")(seed=0, ticks=2500, deme_fitness=fit)
+            run(p, c)
+            cs = [p._deme_closure(pi) for pi in range(p.n_patches) if p._deme_edges.get(pi)]
+            return (mean(cs) if cs else 0.0)
+
+        c_sel = mean_closure("closure")
+        c_base = mean_closure("size")                 # size = no network/closure selection
+        self.assertGreaterEqual(c_sel, 0.0)
+        self.assertLessEqual(c_sel, 1.0)               # a well-formed fraction (emergent metric)
+        self.assertGreater(c_sel, c_base)              # selection raises it above the baseline
+
     def test_bounded_memory_mode_flattens_registry_and_stays_open(self):
         # Scaling: the bounded-memory long-run mode (memory_horizon > 0) evicts cold class
         # records so the registry stays flat over long horizons, WITHOUT killing the

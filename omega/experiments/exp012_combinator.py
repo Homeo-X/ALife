@@ -603,6 +603,21 @@ class CombinatorPhysics:
         return frozenset(e for e, n in self._deme_edges.get(pi, {}).items()
                          if n >= self.edge_threshold)
 
+    def _deme_closure(self, pi: int) -> float:
+        """exp038 AUTOCATALYTIC CLOSURE: an *emergent* coherence measure. From the deme's
+        cross-production edges (producer_cls -> product_cls), a class that is both **produced
+        by** a member and **itself a producer** sits inside a self-maintaining loop. Closure
+        = |producers ∩ products| / |producers ∪ products| — 0 for a feed-forward chain (every
+        product is a dead end), →1 for a fully self-producing set (a collective that rebuilds
+        its own parts). Unlike exp021's imposed coop bit, this is read off the real network."""
+        edges = self._deme_edges.get(pi)
+        if not edges:
+            return 0.0
+        producers = {f for (f, _p) in edges}
+        products = {p for (_f, p) in edges}
+        union = producers | products
+        return len(producers & products) / len(union) if union else 0.0
+
     def _deme_reproduction(self, universe: Universe, rng: Noise) -> None:
         """Kill a fraction of demes and recolonize each from a propagule copied out
         of a surviving deme (productivity-weighted) — deme-level reproduction."""
@@ -673,6 +688,10 @@ class CombinatorPhysics:
                     nb = self._next_band
                     weights = [1.0 + sum(n for a, n in self._deme_atoms.get(s, {}).items()
                                          if a in nb) for s in survivors]
+                elif self.deme_fitness == "closure":
+                    # exp038: reward autocatalytic CLOSURE — a deme that rebuilds its own parts
+                    # (a self-maintaining loop), an emergent coherence read off the network.
+                    weights = [0.05 + self._deme_closure(s) for s in survivors]
                 else:
                     weights = [len(by_patch[s]) for s in survivors]
                 if self.coop:
@@ -906,7 +925,8 @@ class CombinatorPhysics:
                     else:
                         seen[0] += 1
                 if patches is not None and (self.measure_xprod or self.track_signature
-                        or self.deme_fitness in ("productivity", "network", "anticipation")):
+                        or self.deme_fitness in ("productivity", "network", "anticipation",
+                                                 "closure")):
                     # credit this deme's fitness. identity lookup consumes no RNG, so
                     # non-collective runs and every other experiment stay identical.
                     # "productivity": any viable construction. cross-production
@@ -1634,3 +1654,29 @@ def build_genome(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("deme_genome", True)
     overrides.setdefault("genome_mut", 0.3)
     return _make(seed, "exp037", **overrides)
+
+
+@register("exp038")
+def build_closure(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp038 — COHERENCE as an emergent, better-aligned selection target. exp037 showed
+    evolvable architecture amplifies whatever is selected (Goodhart), and that network fitness
+    drives runaway openness. This selects for **autocatalytic closure** instead — the fraction
+    of a deme's cross-production network that is self-producing (a class both produced by and
+    itself a producer: a self-maintaining loop). Unlike exp021's *imposed* cooperation bit,
+    closure is *emergent* — read off the real network. Prediction: `deme_fitness="closure"`
+    raises closure above a matched network-selection control (an emergent coherence trait can
+    be selected), and self-maintaining demes are **longer-lived** (attacking the churn/short-
+    life problem). Runs the exp030 both-corner machinery."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "closure")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    return _make(seed, "exp038", **overrides)

@@ -1,0 +1,14 @@
+exp038 — autocatalytic closure as an emergent, selectable coherence target (6000 ticks, 3 seeds)
+
+   selection  mean closure  heredity self    null  self/null
+     closure         0.064          0.102   0.025       4.12
+     network         0.046          0.209   0.050       4.21
+        size         0.028          0.117   0.023       5.02
+
+  closure gain (closure- vs network-selection): +0.018
+  collective heredity (self-null): closure +0.077 vs network +0.160
+
+  => SELECTABLE: coherence (autocatalytic closure) is an emergent trait selection raises.
+     A better-aligned target than exp037's runaway-openness proxy: it rewards
+     collectives that rebuild their own parts (self-maintenance), read off the
+     real network — not an imposed trait (contrast exp021's cooperation bit).
