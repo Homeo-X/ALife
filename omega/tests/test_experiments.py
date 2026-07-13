@@ -556,6 +556,19 @@ class TestScientificClaims(unittest.TestCase):
         self.assertTrue(all(s > n for s, n in zip(self_w, null_w)))  # heredity alive every window
         self.assertLess(nov_c[-1], nov_o[-1])               # closed control decays vs open
 
+    def test_bounded_memory_mode_flattens_registry_and_stays_open(self):
+        # Scaling: the bounded-memory long-run mode (memory_horizon > 0) evicts cold class
+        # records so the registry stays flat over long horizons, WITHOUT killing the
+        # novelty signal — novelty is counted against a monotonic classes_ever_seen, so it
+        # stays positive (windowed). Off (horizon=0) is byte-identical (covered elsewhere).
+        p0, c0 = get_experiment("exp030")(seed=0, ticks=4000)
+        r0 = run(p0, c0, record_stride=50)                       # unbounded
+        pb, cb = get_experiment("exp030")(seed=0, ticks=4000)
+        rb = run(pb, cb, record_stride=50, memory_horizon=800, relation_cap=5000)
+        # registry is strictly smaller under eviction, novelty still alive
+        self.assertLess(rb.final_classes_total, r0.final_classes_total)
+        self.assertGreater(rb.open_endedness["novelty_rate"], 0.0)
+
     def test_exp035_new_tree_law_reaches_the_both_corner(self):
         # Ω-0.31: the both-corner CONDITION is substrate-general, not special to the type
         # substrates. A genuinely different law — binary-tree grafting (f,x) with a depth

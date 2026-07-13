@@ -56,7 +56,8 @@ class RunResult:
 
 
 def run(physics: Physics, config: Config, *, novelty_window: int | None = None,
-        record_stride: int = 1) -> RunResult:
+        record_stride: int = 1, memory_horizon: int = 0,
+        relation_cap: int = 0) -> RunResult:
     # The rate-measurement window must be long enough to *resolve* a slow but
     # sustained discovery rate. A fixed 50-tick window quantizes a ~0.05/tick rate
     # to zero over long runs and reports a spurious CLOSED verdict (the mirror of
@@ -65,6 +66,10 @@ def run(physics: Physics, config: Config, *, novelty_window: int | None = None,
         novelty_window = max(50, config.ticks // 10)
     rng = Noise(config.seed)
     universe = Universe(total_quanta=config.total_quanta)
+    # Long-run bounded-memory mode (default off => byte-identical). Lets a run reach 10^6+
+    # ticks with flat memory by evicting cold classes and capping provenance relations.
+    universe.memory_horizon = memory_horizon
+    universe.relation_cap = relation_cap
     physics.seed(universe, rng)
 
     scheduler = Scheduler(

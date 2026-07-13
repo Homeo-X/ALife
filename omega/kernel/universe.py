@@ -63,6 +63,11 @@ class Universe:
         self.stats: dict[int, OrgStats] = {}
         self.transforms: list[Transform] = []
         self.class_registry: dict[str, ClassRecord] = {}
+        # Monotonic count of *distinct classes ever seen*. Equals len(class_registry)
+        # exactly while nothing is evicted, but survives eviction — so novelty (which is
+        # this count differenced over ticks) stays exact even when the registry is bounded
+        # for a very long run. This decoupling is what lets the registry shrink.
+        self.classes_ever_seen: int = 0
         self.class_births: dict[str, int] = {}  # lifetime (re)creation count per class
         self.class_fed: dict[str, int] = {}      # births from the reservoir (feed)
         self.class_constructed: dict[str, int] = {}  # births from other organizations
@@ -81,6 +86,14 @@ class Universe:
         self.reactions_committed: int = 0
         self.reactions_blocked: int = 0
         self.decayed: int = 0
+
+        # Long-run (bounded-memory) mode. Both 0 by default => nothing is ever evicted and
+        # every existing experiment is byte-identical. When a Physics/harness sets a
+        # positive horizon, cold class records (and, past a cap, old provenance relations)
+        # are evicted each tick so memory stays flat over 10^6+ ticks. classes_ever_seen
+        # is never decremented, so the novelty *count* stays exact (see bound_memory).
+        self.memory_horizon: int = 0
+        self.relation_cap: int = 0
 
     # ---- identity minting -------------------------------------------------
     def mint_uid(self) -> int:
@@ -217,12 +230,42 @@ class Universe:
                                   depth=example.depth, size=example.distinguishability,
                                   kind=example.kind, rep_state=example.state)
                 self.class_registry[cls] = rec
+                self.classes_ever_seen += 1
             rec.last_seen = self.tick
             rec.peak_population = max(rec.peak_population, n)
             rec.total_observations += n
             rec.ticks_present += 1
             rec.births = self.class_births.get(cls, rec.births)
+        if self.memory_horizon or self.relation_cap:
+            self.bound_memory()
         return pop
+
+    def bound_memory(self) -> None:
+        """Long-run mode: evict cold state so memory stays bounded over 10^6+ ticks.
+
+        A class not seen for ``memory_horizon`` ticks is dropped from the registry and
+        from the per-class amplification tallies — so ``amplification()``'s scan (over
+        ``class_constructed``) stays bounded too, with no need for incremental tracking.
+        ``classes_ever_seen`` is *not* decremented, so the novelty **count** stays exact;
+        a class that reappears after eviction is counted as a fresh discovery (a
+        horizon-windowed novelty). Lifetime-aggregate readers (persistence spectrum,
+        amplification) thereby become horizon-windowed — the price of a bounded registry.
+        Old provenance ``relations`` past ``relation_cap`` are trimmed (only exp011 reads
+        them, and never in this mode). Both knobs 0 => this method is never called.
+        """
+        h = self.memory_horizon
+        if h > 0:
+            cutoff = self.tick - h
+            if cutoff > 0:
+                cold = [c for c, r in self.class_registry.items() if r.last_seen < cutoff]
+                for c in cold:
+                    del self.class_registry[c]
+                    self.class_births.pop(c, None)
+                    self.class_fed.pop(c, None)
+                    self.class_constructed.pop(c, None)
+        cap = self.relation_cap
+        if cap > 0 and len(self.relations) > cap:
+            del self.relations[:-cap]
 
     def verify(self) -> int:
         return verify_conservation(self)

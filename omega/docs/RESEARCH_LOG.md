@@ -46,6 +46,28 @@ Lamarckian**).
 
 ---
 
+## Milestone Ω-0.21 — Scaling infrastructure: lifting the in-miniature cap (bounded memory + 3× faster kernel)
+
+**Date:** 2026-07-12 · **Status:** infrastructure (no new scientific claim) · **Verdict:** the
+three limits that kept every open-endedness result *in miniature* are lifted, gated so
+exp001–035 stay byte-identical. Detail: `studies/SCALING.md`.
+
+The verdict after Ω-0.20 named the gap: horizons ≤ 250k, few seeds, because (1) the class
+registry + provenance relations grew O(ticks) → OOM at 10⁶ ticks, (2) `canonical_cls`/`depth`
+were re-hashed 4×/tick on persistent state, and (3) `amplification()` rescanned every class
+ever. Fixes: a **bounded-memory long-run mode** (`Universe.memory_horizon`/`relation_cap`,
+default 0 = byte-identical) that evicts cold class records — decoupled from novelty via a
+monotonic `classes_ever_seen` counter so the novelty *count* stays exact (bounded novelty is a
+*horizon-windowed* rate, higher than unbounded, so bounded runs compare bounded-to-bounded);
+and **memoizing** the pure state functions (`organization.py`, bounded LRU). Measured: registry
+flat and peak RAM 70 → 10 MB at 12k ticks (gap grows with horizon), and **5.28 → 1.71 ms/tick
+(3.1× faster)** — a 10⁶-tick run drops from ~90 min-and-OOM to ~28 min at flat memory. This
+unblocks the campaign (10⁶-tick, multi-seed, deeper towers) that moves the unboundedness claims
+from *in miniature* toward the program's original goal. Still open: optimizing the `normalize`
+reduction engine (the dominant raw cost) and checkpoint/resume for multi-hour runs.
+
+---
+
 ## Milestone Ω-0.20 — Sustained novelty needs *continuing* construction, not a bigger fixed alphabet (exp034, 250k ticks)
 
 **Date:** 2026-07-12 · **Status:** complete · **Verdict:** the sharpest form of the founding

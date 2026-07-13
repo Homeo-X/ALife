@@ -26,8 +26,16 @@ class NoveltyTracker:
     _last_total: int = 0
 
     def record(self, universe: Universe) -> int:
-        """Call once per tick (after observe_classes). Returns new classes this tick."""
-        total = len(universe.class_registry)
+        """Call once per tick (after observe_classes). Returns new classes this tick.
+
+        Counts against ``classes_ever_seen`` (a monotonic counter) rather than
+        ``len(class_registry)`` so novelty stays exact even when the registry is bounded
+        (evicted) on a very long run. The two are identical while nothing is evicted, so
+        every existing experiment is byte-identical; under eviction this becomes a
+        horizon-windowed novelty (a class absent longer than the horizon and reappearing
+        counts as newly discovered — a conservative, memory-bounded rate).
+        """
+        total = universe.classes_ever_seen
         new = total - self._last_total
         self._last_total = total
         self.new_per_tick.append(new)

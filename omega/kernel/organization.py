@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass, field
+from functools import lru_cache
 from typing import Any, Iterable
 
 # An atomic difference is any hashable, non-tuple value (int, str, ...).
@@ -36,6 +37,13 @@ def _iter_atoms(state: Any) -> Iterable[Atom]:
         yield state
 
 
+# States are immutable and hashable, so distinguishability, class identity, and depth
+# are *pure* functions of the state and can be memoized. The same persistent live states
+# are re-hashed/re-walked several times every tick (observe_classes, ~3× class_population,
+# spawn); a bounded LRU cache removes that redundant work with byte-identical results and
+# without leaking (old states fall out of the cache). This is the single largest safe
+# per-tick speedup for long horizons. maxsize comfortably covers the live working set.
+@lru_cache(maxsize=1 << 19)
 def distinguishability(state: Any) -> int:
     """Number of atomic differences bound up in ``state``.
 
@@ -45,6 +53,7 @@ def distinguishability(state: Any) -> int:
     return sum(1 for _ in _iter_atoms(state))
 
 
+@lru_cache(maxsize=1 << 19)
 def canonical_cls(state: Any) -> str:
     """Stable class identity for a state — its *continued recognizability*.
 
@@ -94,6 +103,7 @@ class Organization:
         )
 
 
+@lru_cache(maxsize=1 << 19)
 def _depth(state: Any) -> int:
     if not isinstance(state, tuple) or not state:
         return 0
