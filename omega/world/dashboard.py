@@ -63,6 +63,10 @@ _PAGE = """<!doctype html><meta charset=utf-8><title>Ω World</title>
  .ev{color:#9fb0c8;border-left:2px solid #2b3550;padding-left:8px;margin:3px 0}
  .born{color:#8affc1}.reify{color:#ffd479}.lifeform{color:#7fd1ff}
  .big{font-size:26px;color:#e8eef7}
+ #ctl button{background:#1b2436;color:#c8d3e0;border:1px solid #2b3550;border-radius:5px;
+   padding:6px 10px;margin:0 6px 6px 0;cursor:pointer;font:inherit}
+ #ctl button:hover{background:#26324a;color:#8affc1}
+ #ctl input[type=range]{width:60%;vertical-align:middle}
 </style>
 <header>
  <h1>Ω WORLD</h1>
@@ -75,6 +79,18 @@ _PAGE = """<!doctype html><meta charset=utf-8><title>Ω World</title>
 <main>
  <div class=card style=grid-column:1/3><h2>novelty pulse — the world keeps discovering</h2>
    <div class=pulse id=pulse></div></div>
+ <div class=card><h2>world map — geography</h2><canvas id=map width=320 height=320
+   style="width:100%;image-rendering:pixelated;background:#0b0e14;border-radius:4px"></canvas>
+   <div class=tag style=margin-top:6px>cell = a patch; hue = dominant lifeform, brightness = population</div></div>
+ <div class=card><h2>reach in — steer the world</h2><div id=ctl>
+   <button data-a=seed>seed life</button>
+   <button data-a=shock>mass extinction</button>
+   <button data-a=reify>force reify</button>
+   <div style=margin-top:8px><span class=k>culture (horizontal transfer)</span>
+     <input type=range min=0 max=1 step=0.05 value=0.3 id=ht></div>
+   <div><span class=k>mutation rate</span>
+     <input type=range min=0 max=0.3 step=0.01 value=0.05 id=mut></div>
+   <div id=actlog class=tag style=margin-top:6px></div></div></div>
  <div class=card><h2>lifeforms — persistent characters</h2><div id=life></div></div>
  <div class=card><h2>collectives — living communities <span id=nc></span></h2><div id=coll></div></div>
  <div class=card><h2>culture &amp; construction</h2><div id=cc></div></div>
@@ -102,7 +118,29 @@ async function tick(){
    `<div class=row><span class=k>registry (windowed)</span><span class=v>${s.registry_size.toLocaleString()}</span></div>`;
  $('ev').innerHTML=s.events.slice(0,14).map(e=>`<div class="ev ${e.kind}">`+
    `<span class=tag>${e.tick.toLocaleString()}</span> ${e.text}</div>`).join('');
+ drawMap(s.space);
 }
+function hue(name){let h=0;for(const c of(name||''))h=(h*31+c.charCodeAt(0))%360;return h;}
+function drawMap(sp){
+ const cv=document.getElementById('map'); if(!sp){cv.style.display='none';return;}
+ const g=cv.getContext('2d'); const W=sp.w,H=sp.h; const cw=cv.width/W, ch=cv.height/H;
+ const mx=Math.max(1,...sp.cells.map(c=>c.pop));
+ g.clearRect(0,0,cv.width,cv.height);
+ for(const c of sp.cells){
+   const l=c.pop?(18+62*c.pop/mx):8;
+   g.fillStyle=c.dominant?`hsl(${hue(c.dominant)},70%,${l}%)`:'#0b0e14';
+   g.fillRect(c.x*cw,c.y*ch,cw-1,ch-1);
+ }
+}
+async function act(action,params){ try{ await fetch('/act',{method:'POST',
+   headers:{'Content-Type':'application/json'},body:JSON.stringify({action,params})});
+   document.getElementById('actlog').textContent=action+' sent @tick '+
+     (document.getElementById('tick').textContent); }catch(e){} }
+document.querySelectorAll('#ctl button').forEach(b=>b.onclick=()=>({
+   seed:()=>act('seed_life',{n:12}), shock:()=>act('shock',{magnitude:0.5}),
+   reify:()=>act('reify_now',{})})[b.dataset.a]());
+document.getElementById('ht').oninput=e=>act('set_law',{name:'horizontal_transfer',value:+e.target.value});
+document.getElementById('mut').oninput=e=>act('set_law',{name:'mut_prob',value:+e.target.value});
 tick(); setInterval(tick, 1000);
 </script>"""
 
@@ -125,10 +163,32 @@ class _Runner:
         self.latest: dict = self.obs.snapshot(world)
         self._lock = threading.Lock()
         self._stop = threading.Event()
+        self._queue: list = []                 # pending interactions (applied between chunks)
+
+    def enqueue(self, action: str, params: dict) -> None:
+        with self._lock:
+            self._queue.append((action, params))
+
+    def _apply_pending(self) -> None:
+        with self._lock:
+            pending, self._queue = self._queue, []
+        for action, pr in pending:             # applied between steps -> no race with step()
+            try:
+                if action == "seed_life":
+                    self.world.seed_life(int(pr.get("n", 8)), pr.get("patch"))
+                elif action == "shock":
+                    self.world.shock(float(pr.get("magnitude", 0.5)), pr.get("patch"))
+                elif action == "set_law":
+                    self.world.set_law(str(pr["name"]), float(pr["value"]))
+                elif action == "reify_now":
+                    self.world.reify_now()
+            except (KeyError, ValueError, TypeError):
+                pass
 
     def loop(self) -> None:
         chunks = 0
         while not self._stop.is_set():
+            self._apply_pending()
             self.world.step(self.chunk)
             snap = self.obs.snapshot(self.world)
             with self._lock:
@@ -165,6 +225,22 @@ def serve(world: World, port: int = 8000, chunk: int = 40,
                 body = _PAGE.encode()
                 self.send_response(200)
                 self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def do_POST(self):
+            if not self.path.startswith("/act"):
+                self.send_response(404); self.end_headers(); return
+            n = int(self.headers.get("Content-Length", 0))
+            try:
+                req = json.loads(self.rfile.read(n) or b"{}")
+                runner.enqueue(str(req.get("action", "")), req.get("params", {}))
+                body = b'{"ok":true}'
+            except (ValueError, TypeError):
+                body = b'{"ok":false}'
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
             self.wfile.write(body)

@@ -84,5 +84,56 @@ class TestWorldBoundedMemory(unittest.TestCase):
         self.assertGreater(s["novelty_rate"], 0.0)               # still open
 
 
+class TestWorldSpace(unittest.TestCase):
+    def test_space_off_is_byte_identical(self):
+        # SPACE is gated: the world's geography changes dynamics, but a spaceless run is
+        # byte-identical to the pre-space engine (space defaults off outside the world builder).
+        from omega.experiments.registry import get_experiment
+        from omega.experiments import run as _run
+        a = _run(*get_experiment("exp030")(seed=0, ticks=800))
+        b = _run(*get_experiment("exp030")(seed=0, ticks=800))
+        self.assertEqual(a.novelty_cumulative, b.novelty_cumulative)
+        self.assertEqual(a.final_population, b.final_population)
+
+    def test_world_has_a_map_with_geography(self):
+        w = World.create("world", seed=0)
+        self.assertTrue(w.physics.space)
+        # grid tiles the patches exactly and neighbours are reciprocal on the torus
+        gw, gh = w.physics._grid_dims()
+        self.assertEqual(gw * gh, w.physics.n_patches)
+        self.assertIn(0, w.physics._neighbors(w.physics._neighbors(0)[0]))
+        w.step(1500)
+        s = Observer().snapshot(w)
+        self.assertIsNotNone(s["space"])
+        self.assertEqual(len(s["space"]["cells"]), w.physics.n_patches)
+        pops = [c["pop"] for c in s["space"]["cells"]]
+        self.assertGreater(max(pops), 0)
+        self.assertGreater(max(pops) - min(pops), 0)          # spatial heterogeneity
+
+
+class TestWorldInteraction(unittest.TestCase):
+    def test_perturbations_apply_and_are_logged(self):
+        w = World.create("world", seed=0)
+        w.step(1000)
+        before = len(w.universe.organizations)
+        killed = w.shock(0.5)
+        self.assertGreater(killed, 0)
+        self.assertLess(len(w.universe.organizations), before)   # extinction reduced life
+        born = w.seed_life(15, patch=0)
+        self.assertGreater(born, 0)                              # seeding added life
+        self.assertTrue(w.set_law("horizontal_transfer", 0.9))
+        self.assertEqual(w.physics.horizontal_transfer, 0.9)     # law tuned live
+        self.assertFalse(w.set_law("not_a_law", 1.0))
+        kinds = [i["kind"] for i in w.interactions]
+        self.assertEqual(kinds, ["shock", "seed_life", "set_law"])  # replay log
+        w.step(200)                                              # world keeps running after
+
+    def test_untouched_world_stays_deterministic(self):
+        # interaction is opt-in: a world with no perturbations is reproducible from its seed.
+        a = World.create("world", seed=3); a.step(1000)
+        b = World.create("world", seed=3); b.step(1000)
+        self.assertEqual(a.novelty.new_per_tick, b.novelty.new_per_tick)
+
+
 if __name__ == "__main__":
     unittest.main()

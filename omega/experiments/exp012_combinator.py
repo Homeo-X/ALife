@@ -285,6 +285,14 @@ class CombinatorPhysics:
         self.n_patches = n_patches
         self.mig_rate = mig_rate
         self._patch: dict[int, int] = {}
+        # world: SPACE. The kernel stays spaceless; space is a *constraint a Physics imposes
+        # on which organizations may react* (the README's rule). When ``space`` is on, the
+        # n_patches demes are laid out on a W×H torus and locality becomes geography:
+        # migration hops only to a neighbouring patch, and an extinct patch is recolonized
+        # preferentially from a *nearby* survivor — so lineages spread locally
+        # (isolation-by-distance, biogeography). Off (default) = the well-mixed uniform-random
+        # behaviour of every prior experiment → byte-identical.
+        self.space = False
         # exp017 multi-level selection: demes themselves reproduce. Every deme_gen
         # ticks a fraction of demes go extinct and are recolonized by a *propagule*
         # copied from a surviving deme (chosen by productivity, so fitter collectives
@@ -475,6 +483,30 @@ class CombinatorPhysics:
             org = universe.spawn(self._random_normal(rng), kind="expr")
             self._seed_coop(org, rng)
 
+    # ---- geography (world SPACE) --------------------------------------
+    def _grid_dims(self) -> tuple[int, int]:
+        """Lay the n_patches demes on the most-square W×H torus that tiles them exactly."""
+        n = max(1, self.n_patches)
+        w = int(n ** 0.5)
+        while w > 1 and n % w:
+            w -= 1
+        return w, n // w
+
+    def patch_pos(self, p: int) -> tuple[int, int]:
+        w, _ = self._grid_dims()
+        return p % w, p // w
+
+    def _neighbors(self, p: int) -> list:
+        w, h = self._grid_dims()
+        x, y = p % w, p // w
+        return [((y + dy) % h) * w + ((x + dx) % w)
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))]
+
+    def _patch_dist(self, a: int, b: int) -> int:
+        w, h = self._grid_dims()
+        ax, ay, bx, by = a % w, a // w, b % w, b // w
+        return min((ax - bx) % w, (bx - ax) % w) + min((ay - by) % h, (by - ay) % h)
+
     def _build_patches(self, pop, rng: Noise) -> list:
         """Assign each org to a patch (inheriting its function-parent's patch, else
         random), apply migration, and return the per-patch member lists."""
@@ -505,7 +537,10 @@ class CombinatorPhysics:
                         p = rng.randint(0, self.n_patches - 1)
                 self._patch[o.uid] = p
             if rng.random() < self.mig_rate:         # migration couples the demes
-                p = rng.randint(0, self.n_patches - 1)
+                if self.space:                       # geography: hop to a neighbour only
+                    p = rng.choice(self._neighbors(p))
+                else:
+                    p = rng.randint(0, self.n_patches - 1)
                 self._patch[o.uid] = p
             buckets[p].append(o)
         return buckets
@@ -614,6 +649,9 @@ class CombinatorPhysics:
                                 / len(m)) if m else 0.0
                         boosted.append(w * (1.0 + self.coop_benefit * frac))
                     weights = boosted
+                if self.space:                       # geography: recolonize from nearby
+                    weights = [w * (0.25 ** self._patch_dist(s, kp))
+                               for w, s in zip(weights, survivors)]
                 src = rng.weighted_choice(survivors, weights)
                 pool = by_patch[src]
             else:  # "mixed" null — propagule from the whole survivor pool
@@ -971,6 +1009,7 @@ def _make(seed, experiment, **overrides):
     physics.n_types = int(overrides.get("n_types", 12))
     physics.type_resolution = int(overrides.get("type_resolution", 0))
     physics.tree_resolution = int(overrides.get("tree_resolution", 0))
+    physics.space = bool(overrides.get("space", False))     # world geography (gated)
     physics.reify_period = int(overrides.get("reify_period", 0))
     physics.reify_max_atoms = int(overrides.get("reify_max_atoms", 0))
     if physics.substrate in ("typed", "typed_path", "tree"):  # atoms over n_types base types
@@ -1458,4 +1497,6 @@ def build_world(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("reify_period", 500)
     overrides.setdefault("reify_max_atoms", 0)      # keep constructing (persistent world)
     overrides.setdefault("horizontal_transfer", 0.3)
+    overrides.setdefault("space", True)             # geography: a torus of patches
+    overrides.setdefault("mig_rate", 0.06)          # local diffusion (neighbours only)
     return _make(seed, "world", **overrides)

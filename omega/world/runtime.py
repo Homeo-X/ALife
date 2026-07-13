@@ -37,6 +37,7 @@ class World:
         self.config = config
         self.memory_horizon = memory_horizon
         self.relation_cap = relation_cap
+        self.interactions: list = [] if _bundle is None else _bundle.get("interactions", [])
         if _bundle is None:                     # a fresh world
             self.rng = Noise(config.seed)
             self.universe = Universe(total_quanta=config.total_quanta)
@@ -95,6 +96,65 @@ class World:
     def tick(self) -> int:
         return self.universe.tick
 
+    # ---- interaction: reaching into the running world -------------------
+    # Perturbations are external inputs (so a *touched* world is no longer a pure function of
+    # its seed — by design; an untouched world stays deterministic). Each is logged with its
+    # tick so a session is replayable. All respect conservation of distinguishability.
+    LAWS = ("mut_prob", "horizontal_transfer", "reify_period", "mig_rate")  # live-tunable knobs
+
+    def _log(self, kind: str, **kw) -> None:
+        self.interactions.append({"tick": self.tick, "kind": kind, **kw})
+
+    def seed_life(self, n: int = 8, patch: int | None = None, state=None) -> int:
+        """Inject ``n`` new organisms into a patch (spawn draws from the reservoir, so this
+        is conservative — it fails quietly if the reservoir can't cover them)."""
+        born = 0
+        for _ in range(n):
+            st = state if state is not None else self.physics._random_normal(self.rng)
+            org = self.universe.spawn(st, "seeded")
+            if org is None:
+                break
+            if self.physics.n_patches > 0:
+                self.physics._patch[org.uid] = (patch if patch is not None
+                                                else self.rng.randint(0, self.physics.n_patches - 1))
+            born += 1
+        self._log("seed_life", n=born, patch=patch)
+        return born
+
+    def shock(self, magnitude: float = 0.5, patch: int | None = None) -> int:
+        """A mass-extinction shock — dissolve a fraction of life (globally, or one region).
+        Dissolving returns quanta to the reservoir, so it is conservative."""
+        killed = 0
+        for uid in list(self.universe.organizations):
+            if patch is not None and self.physics._patch.get(uid) != patch:
+                continue
+            if self.rng.random() < magnitude:
+                self.universe.dissolve(uid)
+                killed += 1
+        self._log("shock", magnitude=magnitude, patch=patch, killed=killed)
+        return killed
+
+    def set_law(self, name: str, value: float) -> bool:
+        """Tune a physics law live (whitelisted). Returns False for an unknown law."""
+        if name == "decay_hazard":
+            self.scheduler.decay_hazard = float(value)
+        elif name in self.LAWS and hasattr(self.physics, name):
+            cur = getattr(self.physics, name)
+            setattr(self.physics, name, type(cur)(value))
+        else:
+            return False
+        self._log("set_law", name=name, value=value)
+        return True
+
+    def reify_now(self) -> int:
+        """Force a reification pass (promote a persistent motif to a new primitive)."""
+        before = len(getattr(self.physics, "_reified", {}))
+        if hasattr(self.physics, "_reify_promote"):
+            self.physics._reify_promote()
+        gained = len(getattr(self.physics, "_reified", {})) - before
+        self._log("reify_now", gained=gained)
+        return gained
+
     def bundle(self) -> dict:
         """The picklable state bundle (everything except the rebuildable scheduler)."""
         return {
@@ -106,4 +166,5 @@ class World:
             "physics": self.physics,
             "novelty": self.novelty,
             "construction": self.construction,
+            "interactions": self.interactions,
         }

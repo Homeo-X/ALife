@@ -50,12 +50,46 @@ history across sessions** and survives container restarts.
 - **World physics** — the registered `world` builder: the exp030 both-corner (`typed_path`) +
   collectives + reification + culture, i.e. the most-alive single-tier configuration.
 
+## Geography (space)
+
+The kernel stays spaceless — space is *a constraint a Physics imposes on which organizations
+may react* (the README's rule), grown from the existing deme/patch structure. With `space` on
+(default in the `world` builder), the patches are laid on a **W×H torus** and locality becomes
+geography: **migration** hops only to a neighbouring patch, and an extinct patch is
+**recolonized preferentially from a nearby survivor** (a steep `0.25^distance` kernel) — so
+founding is local. The dashboard shows the **world map**: each cell a patch, hue = its dominant
+lifeform, brightness = population; regions differ and drift over time. Gated: `space=False`
+(everywhere except the world) is byte-identical to the pre-space engine.
+
+*Honest finding:* class-level **isolation-by-distance is weak** here — the world's open-ended
+novelty continuously mints unique classes in every patch, so neighbours share little *class*
+composition regardless of proximity. Geography lives in local migration/founding and in
+per-patch heterogeneity (the map), not in class overlap — open-endedness actively works against
+class-level biogeography, which is itself a real observation.
+
+## Interaction (reach in)
+
+A running world is steerable. `World` exposes conservation-respecting perturbations, also on the
+dashboard ("reach in" panel) via a `POST /act` endpoint applied *between* chunks (no race with
+the stepping thread):
+
+- `seed_life(n, patch)` — inject organisms (spawns from the reservoir; conservative).
+- `shock(magnitude, patch)` — a mass-extinction pulse (globally or in one region; dissolving
+  returns quanta to the reservoir).
+- `set_law(name, value)` — tune a law live (`mut_prob`, `horizontal_transfer`, `reify_period`,
+  `mig_rate`, `decay_hazard`) and watch the world respond.
+- `reify_now()` — force a persistent motif into a new primitive.
+
+Every perturbation is appended to a **replay log** (`world.interactions`, checkpointed). By
+design, a *touched* world is no longer a pure function of its seed; an **untouched** world stays
+fully deterministic (pinned by `test_world`).
+
 ## Honest notes
 
 - **Bounded novelty is horizon-windowed.** With memory bounded, a class evicted after
   `memory_horizon` ticks of absence and later reappearing counts as newly discovered — so the
   world's novelty rate is a *windowed* rate, not an all-time one (see `SCALING.md`). It cleanly
   shows the world stays open; it is not a cumulative census.
-- **Scope (v1).** This is the *watchable* foundation. Interaction (seeding/steering the world),
-  spatial geography, and embodied agent minds are deliberate follow-ons the runtime enables, not
-  part of v1.
+- **Scope.** v1 was the *watchable* foundation; v2 adds **geography** (space) and **interaction**
+  (reach in). The remaining follow-on the runtime enables is **embodied agent minds** (perceiving,
+  acting inhabitants) on top of this spatial, steerable world.

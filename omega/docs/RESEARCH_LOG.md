@@ -46,6 +46,30 @@ Lamarckian**).
 
 ---
 
+## Milestone Ω-0.23 — The world gains geography and a hand: space + interaction (`omega/world/`, v2)
+
+**Date:** 2026-07-13 · **Status:** capability · **Verdict:** the watchable world (Ω-0.22) becomes
+**spatial and steerable**, both gated so exp001–035 stay byte-identical (52 tests green). Detail:
+`omega/docs/WORLD.md`.
+
+**Space.** The kernel stays spaceless; space is imposed as *a constraint on which organizations
+react* (the README's own rule), grown from the deme/patch structure: patches on a W×H torus,
+migration to neighbours only, and extinct patches recolonized from *nearby* survivors (a steep
+`0.25^dist` kernel). The dashboard renders a **world map** (cell = patch, hue = dominant lifeform,
+brightness = population) with real spatial heterogeneity. *Honest finding:* class-level
+isolation-by-distance is **weak** — the world's open-ended novelty differentiates every patch
+regardless of proximity, so open-endedness actively works against class-level biogeography.
+Geography lives in local migration/founding and per-patch heterogeneity, not class overlap.
+
+**Interaction.** `World` exposes conservation-respecting perturbations — `seed_life`, `shock`
+(mass extinction), `set_law` (tune `mut_prob`/`horizontal_transfer`/`reify_period`/`mig_rate`/
+`decay_hazard` live), `reify_now` — surfaced on the dashboard as a "reach in" panel via a
+`POST /act` endpoint applied between chunks. Each is appended to a checkpointed **replay log**; a
+touched world is no longer seed-deterministic (by design), an untouched one still is. The only
+follow-on left is embodied agent minds on top of this spatial, steerable world.
+
+---
+
 ## Milestone Ω-0.22 — The living world: the engine turned into a persistent, watchable world (`omega/world/`)
 
 **Date:** 2026-07-13 · **Status:** capability (not a scientific claim) · **Verdict:** the

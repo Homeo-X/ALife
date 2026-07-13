@@ -59,6 +59,33 @@ class Observer:
                 seen[name]["patches"] += 1
         return sorted(seen.values(), key=lambda d: (-d["size"], d["name"]))
 
+    def _spatial(self, world) -> dict | None:
+        """The world **map** — per-patch geography, when the physics is spatial. Each cell
+        carries its grid position, population, and dominant lifeform (named), so a region's
+        character (and its change over time) is visible. ``None`` for a spaceless world."""
+        p, u = world.physics, world.universe
+        if not getattr(p, "space", False) or p.n_patches <= 0:
+            return None
+        w, h = p._grid_dims()
+        from collections import Counter
+        pop: dict[int, Counter] = {}
+        for o in u.organizations.values():
+            pi = p._patch.get(o.uid)
+            if pi is not None:
+                pop.setdefault(pi, Counter())[o.cls] += 1
+        cells = []
+        for pi in range(p.n_patches):
+            c = pop.get(pi)
+            x, y = p.patch_pos(pi)
+            if c:
+                dom_cls, dom_n = c.most_common(1)[0]
+                cells.append({"p": pi, "x": x, "y": y, "pop": sum(c.values()),
+                              "dominant": _name(dom_cls), "diversity": len(c)})
+            else:
+                cells.append({"p": pi, "x": x, "y": y, "pop": 0,
+                              "dominant": None, "diversity": 0})
+        return {"w": w, "h": h, "cells": cells}
+
     def _lifeforms(self, universe) -> list[dict]:
         """Stable, named **lifeforms** — the persistent organizational classes, with real
         ages (``ticks_present``). These are the characters a viewer follows over time."""
@@ -107,5 +134,6 @@ class Observer:
             "collectives": collectives,
             "n_collectives": len(collectives),
             "lifeforms": lifeforms,
+            "space": self._spatial(world),
             "events": list(self._events),
         }
