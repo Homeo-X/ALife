@@ -38,9 +38,10 @@ def _wins(xs: list, k: int) -> list:
 
 
 def _run(args: tuple) -> dict:
-    tag, exp, extra, ticks, stride = args
+    tag, exp, extra, ticks, stride, mem_h = args
     physics, cfg = get_experiment(exp)(seed=0, ticks=ticks, **extra)
-    r = run(physics, cfg, record_stride=stride)
+    r = run(physics, cfg, record_stride=stride, memory_horizon=mem_h,
+            relation_cap=(mem_h * 4 if mem_h else 0))
     return {"tag": tag,
             "novelty_win": _wins(r.novelty_new_per_tick, NWIN),
             "self_win": _wins(physics._hered_edge_self, NWIN),
@@ -63,18 +64,25 @@ def main() -> None:
     # literal 10^6 run is memory-bound on a 16GB box; this is the same experiment at a
     # feasible, memory-safe horizon).
     cap = int(sys.argv[2]) if len(sys.argv) > 2 else 64
+    # memory_horizon (arg 3): 0 = unbounded/exact (small horizons); >0 = bounded-memory mode
+    # for very long horizons (all arms use the SAME horizon so the windowed-novelty inflation
+    # is common-mode and the bounded-to-bounded comparison stays valid). Pick it >> the
+    # class-turnover timescale to keep inflation small.
+    mem_h = int(sys.argv[3]) if len(sys.argv) > 3 else 0
     jobs = [
-        ("uncapped", "exp034", {"reify_max_atoms": 0}, ticks, stride),
-        ("capped",   "exp034", {"reify_max_atoms": cap}, ticks, stride),
-        ("baseline", "exp030", {}, ticks, stride),
+        ("uncapped", "exp034", {"reify_max_atoms": 0}, ticks, stride, mem_h),
+        ("capped",   "exp034", {"reify_max_atoms": cap}, ticks, stride, mem_h),
+        ("baseline", "exp030", {}, ticks, stride, mem_h),
     ]
+    out_path = ("studies/exp034_megatick_results.json" if not mem_h
+               else f"studies/exp034_megatick_bounded{ticks}_results.json")
     rows = []
     with ProcessPoolExecutor(max_workers=3) as ex:
         futs = [ex.submit(_run, j) for j in jobs]
         for f in as_completed(futs):
             rows.append(f.result())
-            json.dump({"ticks": ticks, "nwin": NWIN, "rows": rows},
-                      open("studies/exp034_megatick_results.json", "w"), indent=2)
+            json.dump({"ticks": ticks, "nwin": NWIN, "mem_h": mem_h, "rows": rows},
+                      open(out_path, "w"), indent=2)
             print(f"[done {rows[-1]['tag']}] atoms={rows[-1]['atoms_final']} "
                   f"classes={rows[-1]['classes']}", flush=True)
     by = {r["tag"]: r for r in rows}
