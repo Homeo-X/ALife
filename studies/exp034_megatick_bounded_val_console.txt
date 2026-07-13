@@ -1,2 +1,24 @@
 [done baseline] atoms=32 classes=17939
 [done capped] atoms=64 classes=25230
+[done uncapped] atoms=531 classes=44408
+exp034 — long-horizon: does sustained novelty need CONTINUING construction?
+  250000 ticks, seed 0, 10 windows of 25000 ticks; the capped arm stopped growing at 64 atoms (32 reified)
+
+  novelty rate / window (new classes/tick):
+  w0     w1     w2     w3     w4     w5     w6     w7     w8     w9     
+  base  0.391  0.327  0.337  0.222  0.224  0.284  0.298  0.255  0.313  0.279
+  capp  0.562  0.420  0.344  0.363  0.371  0.335  0.380  0.378  0.343  0.377
+  unca  0.554  0.637  0.697  0.730  0.833  0.832  0.709  0.802  0.826  0.871
+
+  collective heredity self>null (uncapped arm — must stay heritable):
+  self  0.111  0.080  0.085  0.085  0.076  0.085  0.088  0.087  0.084  0.085
+  null  0.026  0.014  0.015  0.016  0.014  0.016  0.015  0.016  0.014  0.016
+
+  atoms final: baseline 32, capped 64 (32 reified), uncapped 531 (499 reified)
+  novelty-rate late/early ratio (higher = less decay):
+     baseline: 0.85
+       capped: 0.96
+     uncapped: 1.25
+
+  => sustained novelty needs CONTINUING construction: the uncapped arm holds
+     its rate while the capped arm decays after its alphabet stops growing.

@@ -60,6 +60,26 @@ For a long run, pick a horizon **much larger than the class-turnover timescale**
 windowed-novelty inflation small) but small enough to bound memory — e.g. 10k–50k for a 10⁶-tick
 run. Pinned by `test_bounded_memory_mode_flattens_registry_and_stays_open`.
 
+## Instrument validation — bounded reproduces unbounded (250k, 3 arms)
+
+Before trusting the bounded instrument at long horizons, it was checked against the *known*
+unbounded 250k continuing-construction result (Ω-0.20). Same 3 arms (baseline / capped /
+uncapped), `memory_horizon=50000`:
+
+| arm | bounded late/early | unbounded late/early (Ω-0.20) | verdict |
+|-----|:------------------:|:-----------------------------:|:-------:|
+| baseline (never constructs) | 0.85 | 0.51 | decays |
+| capped (stops constructing) | 0.96 | 0.67 | decays after freeze |
+| **uncapped (keeps constructing)** | **1.25** | **1.16** | **sustains/rises** |
+
+The **ordering and conclusion are identical** — only continuing construction sustains novelty;
+uncapped's late-window rate (0.87) dwarfs capped (0.38) and baseline (0.28). The decaying arms'
+ratios sit *higher* under bounding exactly because bounded novelty is horizon-windowed (the
+reappearance floor lifts a decaying rate) — a common-mode effect that does not touch the
+bounded-to-bounded comparison. Memory stayed flat (registry 18k–44k, not ~175k) and heredity
+alive (self ≈ 0.085 ≫ null ≈ 0.015). **The bounded instrument is validated for long-horizon,
+bounded-to-bounded studies** (`studies/exp034_megatick_bounded250000_results.json`).
+
 ## What this unblocks (the campaign)
 With flat memory and 3× throughput, the headline open-endedness tests can move from *miniature*
 to *at scale*: 10⁶-tick persistence and continuing-construction (bounded-to-bounded arms),
