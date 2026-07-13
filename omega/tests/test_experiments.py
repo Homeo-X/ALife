@@ -573,6 +573,21 @@ class TestScientificClaims(unittest.TestCase):
         r = run(*get_experiment("exp036")(seed=0, ticks=800))
         self.assertGreater(r.open_endedness["novelty_rate"], 0.0)   # still an open world
 
+    def test_exp037_per_collective_genome_is_evolvable_internal_state(self):
+        # Ω-0.25: the engine piece exp036 lacked — a collective carries a heritable, mutable
+        # construction rule of its own (its type_resolution), used in its own compositions and
+        # transmitted to the demes it founds. Here we pin that the genome exists, diversifies
+        # (per-deme values within range), and the world stays open; the *evolution under
+        # selection* verdict (treat vs control) is the study's (EXP037_FINDINGS.md).
+        p, c = get_experiment("exp037")(seed=0, ticks=2500)
+        r = run(p, c)
+        self.assertTrue(p.deme_genome)
+        res = list(p._deme_res.values())
+        self.assertGreater(len(res), 0)                       # a per-collective genome formed
+        self.assertTrue(all(1 <= v <= 6 for v in res))        # within the genome range
+        self.assertGreaterEqual(len(set(res)), 2)             # it diversified across demes
+        self.assertGreater(r.open_endedness["novelty_rate"], 0.0)   # still an open world
+
     def test_bounded_memory_mode_flattens_registry_and_stays_open(self):
         # Scaling: the bounded-memory long-run mode (memory_horizon > 0) evicts cold class
         # records so the registry stays flat over long horizons, WITHOUT killing the

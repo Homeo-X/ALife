@@ -425,6 +425,16 @@ class CombinatorPhysics:
         self._cur_band: list = []      # atoms favoured by the feed this tick (cyclic)
         self._next_band: set = set()   # atoms the NEXT season will favour (what to anticipate)
         self._deme_atoms: dict[int, dict] = {}   # per-patch recent product-atom tally
+        # exp037 PER-COLLECTIVE EVOLVABLE INTERNAL STATE (meta-reification): a deme carries a
+        # heritable, mutable *construction rule* of its own — its own type_resolution — used in
+        # its own compositions and transmitted (with mutation) to the demes it founds. exp033
+        # made physics first-class per LEVEL; this makes a slice of it first-class per
+        # COLLECTIVE, so a collective can evolve and improve its own "architecture" under
+        # selection (proto self-improvement). deme_genome=False (default) => byte-identical.
+        self.deme_genome = False
+        self.genome_mut = 0.3
+        self.genome_res_range = (1, 5)   # initial per-deme resolution drawn uniformly here
+        self._deme_res: dict[int, int] = {}   # per-patch resolution (the heritable genome)
         # exp020 replicase: strength/fidelity of the explicit template-copy channel.
         # copy_rate=0 (default) leaves every earlier experiment untouched.
         self.copy_rate = 0.0
@@ -680,6 +690,12 @@ class CombinatorPhysics:
                                for w, s in zip(weights, survivors)]
                 src = rng.weighted_choice(survivors, weights)
                 pool = by_patch[src]
+                if self.deme_genome:   # exp037: the founded deme inherits src's rule (+ mut)
+                    lo, hi = self.genome_res_range
+                    r = self._deme_res.get(src, self.type_resolution)
+                    if rng.random() < self.genome_mut:
+                        r = max(lo, min(hi, r + rng.choice((-1, 1))))
+                    self._deme_res[kp] = r
             else:  # "mixed" null — propagule from the whole survivor pool
                 pool = [o for s in survivors for o in by_patch[s]]
             k = min(self.propagule_size, len(pool))
@@ -847,6 +863,16 @@ class CombinatorPhysics:
                     types.add(Counter(o.cls for o in members).most_common(1)[0][0])
             universe.gauges["n_deme_types"] = float(len(types))
             universe.gauges["n_live_demes"] = float(sum(1 for m in patches if m))
+        # exp037: give every live deme a construction-rule genome (its own resolution) and a
+        # fast id->patch-index map so a composition can use its deme's rule. Gated => off is
+        # byte-identical (no map built, global type_resolution used).
+        genome_ix = None
+        if self.deme_genome and patches is not None:
+            lo, hi = self.genome_res_range
+            for pi in range(len(patches)):
+                if patches[pi] and pi not in self._deme_res:
+                    self._deme_res[pi] = rng.randint(lo, hi)
+            genome_ix = {id(m): i for i, m in enumerate(patches)}
         if len(pop) >= 2:
             for _ in range(self.apply_attempts):
                 if patches is not None:
@@ -859,11 +885,13 @@ class CombinatorPhysics:
                     x = rng.choice(pop)
                 if f.uid == x.uid:
                     continue
+                res = self.type_resolution
+                if genome_ix is not None:
+                    res = self._deme_res.get(genome_ix.get(id(members), -1), res)
                 if self.substrate == "typed":
                     product = compose(f.state, x.state, self.max_size)
                 elif self.substrate == "typed_path":
-                    product = compose_path(f.state, x.state, self.max_size,
-                                           self.type_resolution)
+                    product = compose_path(f.state, x.state, self.max_size, res)
                 elif self.substrate == "tree":
                     product = graft(f.state, x.state, self.max_size, self.tree_resolution)
                 else:
@@ -1057,6 +1085,8 @@ def _make(seed, experiment, **overrides):
     physics.feed_pattern = str(overrides.get("feed_pattern", "random"))  # exp036 environment
     physics.feed_period = int(overrides.get("feed_period", 0))
     physics.feed_bands = int(overrides.get("feed_bands", 4))
+    physics.deme_genome = bool(overrides.get("deme_genome", False))   # exp037 evolvable rule
+    physics.genome_mut = float(overrides.get("genome_mut", 0.3))
     physics.reify_period = int(overrides.get("reify_period", 0))
     physics.reify_max_atoms = int(overrides.get("reify_max_atoms", 0))
     if physics.substrate in ("typed", "typed_path", "tree"):  # atoms over n_types base types
@@ -1575,3 +1605,32 @@ def build_anticipation(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("feed_period", 300)
     overrides.setdefault("feed_bands", 4)
     return _make(seed, "exp036", **overrides)
+
+
+@register("exp037")
+def build_genome(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp037 — PER-COLLECTIVE EVOLVABLE INTERNAL STATE (meta-reification): the engine piece
+    exp036 showed is required (you cannot select for what a collective cannot represent). Each
+    deme carries a heritable, mutable **construction rule of its own** — its `type_resolution`,
+    made first-class per COLLECTIVE (exp033 made it per LEVEL) — used in its own compositions
+    and transmitted (with `genome_mut` mutation) to the demes it founds. Demes start with
+    resolutions drawn uniformly from `genome_res_range`; under network selection the population's
+    rule should **evolve toward the exp027 fitness optimum** (~2–3) — a collective improving its
+    own architecture. Prediction: treatment (network selection) converges toward the optimum
+    from a random start; a matched control (mixed/random founding) drifts. Runs the exp030
+    both-corner machinery."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "network")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("deme_genome", True)
+    overrides.setdefault("genome_mut", 0.3)
+    return _make(seed, "exp037", **overrides)

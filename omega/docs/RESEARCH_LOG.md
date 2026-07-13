@@ -46,6 +46,32 @@ Lamarckian**).
 
 ---
 
+## Milestone Ω-0.25 — Per-collective evolvable internal state: architecture *can* now evolve (exp037)
+
+**Date:** 2026-07-13 · **Status:** complete · **Verdict:** a **weak positive** — the engine piece
+exp036 said was missing is now present and works. Second rung of the self-improvement roadmap.
+Detail: `studies/EXP037_FINDINGS.md`. Gated; exp001–035 byte-identical (54 tests green).
+
+exp036 hit the third wall (you cannot select for what a collective cannot represent). exp037
+supplies representation: each deme carries a **heritable, mutable construction rule of its own** —
+its `type_resolution`, made first-class *per collective* (exp033 made physics first-class per
+*level*) — used in its own compositions and transmitted (with mutation) to the demes it founds.
+Result (6000 ticks, 3 seeds): with a selection channel the population's mean per-deme resolution
+**moves** (treatment 3.5 → 4.14) while a no-selection control stays put (3.03) — a +1.11 gap. So a
+collective can now carry heritable internal state that **selection acts on** — exactly what exp036
+could not do.
+
+**Two honest edges** that matter as much as the result: (i) the selection signal on architecture is
+**weak and noisy** (a ~1-point drift, not a sharp optimum) — consistent with the exp028 heredity
+ceiling; (ii) it evolves toward the **fitness proxy's extreme** (high resolution → runaway
+openness), not the heredity "both corner" — evolvable architecture faithfully **amplifies whatever
+is selected** (Goodhart). So engine piece #2 is necessary and now present, but turning it into
+self-improvement needs **stronger collective heredity** (so selection bites) and a **better-aligned
+target** (so it improves toward coherence, not proxy-gaming) — the next rung, exp038 (coherence /
+autocatalytic closure).
+
+---
+
 ## Milestone Ω-0.24 — Intrinsic function: selection for anticipation is *not enough* (exp036)
 
 **Date:** 2026-07-13 · **Status:** complete · **Verdict:** a **negative-with-diagnosis**, and the

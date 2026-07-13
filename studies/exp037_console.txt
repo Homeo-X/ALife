@@ -1,0 +1,17 @@
+exp037 — does per-collective architecture evolve under selection? (6000 ticks, 3 seeds)
+  genome = per-deme type_resolution, start uniform 1..6 (mean 3.5)
+
+  mean per-deme resolution over the run:
+   treat (network sel)  3.1  2.7  3.3  3.5  3.7  3.5  4.1  4.3  3.7  3.5  4.1   final novelty 0.85
+      control (no sel)  3.1  3.0  3.0  3.0  3.0  3.0  3.0  3.0  3.0  3.0  3.0   final novelty 0.58
+
+  final resolution: treatment 4.14 vs control 3.03 (start 3.5); selection gap +1.11
+  => ARCHITECTURE EVOLVES UNDER SELECTION (engine piece exp036 lacked): the
+     per-collective genome is heritable, mutable, and the selection channel MOVES
+     it (treatment vs the no-selection control). A collective CAN now carry and
+     evolve internal state. Honest edges: (i) the selection signal on architecture
+     is weak/noisy (a ~1-point drift, not a sharp optimum) — consistent with the
+     exp028 heredity ceiling; (ii) it runs toward the fitness proxy's extreme
+     (high resolution => runaway openness), not the heredity 'both corner' —
+     evolvable architecture amplifies WHATEVER is selected (Goodhart). Both point
+     to exp038: select a stronger, better-aligned target (coherence/stability).
