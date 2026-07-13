@@ -94,6 +94,10 @@ class Universe:
         # is never decremented, so the novelty *count* stays exact (see bound_memory).
         self.memory_horizon: int = 0
         self.relation_cap: int = 0
+        # Eviction is amortized: the O(registry) cold-scan runs every N ticks, not every
+        # tick (which would roughly double per-tick cost at a large horizon). Between scans
+        # the registry overshoots by ~N×(new/tick) — negligible vs the horizon.
+        self.memory_evict_interval: int = 512
 
     # ---- identity minting -------------------------------------------------
     def mint_uid(self) -> int:
@@ -236,7 +240,8 @@ class Universe:
             rec.total_observations += n
             rec.ticks_present += 1
             rec.births = self.class_births.get(cls, rec.births)
-        if self.memory_horizon or self.relation_cap:
+        if (self.memory_horizon or self.relation_cap) and \
+                self.tick % self.memory_evict_interval == 0:
             self.bound_memory()
         return pop
 
