@@ -1426,3 +1426,36 @@ def build_tree(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("n_types", 32)
     overrides.setdefault("tree_resolution", 2)
     return _make(seed, "exp035", **overrides)
+
+
+@register("world")
+def build_world(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """The **living world** — the most-alive single-tier configuration, meant to be run
+    *persistently* (forever, bounded memory) and *watched* rather than measured to a fixed
+    horizon. It composes the program's confirmed ingredients on one substrate:
+      - the exp030 **both corner** (`typed_path`, n_types 32, resolution 3): modular AND
+        open-ended, so collectives are heritable *and* the world stays open (Ω-0.15);
+      - **collective individuals** (`track_signature` + `deme_fitness="network"` + demes):
+        reproducing network-signature lifeforms with heredity (Ω-0.15);
+      - **reification** (`reify_period`): continuing construction, so the novelty rate does
+        not decay over a long life (Ω-0.20);
+      - **culture** (`horizontal_transfer`): horizontal, Lamarckian motif spread between
+        lifeforms (Ω-0.16).
+    Every knob already exists and is gated, so exp001–035 stay byte-identical. This is not a
+    new experiment; it is the world runtime's default physics (see `omega/world/`)."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "network")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("reify_period", 500)
+    overrides.setdefault("reify_max_atoms", 0)      # keep constructing (persistent world)
+    overrides.setdefault("horizontal_transfer", 0.3)
+    return _make(seed, "world", **overrides)

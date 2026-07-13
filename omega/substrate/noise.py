@@ -48,3 +48,13 @@ class Noise:
     def fork(self, tag: int) -> "Noise":
         """A derived stream — still deterministic, decorrelated from the parent."""
         return Noise((self.seed * 1_000_003) ^ (tag * 2_654_435_761) & 0xFFFFFFFF)
+
+    # ---- checkpoint / resume ---------------------------------------------
+    # The RNG is the single entropy source, so capturing its exact internal state (not just
+    # the seed, which would rewind to tick 0) is necessary and sufficient to resume a run
+    # byte-identically. Used by the persistent world runtime (omega/world/checkpoint.py).
+    def getstate(self) -> tuple:
+        return self._r.getstate()
+
+    def setstate(self, state: tuple) -> None:
+        self._r.setstate(state)

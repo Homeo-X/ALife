@@ -89,6 +89,21 @@ and the same modular+open-ended engine (exp030) runs one tier up. The four analo
 transmission) — and the recursion are documented in [`LEVELS.md`](LEVELS.md), built by
 `omega/levels/stack.py`, and evidenced in `studies/EXP031_FINDINGS.md`.
 
+### The living world (`omega/world/`)
+
+The same engine can be run not as a batch experiment but as a **persistent, watchable world**
+— forever, at flat memory, with checkpoint/resume — its self-generating open-ended content
+(lifeforms, collectives, cultures, never-ending novelty) made legible and alive. Watch it:
+
+```bash
+python -m omega.world run --dashboard            # live browser dashboard (localhost:8000)
+python -m omega.world run --checkpoint w.ckpt    # persist + resume across restarts
+python -m omega.world snapshot --out world.html  # a self-contained HTML snapshot
+```
+
+See [`WORLD.md`](WORLD.md). Scope is the *watchable* foundation; interaction, spatial
+geography, and embodied agents are the follow-ons it enables.
+
 The headline is the **exp003 → exp004 → exp005 arc**: a bounded alphabet forces
 closure no matter how cleverly operators recombine (exp003); reifying persistent
 structure into new primitives keeps the alphabet growing (exp004); and lowering the

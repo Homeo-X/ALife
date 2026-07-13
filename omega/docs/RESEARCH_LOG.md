@@ -46,6 +46,30 @@ Lamarckian**).
 
 ---
 
+## Milestone Ω-0.22 — The living world: the engine turned into a persistent, watchable world (`omega/world/`)
+
+**Date:** 2026-07-13 · **Status:** capability (not a scientific claim) · **Verdict:** the
+research engine now runs as a **persistent, watchable world** — forever, at flat memory, with
+checkpoint/resume — reusing the confirmed ingredients as one live configuration. Detail:
+`omega/docs/WORLD.md`. Gated; exp001–035 byte-identical (48 tests green).
+
+Ω's result is what most virtual worlds lack: self-generating, open-ended content with nothing
+hand-authored. This packages that generative core as a world. A registered **`world`** physics
+composes the confirmed pieces on one substrate — the both-corner (Ω-0.15) + collective
+individuals + **reification** (continuing construction, Ω-0.20) + **culture** (Ω-0.16). A
+**`World`** runtime (`omega/world/runtime.py`) advances it in chunks indefinitely with
+bounded memory (Ω-0.21) always on; **checkpoint/resume** (`omega/world/checkpoint.py`, via the
+new `Noise.getstate/setstate`) makes a world survive restarts and accrete history —
+*resume-then-continue == run-through*, byte-identical. An **Observer** (`omega/world/observe.py`)
+makes it legible: the **novelty pulse** (open-endedness made visible), named **lifeforms**
+(persistent classes with real ages), transient **collectives** (network communities), culture,
+the growing constructed alphabet, and an event feed. A pure-stdlib **dashboard**
+(`omega/world/dashboard.py`) serves it live in a browser (`http.server`) or the terminal, and
+writes self-contained HTML snapshots. Scope is the *watchable* foundation; interaction, spatial
+geography, and embodied agents are the follow-ons it enables.
+
+---
+
 ## Milestone Ω-0.21 — Scaling infrastructure: lifting the in-miniature cap (bounded memory + 3× faster kernel)
 
 **Date:** 2026-07-12 · **Status:** infrastructure (no new scientific claim) · **Verdict:** the
