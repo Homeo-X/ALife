@@ -46,6 +46,35 @@ Lamarckian**).
 
 ---
 
+## Milestone Ω-0.24 — Intrinsic function: selection for anticipation is *not enough* (exp036)
+
+**Date:** 2026-07-13 · **Status:** complete · **Verdict:** a **negative-with-diagnosis**, and the
+sharpest statement yet of what stands between Ω collectives and minds. First rung of the
+self-improvement roadmap. Detail: `studies/EXP036_FINDINGS.md`. Gated; exp001–035 byte-identical
+(53 tests green).
+
+The discussion on evolving self-improving agents flagged that the usual levers (heredity, memory,
+architecture) are *amplifiers* of whatever is selected, and that two **engine** pieces are missing:
+(1) a reason for computation to be selected, and (2) a substrate that can *represent* it. exp036
+tests (1) in isolation: give the environment a regularity worth predicting — a **cyclic feed**
+whose favoured atom-band rotates each `feed_period` ticks — and select demes for **anticipation**
+(products matching the *next* season). Matched controls isolate cause (cyclic+network; random+
+anticipation). Result (4000 ticks, 3 seeds): the cyclic environment is weakly **tracked**
+(reactivity: P(current band) 0.272 vs 0.245 random, +0.022), but **anticipation does not evolve** —
+treat's P(next band) is −0.005 vs the network control and only +0.019 vs chance (the reactivity
+bleed), robust across `feed_period` ∈ {80,150,300}.
+
+**The third wall.** You cannot select for what the substrate cannot represent. A deme can be
+reactive (products reflect what is currently fed) but not anticipatory, because a collective has
+**no internal state that represents environmental timing** — no clock, no phase memory, no variable
+it could set now to pay off later. With nothing to vary, selection has nothing to act on. This is
+the same lesson as exp010 (a replicator needs von Neumann self-reference the substrate lacks) and
+exp011 (function must be intrinsic, not bolted on): **intrinsic function needs a substrate that can
+hold predictive state, not merely a fitness that rewards it.** So engine piece (1) is inert without
+engine piece (2) — motivating exp037 (per-collective evolvable internal state / memory).
+
+---
+
 ## Milestone Ω-0.23 — The world gains geography and a hand: space + interaction (`omega/world/`, v2)
 
 **Date:** 2026-07-13 · **Status:** capability · **Verdict:** the watchable world (Ω-0.22) becomes

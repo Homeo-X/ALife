@@ -412,6 +412,19 @@ class CombinatorPhysics:
         # exp035 tree substrate: a new composition law (graft at leftmost leaf, depth-capped
         # by tree_resolution). substrate != "tree" => byte-identical.
         self.tree_resolution = 0
+        # exp036 INTRINSIC FUNCTION: give the environment structure worth predicting, and
+        # select for predicting it. feed_pattern="cyclic" makes the feed favour a rotating
+        # BAND of atoms (a "season" that changes every feed_period ticks); deme_fitness=
+        # "anticipation" rewards a deme whose recent products already match the *next* band —
+        # i.e. it has internalized the environment's regularity and pre-builds for it. This
+        # is the engine piece exp011 said was missing (function must be intrinsic, selected,
+        # not bolted on). feed_pattern="random" / other deme_fitness => byte-identical.
+        self.feed_pattern = "random"
+        self.feed_period = 0
+        self.feed_bands = 4
+        self._cur_band: list = []      # atoms favoured by the feed this tick (cyclic)
+        self._next_band: set = set()   # atoms the NEXT season will favour (what to anticipate)
+        self._deme_atoms: dict[int, dict] = {}   # per-patch recent product-atom tally
         # exp020 replicase: strength/fidelity of the explicit template-copy channel.
         # copy_rate=0 (default) leaves every earlier experiment untouched.
         self.copy_rate = 0.0
@@ -440,14 +453,21 @@ class CombinatorPhysics:
         left = rng.randint(1, size - 1)
         return (self._random_expr(rng, left), self._random_expr(rng, size - left))
 
+    def _feed_choice(self, rng: Noise):
+        """Draw a feed atom. exp036 cyclic feed favours the current season's band; otherwise
+        (default) it is exactly ``rng.choice(self.atoms)`` with no extra draw => byte-identical."""
+        if self.feed_pattern == "cyclic" and self._cur_band and rng.random() < 0.75:
+            return rng.choice(self._cur_band)
+        return rng.choice(self.atoms)
+
     def _random_normal(self, rng: Noise):
         """A random behaviour to feed. Combinator: a random expression's normal form.
         Typed (exp029): a random morphism ``(in_type, out_type)``."""
         if self.substrate == "typed":
-            return (rng.choice(self.atoms), rng.choice(self.atoms))
+            return (self._feed_choice(rng), self._feed_choice(rng))
         if self.substrate == "typed_path":
             L = rng.randint(2, max(2, self.expr_size))
-            return _path_build([rng.choice(self.atoms) for _ in range(L)])
+            return _path_build([self._feed_choice(rng) for _ in range(L)])
         if self.substrate == "tree":
             return self._random_expr(rng, rng.randint(2, max(2, self.expr_size)))
         e = self._random_expr(rng, rng.randint(1, self.expr_size))
@@ -637,6 +657,12 @@ class CombinatorPhysics:
                 elif self.deme_fitness == "breed_true":
                     # select demes whose network signature reproduces faithfully
                     weights = [self._breedtrue.get(s, 0.2) + 0.05 for s in survivors]
+                elif self.deme_fitness == "anticipation":
+                    # exp036: reward a deme whose recent products already match the atoms the
+                    # NEXT season will favour — it has internalized the environment's rhythm.
+                    nb = self._next_band
+                    weights = [1.0 + sum(n for a, n in self._deme_atoms.get(s, {}).items()
+                                         if a in nb) for s in survivors]
                 else:
                     weights = [len(by_patch[s]) for s in survivors]
                 if self.coop:
@@ -707,6 +733,7 @@ class CombinatorPhysics:
         self._deme_prod.clear()  # start a fresh productivity window for next gen
         self._xprod.clear()
         self._deme_edges.clear()
+        self._deme_atoms.clear()  # exp036: fresh product-atom window each generation
 
     def _reify_promote(self) -> None:
         """exp034: promote the most common recent non-trivial product to a NEW atom,
@@ -734,6 +761,17 @@ class CombinatorPhysics:
 
     def propose(self, universe: Universe, rng: Noise):
         reactions: list[Reaction] = []
+
+        # exp036: the environment's "season" — which band of atoms the feed favours now, and
+        # which it will favour next (what a deme must anticipate). Deterministic in the tick,
+        # so feed_pattern != "cyclic" consumes no state and stays byte-identical.
+        if self.feed_pattern == "cyclic" and self.feed_period > 0 and self.atoms:
+            k = max(1, self.feed_bands)
+            w = max(1, len(self.atoms) // k)
+            cur = (universe.tick // self.feed_period) % k
+            self._cur_band = list(self.atoms[cur * w: cur * w + w]) or list(self.atoms)
+            nb = ((universe.tick // self.feed_period) + 1) % k
+            self._next_band = set(self.atoms[nb * w: nb * w + w]) or set(self.atoms)
 
         # knockout: continuously remove suppressed classes so they cannot act
         if self.suppress:
@@ -840,7 +878,7 @@ class CombinatorPhysics:
                     else:
                         seen[0] += 1
                 if patches is not None and (self.measure_xprod or self.track_signature
-                        or self.deme_fitness in ("productivity", "network")):
+                        or self.deme_fitness in ("productivity", "network", "anticipation")):
                     # credit this deme's fitness. identity lookup consumes no RNG, so
                     # non-collective runs and every other experiment stay identical.
                     # "productivity": any viable construction. cross-production
@@ -862,6 +900,12 @@ class CombinatorPhysics:
                                     if self.track_signature:
                                         edges = self._deme_edges.setdefault(pi, {})
                                         edges[(f.cls, pcls)] = edges.get((f.cls, pcls), 0) + 1
+                            if self.deme_fitness == "anticipation":
+                                # exp036: tally which atoms this deme is currently producing,
+                                # so anticipation fitness can reward matching the NEXT season.
+                                d = self._deme_atoms.setdefault(pi, {})
+                                for a in _path_nodes(product):
+                                    d[a] = d.get(a, 0) + 1
                             break
                 if self.mut_prob > 0.0 and rng.random() < self.mut_prob:
                     if self.substrate == "typed_path":
@@ -1010,6 +1054,9 @@ def _make(seed, experiment, **overrides):
     physics.type_resolution = int(overrides.get("type_resolution", 0))
     physics.tree_resolution = int(overrides.get("tree_resolution", 0))
     physics.space = bool(overrides.get("space", False))     # world geography (gated)
+    physics.feed_pattern = str(overrides.get("feed_pattern", "random"))  # exp036 environment
+    physics.feed_period = int(overrides.get("feed_period", 0))
+    physics.feed_bands = int(overrides.get("feed_bands", 4))
     physics.reify_period = int(overrides.get("reify_period", 0))
     physics.reify_max_atoms = int(overrides.get("reify_max_atoms", 0))
     if physics.substrate in ("typed", "typed_path", "tree"):  # atoms over n_types base types
@@ -1500,3 +1547,31 @@ def build_world(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("space", True)             # geography: a torus of patches
     overrides.setdefault("mig_rate", 0.06)          # local diffusion (neighbours only)
     return _make(seed, "world", **overrides)
+
+
+@register("exp036")
+def build_anticipation(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp036 — INTRINSIC FUNCTION: the engine piece exp011 said was missing (function must
+    be intrinsic and *selected*, not bolted on). The environment is given a regularity worth
+    predicting — the feed favours a **rotating band of atoms** (a "season" that turns every
+    `feed_period` ticks) — and demes are selected for **anticipation**: a deme whose recent
+    products already match the *next* season is fitter. Prediction: with a predictable feed,
+    collectives evolve to produce the next season's atoms above chance (intrinsic function);
+    the matched control (random feed) has nothing to anticipate, so no such structure forms.
+    Runs the exp030 both-corner collective machinery."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "anticipation")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("feed_pattern", "cyclic")
+    overrides.setdefault("feed_period", 300)
+    overrides.setdefault("feed_bands", 4)
+    return _make(seed, "exp036", **overrides)

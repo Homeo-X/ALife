@@ -556,6 +556,23 @@ class TestScientificClaims(unittest.TestCase):
         self.assertTrue(all(s > n for s, n in zip(self_w, null_w)))  # heredity alive every window
         self.assertLess(nov_c[-1], nov_o[-1])               # closed control decays vs open
 
+    def test_exp036_cyclic_feed_gives_the_environment_structure(self):
+        # Ω-0.24: intrinsic function needs an environment worth predicting. exp036's cyclic
+        # feed favours the CURRENT season's band, so the world has exploitable structure (a
+        # deme can be reactive). Whether *anticipation* is selectable is the study's
+        # negative-with-diagnosis: it is not, absent internal state (see EXP036_FINDINGS.md).
+        from omega.substrate.noise import Noise
+        p, c = get_experiment("exp036")(seed=0, ticks=10)
+        p._cur_band = list(p.atoms[:8])            # 8 of 32 atoms = the season's band
+        cur, rng = set(p._cur_band), Noise(0)
+        biased = sum(1 for _ in range(2000) if p._feed_choice(rng) in cur) / 2000
+        self.assertGreater(biased, 0.5)            # cyclic feed concentrates on the band (>>0.25)
+        p.feed_pattern = "random"
+        flat = sum(1 for _ in range(2000) if p._feed_choice(rng) in cur) / 2000
+        self.assertLess(flat, 0.4)                 # random feed is ~uniform (chance 0.25)
+        r = run(*get_experiment("exp036")(seed=0, ticks=800))
+        self.assertGreater(r.open_endedness["novelty_rate"], 0.0)   # still an open world
+
     def test_bounded_memory_mode_flattens_registry_and_stays_open(self):
         # Scaling: the bounded-memory long-run mode (memory_horizon > 0) evicts cold class
         # records so the registry stays flat over long horizons, WITHOUT killing the

@@ -1,0 +1,60 @@
+{
+  "ticks": 4000,
+  "n_seeds": 3,
+  "rows": [
+    {
+      "label": "treat",
+      "seed": 0,
+      "p_current": 0.2909662262944056,
+      "p_next": 0.27734305468153614
+    },
+    {
+      "label": "treat",
+      "seed": 1,
+      "p_current": 0.2442636542535051,
+      "p_next": 0.265396451108613
+    },
+    {
+      "label": "treat",
+      "seed": 2,
+      "p_current": 0.2814220888837634,
+      "p_next": 0.26309989709278997
+    },
+    {
+      "label": "network-ctrl",
+      "seed": 0,
+      "p_current": 0.28680119265110593,
+      "p_next": 0.2672407118709758
+    },
+    {
+      "label": "network-ctrl",
+      "seed": 1,
+      "p_current": 0.3011708885810006,
+      "p_next": 0.2664257843455253
+    },
+    {
+      "label": "network-ctrl",
+      "seed": 2,
+      "p_current": 0.27539020082122695,
+      "p_next": 0.2878402139177065
+    },
+    {
+      "label": "random-null",
+      "seed": 0,
+      "p_current": 0.24877061902290135,
+      "p_next": 0.23405056492457382
+    },
+    {
+      "label": "random-null",
+      "seed": 1,
+      "p_current": 0.22690416352052148,
+      "p_next": 0.23209847477051665
+    },
+    {
+      "label": "random-null",
+      "seed": 2,
+      "p_current": 0.2598508225263969,
+      "p_next": 0.2545356925217108
+    }
+  ]
+}

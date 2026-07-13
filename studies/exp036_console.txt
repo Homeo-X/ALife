@@ -1,0 +1,16 @@
+exp036 — does selection for anticipation produce it? (4000 ticks, 3 seeds)
+  chance = 1/bands = 0.25
+
+      condition  P(current band)   P(next band)
+          treat            0.272          0.269
+   network-ctrl            0.288          0.274
+    random-null            0.245          0.240
+
+  reactivity (treat P(current) - chance)         : +0.022
+  anticipation gain (treat - network control)    : -0.005
+  anticipation vs chance (treat P(next) - chance): +0.019
+
+  => REACTIVITY ONLY (negative-with-diagnosis): the cyclic environment is weakly
+     tracked, but selection for anticipation adds ~nothing over the control — the
+     substrate has no internal state to REPRESENT environmental timing, so
+     prediction cannot be selected. Motivates exp037 (evolvable internal memory).
