@@ -1,0 +1,9 @@
+# Project Ω has NO third-party dependencies — it is pure Python 3.10+ standard library.
+# This is a deliberate design choice: the substrate must be auditable end-to-end, and a run
+# must be a pure function of its seed. There is nothing to `pip install`.
+#
+#   python -m omega.cli list
+#   python -m omega.world run --dashboard
+#   python -m unittest discover -s omega/tests -t .
+#
+# (Optional, for your own analysis only — never imported by the engine: matplotlib, numpy.)

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" font-family="ui-monospace,Menlo,Consolas,monospace">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0e14"/>
+      <stop offset="1" stop-color="#111a2b"/>
+    </linearGradient>
+    <linearGradient id="tower" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#2b3550"/>
+      <stop offset="0.45" stop-color="#7fd1ff"/>
+      <stop offset="1" stop-color="#8affc1"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="300" fill="url(#bg)"/>
+
+  <!-- novelty pulse (the world never stops discovering) -->
+  <polyline fill="none" stroke="#8affc1" stroke-width="2" opacity="0.35"
+    points="0,255 40,250 80,235 120,244 160,220 200,238 240,214 280,236 320,210 360,232 400,205 440,230 480,206 520,228 560,204 600,226 640,205 680,224 720,206 760,222 800,207 840,221 880,208 920,220 960,208 1000,219 1040,209 1080,218 1120,210 1160,217 1200,211"/>
+
+  <!-- recursive tower: physics -> chemistry -> biology -> culture -->
+  <g transform="translate(90,60)">
+    <rect x="0"   y="150" width="150" height="34" rx="4" fill="url(#tower)" opacity="0.30"/>
+    <rect x="24"  y="112" width="150" height="34" rx="4" fill="url(#tower)" opacity="0.45"/>
+    <rect x="48"  y="74"  width="150" height="34" rx="4" fill="url(#tower)" opacity="0.65"/>
+    <rect x="72"  y="36"  width="150" height="34" rx="4" fill="url(#tower)" opacity="0.90"/>
+    <text x="16"  y="172" fill="#0b0e14" font-size="15">physics</text>
+    <text x="40"  y="134" fill="#0b0e14" font-size="15">chemistry</text>
+    <text x="64"  y="96"  fill="#0b0e14" font-size="15">biology</text>
+    <text x="88"  y="58"  fill="#0b0e14" font-size="15">culture</text>
+  </g>
+
+  <!-- title -->
+  <text x="470" y="120" fill="#e8eef7" font-size="76" font-weight="700" letter-spacing="4">Project &#937;</text>
+  <text x="474" y="164" fill="#7fd1ff" font-size="24" letter-spacing="2">open-ended organizational complexity</text>
+  <text x="474" y="200" fill="#9fb0c8" font-size="19">Open-ended evolution needs infinite <tspan fill="#8affc1">constructibility</tspan>, not infinite space.</text>
+  <text x="474" y="236" fill="#5b6b82" font-size="15">a falsifiable ALife research engine &#183; pure-Python &#183; physics &#8594; chemistry &#8594; biology &#8594; culture</text>
+</svg>

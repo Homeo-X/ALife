@@ -1,4 +1,8 @@
-# Project Ω (OMEGA) — Kernel v0.1
+# Project Ω (OMEGA) — the detailed record
+
+> 🔭 **New here? Start with the [top-level README](../../README.md)** for the big-picture
+> overview, the headline results, and how to watch a living world. *This* document is the dense,
+> per-experiment scientific record — every yes/no question, control, and number.
 
 > Discovering the minimal computational substrate that permits *indefinitely
 > increasing* organizational complexity. Not another ALife simulator: a research
@@ -6,6 +10,21 @@
 >
 > **Open-ended evolution does not require infinite space. It requires infinite
 > constructibility.**
+
+```
+   the whole program on one page
+   ──────────────────────────────
+   physics  (the kernel: atoms, conservation, reactions — the only fixed laws)
+      │  compose + REIFY persistent structure into new primitives      ← keeps a bounded world OPEN
+      ▼
+   chemistry → biology → culture   (a recursive tower: each tier's heritable
+      │                             collectives become the next tier's atoms)
+      ▼
+   a living world  (persistent · watchable · spatial · steerable)
+      │
+      ▼
+   toward minds?  (machinery present; collective-heredity ceiling is the located blocker)
+```
 
 Everything is an **Organization**: a persistent arrangement of interacting
 differences. Space, time, matter, and life are *not* primitives; if they appear
