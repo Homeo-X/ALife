@@ -692,6 +692,20 @@ class CombinatorPhysics:
                     # exp038: reward autocatalytic CLOSURE — a deme that rebuilds its own parts
                     # (a self-maintaining loop), an emergent coherence read off the network.
                     weights = [0.05 + self._deme_closure(s) for s in survivors]
+                elif self.deme_fitness == "composite":
+                    # exp039 capstone: MULTI-OBJECTIVE alignment — reward demes good at BOTH
+                    # self-maintenance (closure) AND faithful reproduction (breed_true heredity).
+                    # Each objective is normalized to the survivor-set mean (so neither's raw
+                    # scale/variance dominates), then multiplied — a deme must be above-average on
+                    # *both* to win. Tests whether combining independent objectives beats exp038's
+                    # single-objective trade-off (compound) or hits a real Pareto frontier.
+                    cl = [self._deme_closure(s) for s in survivors]
+                    bt = [self._breedtrue.get(s, 0.1) for s in survivors]
+                    mcl = (sum(cl) / len(cl)) or 1.0
+                    mbt = (sum(bt) / len(bt)) or 1.0
+                    # maximin: reward the deme whose *weaker* (mean-normalized) objective is
+                    # strongest — forces both high, penalizing single-objective specialists.
+                    weights = [0.05 + min(c / mcl, b / mbt) for c, b in zip(cl, bt)]
                 else:
                     weights = [len(by_patch[s]) for s in survivors]
                 if self.coop:
@@ -926,7 +940,7 @@ class CombinatorPhysics:
                         seen[0] += 1
                 if patches is not None and (self.measure_xprod or self.track_signature
                         or self.deme_fitness in ("productivity", "network", "anticipation",
-                                                 "closure")):
+                                                 "closure", "composite")):
                     # credit this deme's fitness. identity lookup consumes no RNG, so
                     # non-collective runs and every other experiment stay identical.
                     # "productivity": any viable construction. cross-production
@@ -1680,3 +1694,29 @@ def build_closure(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("n_types", 32)
     overrides.setdefault("type_resolution", 3)
     return _make(seed, "exp038", **overrides)
+
+
+@register("exp039")
+def build_composite(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp039 — the CAPSTONE of the self-improvement arc. exp036–038 showed every *single*
+    selection proxy Goodharts: network → runaway openness (exp037), closure → low heredity
+    (exp038). The design constraint they exposed is that **alignment is multi-objective**. This
+    tests it directly: `deme_fitness="composite"` rewards demes good at BOTH self-maintenance
+    (autocatalytic closure) AND faithful reproduction (breed_true heredity), multiplicatively
+    (a deme must satisfy both). Question: does combining objectives **compound** — reaching high
+    closure AND high heredity at once, beating the single-objective trade-off — or does it land
+    in the **middle** (a genuine Pareto frontier: the two are fundamentally in tension)? Either
+    is a real capstone result. Runs the exp030 both-corner machinery."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "composite")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    return _make(seed, "exp039", **overrides)

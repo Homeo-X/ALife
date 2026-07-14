@@ -608,6 +608,22 @@ class TestScientificClaims(unittest.TestCase):
         self.assertLessEqual(c_sel, 1.0)               # a well-formed fraction (emergent metric)
         self.assertGreater(c_sel, c_base)              # selection raises it above the baseline
 
+    def test_exp039_composite_selection_lifts_closure(self):
+        # Ω-0.27 (capstone): multi-objective (maximin) selection over closure AND heredity is
+        # a valid, gated fitness that lifts the closure objective above a no-network baseline.
+        # The capstone SCIENCE — that it lifts closure but NOT heredity, because collective
+        # heredity is the weak channel (exp028 ceiling), so competence does not compound — is
+        # the study's result (EXP039_FINDINGS.md); here we pin the mechanism is sound.
+        from statistics import mean
+
+        def closure(fit):
+            p, c = get_experiment("exp039")(seed=0, ticks=2500, deme_fitness=fit)
+            run(p, c)
+            cs = [p._deme_closure(pi) for pi in range(p.n_patches) if p._deme_edges.get(pi)]
+            return (mean(cs) if cs else 0.0)
+
+        self.assertGreater(closure("composite"), closure("size"))   # combined selection acts
+
     def test_bounded_memory_mode_flattens_registry_and_stays_open(self):
         # Scaling: the bounded-memory long-run mode (memory_horizon > 0) evicts cold class
         # records so the registry stays flat over long horizons, WITHOUT killing the

@@ -46,6 +46,34 @@ Lamarckian**).
 
 ---
 
+## Milestone Ω-0.27 — Capstone: the machinery for self-improvement is present; high-fidelity collective heredity is not (exp039)
+
+**Date:** 2026-07-13 · **Status:** complete · **Verdict:** closes the self-improvement arc
+(exp036→039) with a precise, falsifiable location of the barrier. Detail:
+`studies/EXP039_FINDINGS.md`. Gated; exp001–035 byte-identical (56 tests green).
+
+exp038 left the question: does **multi-objective** selection beat the single-objective trade-off?
+Two findings (6000 ticks, 3 seeds). **(1) The trade-off is not fundamental:** across demes closure
+and collective heredity are **independent** (corr −0.001) — both-high demes exist. **(2) But
+combining objectives still does not compound:** `deme_fitness="composite"` (maximin over the two
+mean-normalized objectives) reaches the **highest closure of all** (0.078) yet leaves **heredity
+low** (0.106 vs 0.209 under direct network selection); three composite formulations
+(multiplicative, normalized, maximin) all give the same shape — closure compounds, heredity does
+not.
+
+**Diagnosis:** selection can only stack a property as fast as it is inherited, and **collective
+heredity is the weak channel** — the exp028 ceiling (network signatures transmit at only ~3–5×
+null, substrate-limited). Closure (a local, low-dimensional loop property) transmits well enough to
+select; the full multi-edge network heredity does not, so competence **cannot compound**. Verdict
+on the self-improvement question: the **machinery is present** — collectives carry evolvable
+internal state (exp037) and are selectable on emergent coherence (exp038) — **but the missing piece
+is high-fidelity collective heredity**, not more selection or a cleverer objective. The follow-on
+work points squarely at the exp028 ceiling: raising whole-network transmission fidelity is the
+prerequisite for open-ended collective self-improvement. Until then, Ω collectives are evolvable and
+selectable but do not compound into minds.
+
+---
+
 ## Milestone Ω-0.26 — Coherence is selectable and emergent — but single-objective selection trades off (exp038)
 
 **Date:** 2026-07-13 · **Status:** complete · **Verdict:** a positive with an honest negative.

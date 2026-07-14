@@ -1,0 +1,21 @@
+exp039 — capstone: does multi-objective selection compound? (6000 ticks, 3 seeds)
+
+  (1) is the trade-off fundamental? corr(closure, heredity) across demes = -0.001
+      => independent (both-high demes exist) — NOT a fundamental Pareto frontier
+
+  (2) does composite reach high BOTH?
+   selection  closure  heredity(self)
+   composite    0.078           0.106
+     closure    0.064           0.102
+     network    0.046           0.209
+        size    0.028           0.117
+
+  single-objective bests: closure 0.064, heredity 0.209
+  composite: closure 0.078, heredity 0.106
+  => DOES NOT COMPOUND: composite reaches high closure but NOT high heredity —
+     even though the objectives are independent (both-high demes exist), selection
+     cannot concentrate on them. The blocker is the WEAK COLLECTIVE-HEREDITY channel
+     (the exp028 ceiling): collectives don't transmit a multi-property phenotype
+     faithfully enough for competence to stack. The machinery for self-improvement
+     is present (exp037 evolvable state, exp038 selectable coherence); the missing
+     piece is high-fidelity collective heredity, not more selection pressure.
