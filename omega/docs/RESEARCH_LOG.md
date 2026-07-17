@@ -6,6 +6,51 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.30 — A self-expanding objective still doesn't compound: the barrier is *goal representation*, not the objective's mobility (exp042)
+
+**Date:** 2026-07-17 · **Status:** complete · **Verdict:** an **informative negative that names the
+deepest frontier** — and closes the self-improvement arc's logic. Detail: `studies/EXP042_FINDINGS.md`.
+Gated; exp001–041 byte-identical (69 tests green).
+
+exp041 pinned the blocker on the *fixed* objective; exp042 makes the objective itself grow.
+`deme_fitness="ratchet"` scores each deme's absolute competence (closure + breed-true heredity +
+normalized network breadth, ~[0,3]) and rewards it for **beating a moving bar** that is raised toward
+the achieved frontier and never lowered — *goal reification*, the collective analogue of reifying
+structure into primitives. Run with the exp040 heredity channel on; controls are exp041 (fixed
+composite) and drift; the bar chase-rate is swept (lr ∈ {0.1, 0.25, 0.5}) so no single rate can be
+blamed (8000 ticks × 5 seeds).
+
+**Competence does not ratchet — and the moving objective is *worse* than the fixed one.** Every
+chase-rate gives a flat-to-declining frontier slope (−0.029 / −0.025 / −0.084 per window; the
+*fastest* chase is the *worst*), and the fixed composite ends with the **highest** frontier of all
+(0.99 vs the best ratchet's 0.58). The heredity channel is engaged throughout (self/null 4.5–8.2×),
+so this is a failure to *accumulate*, not to inherit.
+
+**Two mechanisms, both pointing past the objective's mobility.** (1) A bar that chases the frontier
+**flattens its own selection gradient**: once the bar converges near the top deme, `max(0, comp − bar)`
+collapses to the floor for almost every deme → near-neutral drift (harder chase ⇒ flatter ⇒ observed
+ordering). A "beat the current best" objective removes its gradient the instant competence stops
+rising. (2) More deeply, the bar is a single **non-heritable, non-composable scalar** — the substrate
+has no representation of a *goal* to reify. Reifying **structure** worked (Ω-0.20) because structure
+is exactly what this substrate transmits; reifying a **goal** fails because there is no heritable,
+composable goal representation to transmit.
+
+So the arc lands precisely: **open-ended collective self-improvement needs a representational faculty
+for heritable, composable goals — not just heritable structure (exp040) and not just a moving scalar
+target (exp042).** The whole sequence: exp039 (fixed multi-objective doesn't compound → suspect
+heredity) → exp040 (break the heredity ceiling) → exp041 (still doesn't compound → blame the fixed
+target) → exp042 (self-expand the target → still doesn't, worse → the barrier is goal representation).
+
+### Is / is not
+- **Is:** a robust, multi-seed, multi-rate negative from a *powered* setup (heredity present), and a
+  named next frontier that for the first time requires new *representational* machinery (heritable,
+  composable goals), not a new selection rule.
+- **Is not:** proof that no open-ended objective can work — it shows *this* natural family (scalar,
+  self-referential bars) cannot, and diagnoses *why* (gradient collapse + no goal representation).
+  "Competence" is a within-substrate composite, not task performance.
+
+---
+
 ## Milestone Ω-0.29 — A higher heredity level is not enough: competence does not compound; the blocker moves to *the objective* (exp041)
 
 **Date:** 2026-07-17 · **Status:** complete · **Verdict:** an **informative negative that sharpens

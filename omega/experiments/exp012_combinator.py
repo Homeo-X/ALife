@@ -322,6 +322,16 @@ class CombinatorPhysics:
         # resolution dial: 0 = off (byte-identical); 1 = full pinning (strong heredity but closes
         # the world); intermediate = the target both corner (strong heredity AND sustained novelty).
         self.network_template = 0.0
+        # exp042 self-expanding objective: exp041 showed a FIXED objective can't compound
+        # competence (selection reaches the bar, mutation erodes it, nothing ratchets — the
+        # Ω-0.20 "rate not stock" problem one level up). "ratchet" makes the target itself GROW:
+        # a deme is rewarded for BEATING a moving competence bar, and the bar is then raised
+        # toward the achieved frontier (monotonic — goal reification, the analogue of reifying
+        # persistent STRUCTURE into new primitives, here reifying achieved COMPETENCE into the
+        # new minimum target). ratchet_lr in (0,1] is how fast the bar chases the frontier;
+        # _ratchet_bar is the current (non-decreasing) target. 0 => off (byte-identical).
+        self.ratchet_lr = 0.0
+        self._ratchet_bar = 0.0
         # exp018 collective fitness: how a surviving deme's chance of founding a
         # propagule is set. "size" (the exp017 default) weights by deme headcount —
         # but the global reservoir cap pins every deme to ~the same size, so
@@ -629,6 +639,18 @@ class CombinatorPhysics:
         union = producers | products
         return len(producers & products) / len(union) if union else 0.0
 
+    def _deme_competence(self, pi: int) -> float:
+        """exp042 ABSOLUTE competence of a deme, on a common ~[0,3] scale so it can be compared
+        against a moving bar (unlike the composite maximin, which is mean-normalized and floats
+        around 1 by construction — it *cannot* ratchet). Sums the three axes exp041 tracked:
+        autocatalytic closure (self-maintenance, [0,1]), breed-true heredity (faithful
+        reproduction, [0,1]), and normalized network breadth (construction, len(edges)/10 capped
+        at 1). A deme that is self-maintaining AND reproduces faithfully AND builds a rich network
+        scores high — the multi-property phenotype whose accumulation exp041 found does not
+        compound under a fixed target."""
+        breadth = min(1.0, len(self._deme_edges.get(pi, ())) / 10.0)
+        return self._deme_closure(pi) + self._breedtrue.get(pi, 0.0) + breadth
+
     def _deme_reproduction(self, universe: Universe, rng: Noise) -> None:
         """Kill a fraction of demes and recolonize each from a propagule copied out
         of a surviving deme (productivity-weighted) — deme-level reproduction."""
@@ -717,6 +739,14 @@ class CombinatorPhysics:
                     # maximin: reward the deme whose *weaker* (mean-normalized) objective is
                     # strongest — forces both high, penalizing single-objective specialists.
                     weights = [0.05 + min(c / mcl, b / mbt) for c, b in zip(cl, bt)]
+                elif self.deme_fitness == "ratchet":
+                    # exp042 SELF-EXPANDING objective: reward demes that BEAT the moving competence
+                    # bar. As the bar rises toward the achieved frontier (updated once per
+                    # generation, below), the target keeps climbing — an open-ended objective, not
+                    # a fixed one. Demes above the bar get a reward proportional to how far they
+                    # clear it; all keep a small floor so selection never fully dies.
+                    weights = [0.05 + max(0.0, self._deme_competence(s) - self._ratchet_bar)
+                               for s in survivors]
                 else:
                     weights = [len(by_patch[s]) for s in survivors]
                 if self.coop:
@@ -802,6 +832,16 @@ class CombinatorPhysics:
                 if p_cls in rep_state:
                     self._niche.setdefault(rp, []).append(rep_state[p_cls])
                     self._meme_horizontal += 1
+        if self.ratchet_lr > 0.0 and alive:
+            # exp042: raise the moving competence bar toward this generation's achieved frontier,
+            # then never lower it — goal reification. The bar chases the frontier with lag
+            # (lr < 1), so the best demes stay above it and selectable while the target keeps
+            # climbing. If competence cannot be sustained, the frontier stops exceeding the bar and
+            # it plateaus — the honest test of whether a self-expanding objective makes competence
+            # ratchet. Computed before the network buffers are cleared below.
+            frontier = max(self._deme_competence(p) for p in alive)
+            if frontier > self._ratchet_bar:
+                self._ratchet_bar += self.ratchet_lr * (frontier - self._ratchet_bar)
         self._deme_prod.clear()  # start a fresh productivity window for next gen
         self._xprod.clear()
         self._deme_edges.clear()
@@ -963,7 +1003,7 @@ class CombinatorPhysics:
                         seen[0] += 1
                 if patches is not None and (self.measure_xprod or self.track_signature
                         or self.deme_fitness in ("productivity", "network", "anticipation",
-                                                 "closure", "composite")):
+                                                 "closure", "composite", "ratchet")):
                     # credit this deme's fitness. identity lookup consumes no RNG, so
                     # non-collective runs and every other experiment stay identical.
                     # "productivity": any viable construction. cross-production
@@ -1145,6 +1185,7 @@ def _make(seed, experiment, **overrides):
     physics.deme_genome = bool(overrides.get("deme_genome", False))   # exp037 evolvable rule
     physics.genome_mut = float(overrides.get("genome_mut", 0.3))
     physics.network_template = float(overrides.get("network_template", 0.0))  # exp040 strength
+    physics.ratchet_lr = float(overrides.get("ratchet_lr", 0.0))              # exp042 bar chase-rate
     physics.reify_period = int(overrides.get("reify_period", 0))
     physics.reify_max_atoms = int(overrides.get("reify_max_atoms", 0))
     if physics.substrate in ("typed", "typed_path", "tree"):  # atoms over n_types base types
@@ -1806,3 +1847,36 @@ def build_compound(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("type_resolution", 3)
     overrides.setdefault("network_template", 0.5)       # exp040 developmental channel — ON
     return _make(seed, "exp041", **overrides)
+
+
+@register("exp042")
+def build_ratchet(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp042 — a SELF-EXPANDING objective: does competence finally RATCHET? exp041 showed that even
+    with the heredity ceiling broken (exp040), competence does not compound under a *fixed* objective
+    — selection climbs to the bar, mutation erodes fidelity, and nothing makes the target keep
+    rising (the Ω-0.20 'rate, not stock' problem one level up). This makes the objective itself grow:
+    `deme_fitness="ratchet"` rewards demes for BEATING a moving competence bar, and the bar is then
+    raised toward the achieved frontier and never lowered (goal reification — the collective-level
+    analogue of reifying persistent structure into new primitives). Runs *with* the exp040 heredity
+    channel (`network_template=0.5`) so achieved competence can be inherited. Question: does the
+    achieved competence frontier ratchet UP over generations (competence compounds at last) or
+    plateau (a deeper barrier — the substrate cannot accumulate the goal, needing a new
+    representational faculty)? The matched control is exp041 (`deme_fitness="composite"`,
+    `ratchet_lr=0.0`), the fixed-objective treatment; `size` is the drift floor. `ratchet_lr=0` ⇒
+    exp001–041 byte-identical."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "ratchet")
+    overrides.setdefault("propagule_bias", "network")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("network_template", 0.5)       # exp040 heredity channel — ON
+    overrides.setdefault("ratchet_lr", 0.25)            # exp042 self-expanding objective — ON
+    return _make(seed, "exp042", **overrides)

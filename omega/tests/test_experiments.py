@@ -672,6 +672,34 @@ class TestScientificClaims(unittest.TestCase):
         self.assertGreater(s_treat, n_treat)                    # heritable with the template on
         self.assertGreater(c_treat, c_drift)                    # composite selection acts atop it
 
+    def test_exp042_ratchet_raises_a_monotonic_competence_bar(self):
+        # Ω-0.30: a SELF-EXPANDING objective. deme_fitness="ratchet" rewards demes for beating a
+        # moving competence bar, and the bar is raised toward the achieved frontier and never
+        # lowered (goal reification). Here we pin the mechanism is sound: the bar rises above 0
+        # (demes clear it, so it self-expands) and is monotonic non-decreasing across generations;
+        # collective identity stays heritable with the ratchet + template on (self > null). Whether
+        # a moving objective actually makes competence COMPOUND over generations — the arc's open
+        # question — is the study's result (EXP042_FINDINGS.md). ratchet_lr=0 ⇒ byte-identical.
+        from statistics import mean
+        from omega.experiments.exp012_combinator import Physics
+        from omega.kernel.universe import Universe
+        from omega.kernel.scheduler import Scheduler
+        from omega.substrate.noise import Noise
+
+        p, c = get_experiment("exp042")(seed=0, ticks=2500)
+        rng = Noise(c.seed); u = Universe(total_quanta=c.total_quanta); p.seed(u, rng)
+        sch = Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                        max_reactions_per_tick=c.max_reactions_per_tick)
+        bars = []
+        for _ in range(2500):
+            sch.run(1)
+            bars.append(p._ratchet_bar)
+        self.assertGreater(p._ratchet_bar, 0.0)                 # the bar self-expands off zero
+        self.assertTrue(all(b <= a + 1e-12 for b, a in zip(bars, bars[1:])))  # monotonic ↑
+        s = mean(p._hered_edge_self) if p._hered_edge_self else 0.0
+        n = mean(p._hered_edge_null) if p._hered_edge_null else 0.0
+        self.assertGreater(s, n)                                # heritable with ratchet + template
+
     def test_bounded_memory_mode_flattens_registry_and_stays_open(self):
         # Scaling: the bounded-memory long-run mode (memory_horizon > 0) evicts cold class
         # records so the registry stays flat over long horizons, WITHOUT killing the

@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.29).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.30).
 
 ## Where we are
 
@@ -13,25 +13,28 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
 - **Scale** — bounded-memory long-run mode + a 3× faster kernel, validated (Ω-0.21).
 - **A living world** — persistent, checkpointing, watchable, spatial, steerable (Ω-0.22–0.23).
 - **Toward minds** — the self-improvement machinery is present, the heredity ceiling is broken, and
-  the remaining blocker is now precisely located (Ω-0.24–0.29): collectives carry evolvable internal
+  the remaining blocker is now precisely located (Ω-0.24–0.30): collectives carry evolvable internal
   state (exp037) and are selectable on emergent coherence (exp038); developmental inheritance broke
   the exp028 heredity ceiling (exp040, 8–9× null, world still open); but exp041 showed a higher
-  heredity *level* is **not enough** — under a **fixed** objective competence still doesn't compound
-  (heredity erodes every generation). The barrier moved to **the objective itself**.
+  heredity *level* is **not enough** (competence erodes under a fixed objective), and exp042 showed
+  even a **self-expanding** objective does not ratchet — it is *worse*, because a moving scalar bar
+  flattens its own selection gradient and the substrate has no *goal* to reify. The barrier is now
+  **goal representation**, and it needs new representational machinery, not another selection rule.
 
 ## The next frontier (highest priority)
 
-**1. An open-ended, self-expanding objective.** exp041 ran the arc's predicted falisfication: with
-the heredity ceiling broken (exp040), competence *still* did not compound under a fixed composite
-target — the three axes (closure, heredity, function) do not rise together across generations,
-because selection reaches a fixed bar while mutation erodes fidelity. So the barrier is deeper than
-heredity: it is the **stock-vs-rate** problem one level up (Ω-0.20). The decisive experiment
-(exp042) makes the *deme objective itself grow* — reward *increasing* closure/heredity/breadth
-against a moving baseline, or promote a collective's achieved competence into the next target
-(collective-level reification of *goals*, the analogue of substrate-level reification of
-*primitives*) — then test whether competence finally **ratchets**. *Predicted falsification:* if a
-moving objective still does not compound, self-improvement in this substrate needs a new
-representational faculty (goals the substrate can't yet express), not just a moving target.
+**1. Heritable, composable goals (a representational faculty, not a selection rule).** exp042 ran the
+arc's predicted falsification: even a *self-expanding* objective (a monotonic competence bar chasing
+the frontier) failed to make competence ratchet — worse than the fixed objective, robustly across
+chase-rates — for two reasons past the objective's mobility: a self-referential bar **removes its own
+selection gradient** once competence stops rising, and, more deeply, the bar is a single
+**non-heritable, non-composable scalar** — the substrate can reify *structure* (Ω-0.20) but has no
+representation of a *goal* to reify. The decisive next experiment (exp043) is therefore a **substrate
+extension**: give collectives a *transmissible, mutating, recombining representation of what to build
+next* (a goal that inherits and composes like the type-path structure does), then test whether
+competence ratchets. *Predicted falsification:* if heritable goals still don't compound, the missing
+piece is not representation but *credit assignment* — the collective cannot tell which of its parts
+caused its competence — which would redirect the arc a third time.
 
 **2. Truly unbounded, not in-miniature.** Every open-endedness result is ≤ 250k ticks / few seeds.
 With the Ω-0.21 instrument, run 10⁶–10⁷ ticks, multi-seed, and deep towers (50+), with a *streaming*
