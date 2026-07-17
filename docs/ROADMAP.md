@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.27).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.29).
 
 ## Where we are
 
@@ -12,19 +12,26 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   *continuing* construction (a rate, not a stock).
 - **Scale** — bounded-memory long-run mode + a 3× faster kernel, validated (Ω-0.21).
 - **A living world** — persistent, checkpointing, watchable, spatial, steerable (Ω-0.22–0.23).
-- **Toward minds** — the self-improvement machinery is present but the blocker is located
-  (Ω-0.24–0.27): collectives can carry evolvable internal state and be selected on emergent
-  coherence, but **competence cannot compound until collective heredity beats the exp028 ceiling**.
+- **Toward minds** — the self-improvement machinery is present, the heredity ceiling is broken, and
+  the remaining blocker is now precisely located (Ω-0.24–0.29): collectives carry evolvable internal
+  state (exp037) and are selectable on emergent coherence (exp038); developmental inheritance broke
+  the exp028 heredity ceiling (exp040, 8–9× null, world still open); but exp041 showed a higher
+  heredity *level* is **not enough** — under a **fixed** objective competence still doesn't compound
+  (heredity erodes every generation). The barrier moved to **the objective itself**.
 
 ## The next frontier (highest priority)
 
-**1. Break the collective-heredity ceiling.** exp039 showed the single quantified blocker between
-Ω collectives and self-improvement: whole-network transmission fidelity (~3–5× null,
-substrate-limited since exp028). The decisive experiment is a substrate where a collective's
-*entire* cross-production network is transmitted with **high fidelity** (not sampled), then re-run
-the capstone: does competence finally compound (closure **and** heredity **and** function rising
-together over generations)? *Predicted falsification:* if fidelity rises but competence still does
-not compound, the barrier is deeper than heredity.
+**1. An open-ended, self-expanding objective.** exp041 ran the arc's predicted falisfication: with
+the heredity ceiling broken (exp040), competence *still* did not compound under a fixed composite
+target — the three axes (closure, heredity, function) do not rise together across generations,
+because selection reaches a fixed bar while mutation erodes fidelity. So the barrier is deeper than
+heredity: it is the **stock-vs-rate** problem one level up (Ω-0.20). The decisive experiment
+(exp042) makes the *deme objective itself grow* — reward *increasing* closure/heredity/breadth
+against a moving baseline, or promote a collective's achieved competence into the next target
+(collective-level reification of *goals*, the analogue of substrate-level reification of
+*primitives*) — then test whether competence finally **ratchets**. *Predicted falsification:* if a
+moving objective still does not compound, self-improvement in this substrate needs a new
+representational faculty (goals the substrate can't yet express), not just a moving target.
 
 **2. Truly unbounded, not in-miniature.** Every open-endedness result is ≤ 250k ticks / few seeds.
 With the Ω-0.21 instrument, run 10⁶–10⁷ ticks, multi-seed, and deep towers (50+), with a *streaming*

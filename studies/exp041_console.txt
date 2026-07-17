@@ -1,0 +1,50 @@
+exp041 — does competence compound once the heredity ceiling is broken? (8000 ticks, 5 seeds, 8 windows, mem=4000)
+
+  [composite+template]
+     window      0      1      2      3      4      5      6      7
+    closure  0.145  0.345  0.293  0.279  0.295  0.326  0.311  0.290
+      hered  0.408  0.287  0.243  0.248  0.231  0.210  0.240  0.181
+     funcxn   2.24   4.44   4.58   4.53   4.82   5.38   4.92   5.48
+    trend: closure +0.0114/win, heredity -0.0231/win, function +0.330/win
+    mean heredity self/null = 0.256/0.076 = 3.4x
+
+  [composite]
+     window      0      1      2      3      4      5      6      7
+    closure  0.151  0.229  0.223  0.218  0.227  0.236  0.227  0.257
+      hered  0.346  0.227  0.119  0.119  0.103  0.096  0.090  0.089
+     funcxn   2.14   4.15   5.01   5.16   5.65   5.89   5.83   6.29
+    trend: closure +0.0093/win, heredity -0.0305/win, function +0.483/win
+    mean heredity self/null = 0.149/0.046 = 3.2x
+
+  [size+template]
+     window      0      1      2      3      4      5      6      7
+    closure  0.053  0.120  0.046  0.047  0.052  0.014  0.032  0.077
+      hered  0.384  0.259  0.414  0.289  0.108  0.253  0.173  0.223
+     funcxn   1.71   2.85   2.15   1.65   1.90   1.24   1.30   1.84
+    trend: closure -0.0043/win, heredity -0.0265/win, function -0.111/win
+    mean heredity self/null = 0.263/0.041 = 6.4x
+
+  per-axis relative slope (fractional change / window; < -2% = trade-off):
+         axis    treatment(full/steady)      control(full/steady)
+      closure       +4.0% /    +1.1%        +4.2% /    +2.5%
+         self       -9.0% /    -4.5%       -20.5% /    -6.7%
+     function       +7.3% /    +3.6%        +9.6% /    +4.4%
+
+  weakest-axis (normalized min of the three) steady-state trajectory:
+    composite+template : slope -0.0250/win, final 0.444
+    composite (control): slope -0.0199/win, final 0.258
+    steady-state declining axis(es): treatment ['self'] vs control ['self']
+
+  collective-heredity LEVEL (the exp040 channel): treatment self 0.256 vs control 0.149 (null 0.076) — template 1.7x the control, 3.4x null
+
+  => DOES NOT COMPOUND. The developmental channel does its job on the LEVEL axis —
+     it raises collective heredity to 3.4x null (1.7x the composite-only
+     control), re-confirming exp040 — but a HIGHER heredity level is not enough:
+     over generations the three axes still do not rise together (treatment declining
+     axis: ['self']; weakest-axis slope -0.0250). Competence does not
+     accumulate. So the barrier to self-improvement is NOT (only) heredity fidelity,
+     which exp040 fixed — there is a SEPARATE compounding barrier: single-scalar
+     selection over a fixed objective cannot make closure, heredity, and construction
+     grow jointly across generations. The located blocker moves from 'weak heredity'
+     to 'no open-ended objective' — the substrate can now transmit competence but has
+     nothing that makes the target itself keep expanding (an open-ended-selection gap).

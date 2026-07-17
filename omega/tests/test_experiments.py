@@ -646,6 +646,32 @@ class TestScientificClaims(unittest.TestCase):
         self.assertGreater(off_v, full_v)                       # the dial trades novelty (full closes);
         # the intermediate BOTH corner (heredity AND open) is the study's multi-seed result.
 
+    def test_exp041_composite_and_template_compose(self):
+        # Ω-0.29 (payoff capstone): running the aligned multi-objective objective
+        # (deme_fitness="composite", exp039) TOGETHER with the developmental channel that broke the
+        # heredity ceiling (network_template>0, exp040). Here we pin that the two mechanisms COMPOSE
+        # and both operate: (a) collective identity is still heritable with the template on
+        # (self > null), and (b) composite selection still acts on top of the template (closure above
+        # a drift baseline that shares the same template). The SCIENCE — whether closure, heredity,
+        # and function now rise TOGETHER over generations (compound) instead of trading off, the
+        # payoff the whole self-improvement arc was built toward — is the study's result
+        # (EXP041_FINDINGS.md); this pins the combined mechanism is sound.
+        from statistics import mean
+
+        def run_arm(fit, template):
+            p, c = get_experiment("exp041")(seed=0, ticks=2500,
+                                            deme_fitness=fit, network_template=template)
+            run(p, c)
+            cs = [p._deme_closure(pi) for pi in range(p.n_patches) if p._deme_edges.get(pi)]
+            s = mean(p._hered_edge_self) if p._hered_edge_self else 0.0
+            n = mean(p._hered_edge_null) if p._hered_edge_null else 0.0
+            return (mean(cs) if cs else 0.0), s, n
+
+        c_treat, s_treat, n_treat = run_arm("composite", 0.5)   # both mechanisms on
+        c_drift, _s, _n = run_arm("size", 0.5)                  # template only, no selection
+        self.assertGreater(s_treat, n_treat)                    # heritable with the template on
+        self.assertGreater(c_treat, c_drift)                    # composite selection acts atop it
+
     def test_bounded_memory_mode_flattens_registry_and_stays_open(self):
         # Scaling: the bounded-memory long-run mode (memory_horizon > 0) evicts cold class
         # records so the registry stays flat over long horizons, WITHOUT killing the

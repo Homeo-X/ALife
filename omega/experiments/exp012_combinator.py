@@ -1774,3 +1774,35 @@ def build_composite(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("n_types", 32)
     overrides.setdefault("type_resolution", 3)
     return _make(seed, "exp039", **overrides)
+
+
+@register("exp041")
+def build_compound(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp041 — the PAYOFF capstone the whole self-improvement arc (exp036–040) was built toward.
+    exp039 showed that even *aligned* multi-objective selection (`deme_fitness="composite"`, the
+    closure-AND-heredity maximin) could not make competence **compound**: closure rose but heredity
+    stayed pinned at the exp028 ceiling, because collective heredity was too weak a channel for a
+    multi-property phenotype to stack. exp040 then **broke that ceiling** — developmental
+    (network-template) niche inheritance lifted collective heredity to 8–9× null at a *partial*
+    template while keeping the world open. This runs the two together: composite selection **with**
+    `network_template=0.5`. Question: with a strong heredity channel now available, does the
+    composite objective make closure AND heredity AND function (productivity) rise **together over
+    generations** — competence compounds — or does single-scalar selection still trade them off
+    (a multi-objective barrier separate from the heredity barrier)? Both are real, publishable
+    capstone results. The matched control is exactly exp039 (composite, `network_template=0.0`),
+    which isolates the developmental channel's contribution."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "composite")
+    overrides.setdefault("propagule_bias", "network")   # exp028/040 transmission substrate
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("network_template", 0.5)       # exp040 developmental channel — ON
+    return _make(seed, "exp041", **overrides)

@@ -6,6 +6,49 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.29 — A higher heredity level is not enough: competence does not compound; the blocker moves to *the objective* (exp041)
+
+**Date:** 2026-07-17 · **Status:** complete · **Verdict:** an **informative negative that sharpens
+the located blocker** — the payoff capstone the whole self-improvement arc was built toward. Detail:
+`studies/EXP041_FINDINGS.md`. Gated; exp001–040 byte-identical (68 tests green).
+
+exp040 broke the collective-heredity *ceiling*; exp041 asks the arc's final question: with a strong
+heredity channel available, does competence **compound** — closure, heredity, and function rising
+together over generations? It runs the two mechanisms together (`deme_fitness="composite"` +
+`network_template=0.5`) against exp039 as-is (composite, template off) and a drift arm (size +
+template), and watches a **trajectory** (per generation-window closure, per-window heredity rate,
+network-breadth function), 8000 ticks × 5 seeds, bounded memory.
+
+**Both mechanisms work separately, but competence does not compound.** The template raises the
+heredity *level* (treatment self 0.256 = **1.7× the composite-only control, 3.4× null**,
+re-confirming exp040) and composite selection raises the constructive axes (closure 0.286 / function
+4.55 vs the drift arm's 0.055 / 1.83). **Yet heredity still declines across generations in every arm**
+(steady-state −4.5% / −6.7% / −13.6% per window); the developmental channel *slows* the erosion but
+does not reverse it, and closure/function only drift near-flat. No arm gets the three axes rising
+together. Raising the heredity *level* was **necessary but not sufficient**.
+
+**The blocker moves from "weak heredity" to "no open-ended objective."** With a **fixed** selection
+target, selection climbs to the bar and stops while mutation erodes fidelity — competence plateaus
+and slowly decays; nothing makes the *target itself* keep rising, so there is no ratchet. This is the
+program's own **"rate, not stock"** lesson (Ω-0.20) one level up: a substrate stays open only under
+*continuing* construction, and a *collective* improves open-endedly only under a *continuing*
+objective. The drift arm sharpens it — it gets the **highest** raw heredity (6.4× null) essentially
+free from canalization yet has almost no closure or function: heredity level alone is not competence,
+and the three axes genuinely trade off under any fixed scalar.
+
+### Is / is not
+- **Is:** a clean falsifiable negative from a *powered* setup (strong heredity is present, exp040) —
+  the sign (heredity is the declining axis) is robust across full-run and steady-state and all three
+  arms; and a precise hand-off — the named remaining gap is an **open-ended, self-expanding
+  objective** (collective-level reification of *goals*, the analogue of substrate-level reification
+  of *primitives*).
+- **Is not:** a null from underpowering, and not a claim that self-improvement is impossible here —
+  the machinery (exp037/038) and the heredity channel (exp040) are in place; what is missing is a
+  moving target. The three axes are correlated within-substrate proxies, not independent faculties;
+  "function" is network breadth, not task performance.
+
+---
+
 ## Milestone Ω-0.18 — First-class levels: the transition recurses across *different* physics (exp033)
 
 **Date:** 2026-07-11 · **Status:** complete · **Verdict:** the recursive tower does **not**
