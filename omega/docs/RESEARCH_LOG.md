@@ -74,6 +74,32 @@ selectable but do not compound into minds.
 
 ---
 
+## Milestone Ω-0.28 — The collective-heredity ceiling breaks: developmental (network-template) inheritance (exp040)
+
+**Date:** 2026-07-14 · **Status:** complete · **Verdict:** a **major positive** — the single blocker
+exp039 located is removed. Detail: `studies/EXP040_FINDINGS.md`. Gated; exp001–039 byte-identical
+(57 tests green).
+
+exp039 said competence cannot compound because collective heredity is stuck at the exp028 ceiling
+(~3–5× null; the network is a dynamical attractor offspring don't re-form from inherited *members*).
+exp040 transmits the **developmental niche** too: a fraction `network_template ∈ [0,1]` of the parent
+network's product states is seeded into the child's recycle buffer, so it is re-fed the parent's
+outputs and canalizes toward its edges (niche / parental-effect inheritance). The strength is a dial —
+the collective-level analogue of exp030's resolution dial. Sweep (4000 ticks, 3 seeds): **off** →
+self 0.14, 3.9×, novelty 0.49 (the ceiling); **strength 0.25–0.75** → self ≈ 0.40, **8–9× null**,
+novelty 0.26–0.36 — the **collective "both corner": strong reproducible heredity AND open-endedness at
+once**; **full (1.0)** → self 0.76 but novelty → 0 (closed).
+
+**The ceiling was never a hard wall — it was the exp029↔030 open-vs-reproducible trade-off one level
+up, and it yields to the same fix: partial, modular transmission.** Full transmission reproduces
+perfectly but closes; none stays open but can't reproduce; the intermediate is the both corner.
+Honest scope: the channel is *developmental/ecological* (partial re-provisioning), not purely genetic,
+and staying-open is seed-variable around strength ≈ 0.25–0.75 (heredity-breaking is robust). This
+removes exp039's blocker and makes the arc's final question testable: with heredity strong and the
+world still open, **does competence now compound?** → exp041.
+
+---
+
 ## Milestone Ω-0.26 — Coherence is selectable and emergent — but single-objective selection trades off (exp038)
 
 **Date:** 2026-07-13 · **Status:** complete · **Verdict:** a positive with an honest negative.

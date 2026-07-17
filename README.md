@@ -5,7 +5,7 @@
 <p align="center">
   <a href="#quickstart"><img src="https://img.shields.io/badge/python-3.10%2B-blue" alt="python 3.10+"></a>
   <img src="https://img.shields.io/badge/dependencies-none%20(stdlib%20only)-8affc1" alt="stdlib only">
-  <img src="https://img.shields.io/badge/tests-56%20passing-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/tests-57%20passing-brightgreen" alt="tests">
   <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="license">
 </p>
 
@@ -62,7 +62,7 @@ Each row is a falsifiable experiment (or milestone) with a matched control. Full
 | **Ω-0.20** sustained novelty | Does open-endedness need *continuing* construction? | **Yes** — a one-time alphabet bump still closes; only *ongoing* reification holds the novelty rate. Constructibility is a **rate, not a stock**. |
 | **Ω-0.21** scaling | Can it run at 10⁶ ticks? | Bounded-memory mode + a **3× faster** kernel, validated against known results — the "in-miniature" cap lifted. |
 | **Ω-0.22–23** the living world | Can you *watch* it? | A persistent, checkpointing **world** with a live dashboard: named lifeforms, cultures, a novelty pulse, geography, and the ability to reach in and steer it. |
-| **Ω-0.24–27** toward minds | Can collectives become self-improving? | **Not yet — precisely located.** The machinery is present (evolvable internal state; selectable emergent coherence) but **high-fidelity collective heredity** is the missing piece: competence can't compound until whole-network transmission beats the exp028 ceiling. |
+| **Ω-0.24–28** toward minds | Can collectives become self-improving? | **The located blocker just fell.** The machinery is present (evolvable internal state; selectable emergent coherence); exp039 pinned the one missing piece — high-fidelity collective heredity — and **exp040 breaks it**: *developmental* (niche) inheritance lifts collective heredity to 8–9× while a *partial* template keeps the world open (the "both corner" one level up). Next: does competence now compound? |
 
 *(Kept honestly: exp003 was a retracted false positive; exp009/010/011/018–020/028/036 are
 informative **negatives**. The program is organized against closure, not for hype.)*

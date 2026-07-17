@@ -624,6 +624,28 @@ class TestScientificClaims(unittest.TestCase):
 
         self.assertGreater(closure("composite"), closure("size"))   # combined selection acts
 
+    def test_exp040_developmental_template_breaks_the_heredity_ceiling(self):
+        # Ω-0.28: the collective-heredity ceiling (exp028, ~3-5x null / self ~0.1-0.28) breaks
+        # with a PARTIAL developmental-niche template — offspring inherit a fraction of the parent
+        # network's products and canalize to its edges, reaching the collective "both corner"
+        # (strong heredity AND sustained novelty). Full pinning closes the world (the study's
+        # trade-off; EXP040_FINDINGS.md). Off (strength 0) is byte-identical.
+        from statistics import mean
+
+        def heredity_novelty(strength):
+            p, c = get_experiment("exp040")(seed=0, ticks=2500, network_template=strength)
+            r = run(p, c)
+            s = mean(p._hered_edge_self) if p._hered_edge_self else 0.0
+            n = mean(p._hered_edge_null) if p._hered_edge_null else 0.0
+            return s, n, r.open_endedness["novelty_rate"]
+
+        off_s, off_n, off_v = heredity_novelty(0.0)             # the ceiling baseline (open, weak)
+        full_s, full_n, full_v = heredity_novelty(1.0)          # full template (strong, pinned)
+        self.assertGreater(full_s, 2 * off_s)                   # template breaks heredity past ceiling
+        self.assertGreater(full_s, full_n)                      # and it is parent-specific (self > null)
+        self.assertGreater(off_v, full_v)                       # the dial trades novelty (full closes);
+        # the intermediate BOTH corner (heredity AND open) is the study's multi-seed result.
+
     def test_bounded_memory_mode_flattens_registry_and_stays_open(self):
         # Scaling: the bounded-memory long-run mode (memory_horizon > 0) evicts cold class
         # records so the registry stays flat over long horizons, WITHOUT killing the

@@ -311,6 +311,17 @@ class CombinatorPhysics:
         # by member-set reproducibility (fixable here) or by the substrate itself.
         # "random" (default) leaves every prior experiment byte-identical.
         self.propagule_bias = "random"
+        # exp040 DEVELOPMENTAL (network-template) inheritance: exp028 showed a deme's
+        # cross-production network is a dynamical attractor that offspring do NOT re-form from
+        # inherited *members* alone (the ~3-5x heredity ceiling). This transmits the developmental
+        # *niche* too: when a deme is founded, its recycle buffer (self._niche) is seeded with the
+        # PARENT network's product states, so the child is re-fed the parent's outputs and
+        # canalizes back to the same edges. A biological analogue: inheriting genes AND a
+        # structured developmental environment. It is a STRENGTH dial in [0,1] (the fraction of
+        # the parent network's products seeded) — the collective-level analogue of exp030's
+        # resolution dial: 0 = off (byte-identical); 1 = full pinning (strong heredity but closes
+        # the world); intermediate = the target both corner (strong heredity AND sustained novelty).
+        self.network_template = 0.0
         # exp018 collective fitness: how a surviving deme's chance of founding a
         # propagule is set. "size" (the exp017 default) weights by deme headcount —
         # but the global reservoir cap pins every deme to ~the same size, so
@@ -757,6 +768,18 @@ class CombinatorPhysics:
                 if self.track_signature:
                     self._pending_edges[kp] = self._deme_signature(src)
                     self._pending_src[kp] = src
+                    if self.network_template > 0.0:
+                        # exp040: seed a FRACTION (network_template) of the PARENT network's
+                        # product states into the child's developmental niche, so recycle-feed
+                        # re-primes the producing reactions and the child canalizes toward the
+                        # parent's edges. A partial template (< 1) is the dial between the
+                        # reproducible-but-closed corner (full) and the open-but-weak corner (off).
+                        cls_state = {o.cls: o.state for o in by_patch[src]}
+                        seed = [cls_state[p] for (_f, p) in self._deme_signature(src)
+                                if p in cls_state]
+                        if seed:
+                            keep = max(1, int(self.network_template * len(seed)))
+                            self._niche[kp] = seed[:keep][-self.niche_window:]
         # exp031 CULTURE: horizontal, Lamarckian transfer between *surviving* demes — a
         # deme imitates a fitter deme's top motif within its lifetime (not via
         # reproduction), injecting that motif's product into its own recycle buffer.
@@ -1121,6 +1144,7 @@ def _make(seed, experiment, **overrides):
     physics.feed_bands = int(overrides.get("feed_bands", 4))
     physics.deme_genome = bool(overrides.get("deme_genome", False))   # exp037 evolvable rule
     physics.genome_mut = float(overrides.get("genome_mut", 0.3))
+    physics.network_template = float(overrides.get("network_template", 0.0))  # exp040 strength
     physics.reify_period = int(overrides.get("reify_period", 0))
     physics.reify_max_atoms = int(overrides.get("reify_max_atoms", 0))
     if physics.substrate in ("typed", "typed_path", "tree"):  # atoms over n_types base types
@@ -1694,6 +1718,36 @@ def build_closure(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("n_types", 32)
     overrides.setdefault("type_resolution", 3)
     return _make(seed, "exp038", **overrides)
+
+
+@register("exp040")
+def build_network_template(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp040 — DEVELOPMENTAL (network-template) inheritance: a direct assault on the collective-
+    heredity ceiling (exp028: ~3-5x null, substrate-limited because *identical members ⇏ the same
+    network* — the network is a dynamical attractor, not a stored structure). Hypothesis: offspring
+    fail to breed the network true because they inherit only members and must re-derive the
+    attractor. This transmits the developmental *niche* too — the child's recycle buffer is seeded
+    with the parent network's product states (`network_template`), re-priming the producing
+    reactions so it canalizes back to the parent edges. Base is the exp030 both corner with a
+    network-biased propagule (exp028); the matched control is the same with `network_template=False`
+    (i.e. exp028's members-only transmission, which capped at ~3x). Prediction: template inheritance
+    lifts self-vs-null heredity past the ceiling; falsification (also a real result): it does not,
+    and collective identity is intrinsically non-reproducible."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "network")
+    overrides.setdefault("propagule_bias", "network")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("network_template", 0.5)   # partial template — the both-corner target
+    return _make(seed, "exp040", **overrides)
 
 
 @register("exp039")
