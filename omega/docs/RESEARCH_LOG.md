@@ -6,6 +6,52 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.31 — "Stays open forever" settled with an eviction-robust metric: a genuine positive floor — and the old "flat rate" was ~4× a measurement artifact (exp043 / consolidation)
+
+**Date:** 2026-07-18 · **Status:** complete · **Verdict:** the program's most load-bearing claim is
+**confirmed in its correct form and its overclaimed part retired** — a model consolidation. Detail:
+`studies/EXP043_FINDINGS.md`. Gated; exp001–042 byte-identical (70 tests green).
+
+Every long-horizon open-endedness check had to run under bounded memory, which evicts cold class
+records — so an evicted class that reappears **re-counts** in the novelty rate, and a positive
+long-run *windowed* rate could not be told apart from classes recycling through the eviction window
+(exp032's "positive-floor vs slow-dilution" open edge). This adds the missing instrument — a
+fixed-memory **global** novelty estimator (`omega/emergence/global_novelty.py`, a scalable Bloom
+"ever-seen" set; gated `run(global_novelty=True)`, off ⇒ byte-identical) that counts each class only
+once *ever*. It is conservative by construction: repeats are never counted as new (all recycling
+stripped), and genuine novelty is only ever under-counted by ≤ ~1% — so it can only *lower* the
+measured rate, never fabricate openness.
+
+**Result (300k ticks, 3 seeds; open = exp030 both corner, closed = exp029), two findings:**
+- **The claim holds — a genuine positive floor.** With all recycling stripped, the open engine still
+  discovers **never-before-seen** classes at **~0.13/tick at 300k** (retention 0.45–0.50 across
+  seeds; ~61k distinct classes accumulated on a *flat* ~2k registry), **decisively above the closed
+  control's exact 0.000**. The closed arm proves the instrument: its ~0.003/tick windowed residual is
+  stripped to zero — pure recycling. "Stays open" is a real property of the genuine rate, well past
+  exp032's ambiguous 120k edge.
+- **But the old "flat rate" was ~4× a windowing artifact.** The *windowed* rate is flat at ~0.53 for
+  the whole run (what the previous instrument reported as "sustained"); the global rate shows that
+  flatness is **inflated 4.17×** late by recycling. The **true** genuine rate is **positive but
+  declining** — it roughly **halves** over 300k (0.28 → 0.13), not constant.
+
+**Interpretation.** Consolidation did its job: **confirmed** the world is genuinely open (a
+seed-robust positive floor a closed substrate cannot produce), and **corrected** the overclaim — "the
+novelty rate stays *flat* forever" was substantially a bounded-memory artifact; the honest statement
+is "the genuine rate stays *positive* and decisively above closure while slowly declining." This
+retroactively sharpens exp032/exp034: their *rankings* (open ≫ closed; continuing ≫ capped
+construction) stand (common-mode, bounded-to-bounded), but their absolute "constant rate" readings are
+an upper bound on the genuine rate.
+
+### Is / is not
+- **Is:** a hardened base — the core claim now rests on a conservative, artifact-free, multi-seed
+  metric to 300k ticks, and the residual is a *measured* question (does the global rate asymptote
+  above zero at 10⁶–10⁷?), not a conceptual gap.
+- **Is not:** a proof of a non-zero asymptote (the verdict is about the last windows at 300k, 0.13/tick
+  ≫ 0, not the limit); one law, ≤ 300k ticks. The global rate is a conservative under-estimate, so
+  true novelty is ≥ what is plotted.
+
+---
+
 ## Milestone Ω-0.30 — A self-expanding objective still doesn't compound: the barrier is *goal representation*, not the objective's mobility (exp042)
 
 **Date:** 2026-07-17 · **Status:** complete · **Verdict:** an **informative negative that names the

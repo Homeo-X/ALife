@@ -87,3 +87,23 @@ multi-seed distributions, and deeper towers. Still open for a future pass: optim
 `normalize` reduction engine (the dominant raw cost), and checkpoint/resume so multi-hour runs
 survive container restarts (the RNG is picklable; `harness.run` would need to accept/emit a
 `(Noise, Universe, physics, trackers, tick)` bundle).
+
+## Update (Ω-0.31) — the reappearance floor is now measured out, not just controlled for
+
+The caveat above — bounded novelty is horizon-windowed, so an evicted class that reappears re-counts
+and lifts the rate (valid only for *bounded-to-bounded* comparison) — is now fixed by a fixed-memory
+**global** novelty estimator: `omega/emergence/global_novelty.py` (`GlobalNoveltySketch`, a scalable
+Bloom "ever-seen" set), enabled with `harness.run(global_novelty=True)` (gated, off ⇒ byte-identical).
+It counts each class only once *ever*, so it strips the recycling inflation and measures the
+**absolute** genuine-novelty rate, not just a bounded-to-bounded ratio.
+
+`studies/exp043_unbounded.py` (300k ticks, 3 seeds) settles the headline claim with it: the open
+engine (exp030) holds a **genuine positive novelty floor (~0.13 new-never-seen classes/tick at 300k)**,
+decisively above the closed control (exp029, whose global rate is **exactly 0** — its windowed
+"novelty" was 100% recycling). Two consequences: (1) "stays open" is real, not a windowing artifact,
+now past the prior 120k/250k horizons; (2) the previously-reported *flat* windowed rate is **~4×
+inflated** by recycling — the true genuine rate is positive but **slowly declining** (halves over
+300k). So the absolute "constant rate" reading of earlier bounded runs is an *upper bound*; their
+ranking claims (open ≫ closed; continuing ≫ capped construction) are unaffected. See
+`studies/EXP043_FINDINGS.md` and `RESEARCH_LOG` Ω-0.31. Residual: does the global rate asymptote
+above zero at 10⁶–10⁷ ticks? — now a clean run, not a conceptual gap.

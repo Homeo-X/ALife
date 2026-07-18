@@ -5,7 +5,7 @@
 <p align="center">
   <a href="#quickstart"><img src="https://img.shields.io/badge/python-3.10%2B-blue" alt="python 3.10+"></a>
   <img src="https://img.shields.io/badge/dependencies-none%20(stdlib%20only)-8affc1" alt="stdlib only">
-  <img src="https://img.shields.io/badge/tests-69%20passing-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/tests-70%20passing-brightgreen" alt="tests">
   <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="license">
 </p>
 
@@ -59,6 +59,7 @@ Each row is a falsifiable experiment (or milestone) with a matched control. Full
 | **Ω-0.15** collective individuality | Can a collective become a *reproducible individual*? | **Yes, in miniature** — a substrate that is **modular _and_ open-ended** (variable-length type paths) reaches the "both corner": strong reproducible heredity **and** sustained novelty. |
 | **Ω-0.16** levels of organization | Does the transition *recurse*? | **Yes** — each tier's heritable collectives become the next tier's atoms: physics → chemistry → biology → culture from **one engine**. |
 | **Ω-0.17** unboundedness | Does it persist over 10⁵ ticks / keep climbing? | **Affirmative in miniature** — heredity flat & novelty > 0 to 120k ticks; no intrinsic tower-depth ceiling found. |
+| **Ω-0.31** settling openness | Is the long-run novelty *real*, or an eviction-window artifact? | **A genuine positive floor — with an honest correction.** A fixed-memory global-novelty sketch (counts each class once *ever*) shows the open engine still discovers never-before-seen classes at **~0.13/tick at 300k ticks, 3 seeds**, decisively above the closed control's exact **0**. But the previously-reported *flat* rate was **~4× inflated** by eviction recycling; the true genuine rate is **positive but slowly declining** (halves over 300k). Claim confirmed, overclaim retired. |
 | **Ω-0.20** sustained novelty | Does open-endedness need *continuing* construction? | **Yes** — a one-time alphabet bump still closes; only *ongoing* reification holds the novelty rate. Constructibility is a **rate, not a stock**. |
 | **Ω-0.21** scaling | Can it run at 10⁶ ticks? | Bounded-memory mode + a **3× faster** kernel, validated against known results — the "in-miniature" cap lifted. |
 | **Ω-0.22–23** the living world | Can you *watch* it? | A persistent, checkpointing **world** with a live dashboard: named lifeforms, cultures, a novelty pulse, geography, and the ability to reach in and steer it. |
@@ -89,7 +90,7 @@ git clone https://github.com/homeo-x/alife && cd alife
 python -m omega.cli list                    # list experiments
 python -m omega.cli run exp030 --seed 0     # a completed transition to collective individuality
 python -m omega.cli run exp002 --set bind=false   # a matched control
-python -m unittest discover -s omega/tests  # run the test suite (69 tests)
+python -m unittest discover -s omega/tests  # run the test suite (70 tests)
 ```
 
 More runnable one-liners are in [`examples/`](examples/).
@@ -121,7 +122,7 @@ docs/               presentation: this banner, ROADMAP, CONTRIBUTING
 
 **Status:** the constructibility hypothesis is confirmed *in miniature* and consolidated; a
 living world exists; the self-improvement question is answered with a located blocker. Full
-history in [`omega/docs/RESEARCH_LOG.md`](omega/docs/RESEARCH_LOG.md) (milestones Ω-0.1 → Ω-0.30).
+history in [`omega/docs/RESEARCH_LOG.md`](omega/docs/RESEARCH_LOG.md) (milestones Ω-0.1 → Ω-0.31).
 
 **Next frontier** (see [`docs/ROADMAP.md`](docs/ROADMAP.md)): an **open-ended, self-expanding
 objective** — collective-level reification of *goals* (the analogue of substrate-level reification

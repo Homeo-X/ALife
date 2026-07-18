@@ -1,0 +1,28 @@
+[done open-s0] registry=1964 global_distinct=63578 late_global=0.1382
+[done open-s1] registry=2162 global_distinct=59682 late_global=0.1262
+[done open-s2] registry=2163 global_distinct=59736 late_global=0.1264
+[done closed-s0] registry=133 global_distinct=144 late_global=0.0000
+[done closed-s1] registry=144 global_distinct=144 late_global=0.0000
+[done closed-s2] registry=144 global_distinct=144 late_global=0.0000
+
+exp043 — is long-run novelty a POSITIVE FLOOR or eviction recycling? (300000 ticks, 3 seeds, mem_h=2500, 10 windows)
+
+  [open = exp030]
+       window       0       1       2       3       4       5       6       7       8       9
+     windowed  0.5194  0.5512  0.5340  0.5481  0.5240  0.5326  0.5557  0.5399  0.5370  0.5516
+       global  0.3652  0.3038  0.2462  0.1923  0.1683  0.1927  0.1740  0.1459  0.1218  0.1232
+    late windowed/global inflation factor = 4.17
+
+  [closed = exp029]
+       window       0       1       2       3       4       5       6       7       8       9
+     windowed  0.0089  0.0027  0.0028  0.0020  0.0032  0.0035  0.0033  0.0033  0.0022  0.0027
+       global  0.0048  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000
+    late windowed/global inflation factor = inf
+
+  open global novelty: early(w1-2)=0.2750  late(w-3..)=0.1303  retention=0.47
+  closed global novelty late = 0.0000 (instrument sanity: must be ~0)
+
+  => POSITIVE FLOOR (settled): even with all eviction-recycling stripped, the open
+     engine keeps discovering genuinely-never-seen classes to the horizon, decisively
+     above the closed control. 'Stays open forever' is a real property of the global
+     novelty rate, not an artifact of the bounded-memory measurement window.
