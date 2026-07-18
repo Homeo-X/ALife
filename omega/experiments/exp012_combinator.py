@@ -480,6 +480,14 @@ class CombinatorPhysics:
         self._reify_seen: dict = {}    # product class -> [count, state] this period
         self._reified_cls: set = set()
         self._reify_next = 0
+        # exp049 COMPETENCE REIFICATION ("competence as a rate"): reify_by selects WHICH achieved
+        # structure is promoted to a new atom. "frequency" (exp034 default) promotes the most common
+        # product; "closure" promotes the most CLOSURE-CENTRAL module — a class that repeatedly sits in
+        # demes' autocatalytic cores (producers ∩ products, the competent self-maintaining structure).
+        # Tests whether reifying achieved COMPETENCE (not just persistent structure) raises the
+        # competence CEILING over the run — the Ω-0.20 rate-not-stock lesson applied to competence.
+        self.reify_by = "frequency"
+        self._closure_seen: dict = {}  # class -> times it sat in a deme closure core this period
         # exp035 tree substrate: a new composition law (graft at leftmost leaf, depth-capped
         # by tree_resolution). substrate != "tree" => byte-identical.
         self.tree_resolution = 0
@@ -1002,6 +1010,16 @@ class CombinatorPhysics:
                 products = {q for (_f, q) in edges}
                 for cls in (producers & products):
                     cr[cls] = cr.get(cls, 0.0) + 1.0
+        if self.reify_by == "closure" and self.reify_period and alive:
+            # exp049: tally how often each class sits in a deme's autocatalytic closure core, so
+            # _reify_promote can promote the most COMPETENT (closure-central) module — not just the
+            # most common product — to a new atom. Identity-only; consumes no RNG.
+            for p in alive:
+                edges = self._deme_edges.get(p, {})
+                producers = {f for (f, _q) in edges}
+                products = {q for (_f, q) in edges}
+                for cls in (producers & products):
+                    self._closure_seen[cls] = self._closure_seen.get(cls, 0) + 1
         self._deme_prod.clear()  # start a fresh productivity window for next gen
         self._xprod.clear()
         self._deme_edges.clear()
@@ -1017,14 +1035,19 @@ class CombinatorPhysics:
         tally is cleared so it tracks the *moving* frontier of common motifs."""
         if self.reify_max_atoms and len(self.atoms) >= self.reify_max_atoms:
             self._reify_seen = {}
+            self._closure_seen = {}
             return
         best, best_n = None, self.edge_threshold
         for pc, (n, st) in self._reify_seen.items():
             if pc in self._reified_cls or not isinstance(st, tuple):
                 continue                       # only composites (non-atomic) are reifiable
-            if n > best_n:
-                best_n, best = n, (pc, st)
+            # exp049: rank by CLOSURE-centrality (competent structure) instead of raw frequency when
+            # reify_by="closure" — promote the module most central to demes' self-maintaining loops.
+            score = self._closure_seen.get(pc, 0) if self.reify_by == "closure" else n
+            if score > best_n:
+                best_n, best = score, (pc, st)
         self._reify_seen = {}
+        self._closure_seen = {}
         if best is None:
             return
         sym = f"R{self._reify_next}"
@@ -1373,6 +1396,7 @@ def _make(seed, experiment, **overrides):
     physics.goal_mut = float(overrides.get("goal_mut", 0.3))                  # exp044 goal mutation rate
     physics.reify_period = int(overrides.get("reify_period", 0))
     physics.reify_max_atoms = int(overrides.get("reify_max_atoms", 0))
+    physics.reify_by = str(overrides.get("reify_by", "frequency"))            # exp049 competence reify
     if physics.substrate in ("typed", "typed_path", "tree"):  # atoms over n_types base types
         physics.atoms = tuple(f"y{i}" for i in range(physics.n_types))
     # exp031 level stack: an explicit promoted alphabet (a tier's atoms ARE the lower
@@ -2184,3 +2208,37 @@ def build_replicator_credit(seed: int = 0, **overrides) -> tuple[Physics, Config
     default ⇒ exp001–047 byte-identical."""
     overrides.setdefault("substrate", "combinator")     # parts CAN self-replicate (exp012 C·x → C)
     return build_credit(seed, **overrides)
+
+
+@register("exp049")
+def build_competence_reify(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp049 — COMPETENCE AS A RATE, NOT A STOCK. exp048 closed the self-improvement arc with the
+    lesson that competence *plateaus* at a substrate-set ceiling — the world has open-ended *novelty*
+    (Ω-0.31) but not open-ended *competence*. The program's answer to plateauing novelty was Ω-0.20:
+    open-endedness is a **rate**, sustained only by *continuing reification* — promoting achieved
+    structure to new primitives keeps growing the construction space. This applies that lever to
+    competence: `reify_by="closure"` promotes the most CLOSURE-CENTRAL module (a class that repeatedly
+    sits in demes' autocatalytic cores — achieved *competent* structure) to a new atom every
+    `reify_period` ticks, so each cohort of collectives builds on top of the previous cohort's competent
+    modules and the competence *ceiling* itself can climb. Runs the exp030 both-corner base with closure
+    selection. Question: does reifying achieved competence make collective competence **compound** over
+    a long horizon (the ceiling rises), where every selection route (exp039–048) left it flat? Matched
+    controls: `reify_by="frequency"` (exp034 reification — promote common, not competent, structure) and
+    `reify_period=0` (no reification — the exp048 plateau). `reify_period=0` ⇒ exp001–048 byte-identical."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "closure")     # select for autocatalytic competence
+    overrides.setdefault("propagule_bias", "network")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("network_template", 0.5)       # exp040 heredity channel — ON
+    overrides.setdefault("reify_period", 400)           # reify a module every 400 ticks
+    overrides.setdefault("reify_by", "closure")         # exp049 — reify COMPETENT (closure) structure
+    return _make(seed, "exp049", **overrides)

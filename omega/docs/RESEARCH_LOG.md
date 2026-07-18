@@ -6,6 +6,58 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.38 — Competence as a *rate*, not a *stock*: reifying achieved competence does **not** raise the ceiling — the arc's open problem, closed (exp049)
+
+**Date:** 2026-07-18 · **Status:** complete · **Verdict:** an **honest negative that resolves the arc's
+sharpened open problem** — the Ω-0.20 rate-not-stock lever does not transfer from novelty to competence.
+Detail: `studies/EXP049_FINDINGS.md`. Gated; exp001–048 byte-identical (deterministic across
+`PYTHONHASHSEED`).
+
+exp048 left the arc with one question. The program has *two* open-endednesses and had shown only one:
+**construction is open-ended** (Ω-0.31, the genuine novelty rate stays positive) but **competence is
+not** (exp048, collectives plateau at a substrate-set ceiling). The program's answer to plateauing
+*novelty* was Ω-0.20: openness is a **rate**, sustained by **continuing reification** — promote achieved
+structure to new primitives and the construction space keeps growing. exp049 aims that exact lever at
+competence: `reify_by="closure"` promotes the most **closure-central** module (achieved *competent*
+structure, a class repeatedly in demes' autocatalytic cores) to a new atom every `reify_period` ticks,
+so each cohort builds on the previous cohort's competent modules and the ceiling might climb. Controls:
+`reify_by="frequency"` (exp034 — promote *common*, not competent, structure) and `reify_period=0` (the
+exp048 plateau, no reification).
+
+**Result (12k ticks, 6 seeds):** competence **stays a stock.** All three arms are flat — reify-closure
+slope **+0.0006**/win (mean 0.684), reify-freq +0.0022 (0.686), no-reify +0.0046 (0.673); competence
+oscillates in a fixed ~0.63–0.80 band in every arm across all 8 windows and the ceiling does not climb.
+Reifying *competent* structure is statistically indistinguishable from reifying *common* structure or
+from *not reifying*. Strikingly, the reify arms grow their alphabet 32 → 51–53 atoms and find ~26% more
+distinct classes (5.8k vs 4.6k) — **novelty compounds** — while competence does not: Ω-0.31's
+open-ended-novelty-≠-open-ended-competence, demonstrated *within one experiment*.
+
+**Interpretation.** Reification raises *novelty* because a new atom **enlarges** the constructible space
+and the metric counts exactly that. It cannot raise *competence* because competence is measured on the
+**cross-production network** (closure, breed-true heredity, breadth), and promoting a competent module
+to an **opaque atom moves its internal structure *out* of that network** — the closure it embodied
+stops being visible as closure. Reification trades measured competence *inside* the module for a bigger
+alphabet *outside* it: a lateral move, not a ratchet. No dynamical coupling makes achieved competence
+raise the *ceiling*; the ceiling is set by the substrate's fixed reaction law, which reification never
+touches. **The Ω-0.20 rate-not-stock lever does not transfer from novelty to competence** — they are
+genuinely different, and the competence plateau is intrinsic to selection over a fixed substrate.
+
+**The arc's open problem is resolved (negatively).** Compounding competence is achieved by *no* move the
+program has: not goal representation (exp044), credit assignment (exp045/046), selection grain (exp047),
+replicating parts (exp048), or competence reification (exp049). Any future route must change the
+**substrate law itself** during the run (make the reaction physics competence-dependent), not merely
+grow its alphabet — a qualitatively harder move than anything in the arc.
+
+### Is / is not
+- **Is:** a direct, multi-seed test of the arc's last standing candidate lever, showing it fails and
+  *why* (reification enlarges the alphabet, not the network competence lives on); a clean within-run
+  demonstration that novelty compounds while competence does not.
+- **Is not:** proof that *no* mechanism can compound competence — it rules out the reification lever and
+  names the one class of move not yet tried (changing the substrate law mid-run). Within-substrate
+  measure on the typed_path both-corner base.
+
+---
+
 ## Milestone Ω-0.37 — The loop-back: part-level replicators lift the competence *ceiling* (~2×) but competence still doesn't *compound* — open-ended novelty ≠ open-ended competence (exp048)
 
 **Date:** 2026-07-18 · **Status:** complete · **Verdict:** the arc's **closing result** — a mixed

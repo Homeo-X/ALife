@@ -906,6 +906,37 @@ class TestScientificClaims(unittest.TestCase):
         cs = [p._deme_closure(pi) for pi in range(p.n_patches) if p._deme_edges.get(pi)]
         self.assertGreater(mean(cs) if cs else 0.0, 0.0)     # the combinator soup forms closure loops
 
+    def test_exp049_competence_reification_promotes_closure_central_modules(self):
+        # Ω-0.38 (competence as a rate): exp049 applies the Ω-0.20 reification lever to COMPETENCE —
+        # reify_by="closure" promotes the most closure-central module (achieved competent structure)
+        # to a new atom every reify_period ticks, instead of the most common one (reify_by="frequency",
+        # exp034). Pin the mechanism: closure-reify is the exp049 default; a closure-centrality tally is
+        # kept and reification grows the constructed alphabet; and it is gated (reify_period=0 ⇒ no new
+        # atoms, and the reify_by knob is off by default ⇒ exp001–048 unaffected). Whether reifying
+        # achieved competence makes competence COMPOUND is the study's science (EXP049_FINDINGS.md).
+        from omega.kernel.universe import Universe
+        from omega.kernel.scheduler import Scheduler
+        from omega.substrate.noise import Noise
+
+        p, c = get_experiment("exp049")(seed=0, ticks=4000)
+        self.assertEqual(p.reify_by, "closure")              # exp049 reifies COMPETENT (closure) structure
+        self.assertEqual(p.deme_fitness, "closure")          # selecting for autocatalytic competence
+        self.assertTrue(p.reify_period)                      # reification is on
+        n_atoms0 = len(p.atoms)
+        rng = Noise(c.seed); u = Universe(total_quanta=c.total_quanta); p.seed(u, rng)
+        Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                  max_reactions_per_tick=c.max_reactions_per_tick).run(4000)
+        self.assertTrue(p._closure_seen or len(p.atoms) > n_atoms0)  # closure tally lives / feeds reify
+        self.assertGreater(len(p.atoms), n_atoms0)           # competent modules get promoted to new atoms
+
+        # gating: reify_period=0 ⇒ NO new atoms (the exp048 plateau control), so the alphabet is fixed.
+        p0, c0 = get_experiment("exp049")(seed=0, ticks=4000, reify_period=0)
+        m0 = len(p0.atoms)
+        rng0 = Noise(c0.seed); u0 = Universe(total_quanta=c0.total_quanta); p0.seed(u0, rng0)
+        Scheduler(u0, p0, rng0, decay_hazard=c0.decay_hazard,
+                  max_reactions_per_tick=c0.max_reactions_per_tick).run(4000)
+        self.assertEqual(len(p0.atoms), m0)                  # no reification ⇒ constructed alphabet frozen
+
     def test_global_novelty_sketch_is_conservative_and_eviction_robust(self):
         # Ω-0.31 (consolidation): the eviction-robust GLOBAL novelty estimator (a scalable Bloom
         # 'ever-seen' set) is the instrument that settles "stays open forever". Its two load-bearing

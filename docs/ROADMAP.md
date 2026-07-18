@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.37).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.38).
 
 ## Where we are
 
@@ -12,7 +12,7 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   *continuing* construction (a rate, not a stock).
 - **Scale** — bounded-memory long-run mode + a 3× faster kernel, validated (Ω-0.21).
 - **A living world** — persistent, checkpointing, watchable, spatial, steerable (Ω-0.22–0.23).
-- **Toward minds — the self-improvement arc is COMPLETE (Ω-0.24–0.37).** A precise, honest,
+- **Toward minds — the self-improvement arc is COMPLETE (Ω-0.24–0.38).** A precise, honest,
   falsifiable sequence that ruled out every selection/representation route to compounding collective
   competence and terminated in a *substrate* reason. Collectives carry evolvable state (exp037) and
   selectable coherence (exp038); developmental inheritance broke the exp028 heredity ceiling (exp040);
@@ -23,10 +23,17 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   collective selection) **collapses the collective** → competence is **irreducibly collective**, and
   the type-path parts are not replicators. The loop-back (exp048) ran it on the combinator substrate,
   where parts *are* replicators (exp012 `C·x → C`): replicating parts **lift the competence ceiling ~2×**
-  (1.09 vs 0.62, closure 0.36 vs 0.13) but competence stays **high-and-flat**, not rising. The arc's
-  closing lesson: **open-ended novelty ≠ open-ended competence** — the world compounds *what it builds*
-  (Ω-0.31), not *how good its collectives are*. Compounding competence is **not achieved** in either
-  substrate; the real open problem is *what makes competence a rate, not a stock*.
+  (1.09 vs 0.62, closure 0.36 vs 0.13) but competence stays **high-and-flat**, not rising. The loop-back's
+  sharpened open problem — *what makes competence a rate, not a stock* — then got its own direct test:
+  exp049 aimed the Ω-0.20 reification lever at competence (reify the most closure-central *competent*
+  module to a new atom) and it **stays flat** (slopes ≈ 0; reifying competent structure is
+  indistinguishable from reifying common structure or not reifying), even as the alphabet grows 32→53 and
+  novelty compounds — because reifying a competent module hides its structure in an **opaque atom**, out
+  of the measured network. The arc's closing lesson: **open-ended novelty ≠ open-ended competence** — the
+  world compounds *what it builds* (Ω-0.31), not *how good its collectives are*. Compounding competence is
+  **not achieved** in either substrate by any selection/representation/replicator/reification move; the
+  competence ceiling is set by the substrate's **fixed reaction law**, and the one untried class of move
+  is to make that law itself competence-dependent *during the run*.
 
 ## The next frontier (highest priority)
 
@@ -37,14 +44,16 @@ rate finds a positive floor, or it dilutes to zero at some horizon.
 
 ## Secondary threads
 
-- **Competence as a *rate*, not a *stock* (the arc's sharpened open problem).** exp048 closed the
-  loop-back: part-level replicators lift the competence *ceiling* but competence still plateaus — the
-  world has open-ended *novelty* but not open-ended *competence*. The Ω-0.20 lesson (open-endedness is
-  a rate, sustained only by *continuing* construction) has never been applied to competence. The open
-  question: is there a dynamical coupling that makes a collective's competence *keep rising* — a
-  competence analogue of reification, where achieved competence feeds back to raise the ceiling itself
-  — or is bounded competence intrinsic to selection over a fixed substrate? A matched-control yes/no,
-  and the real unsolved problem the self-improvement arc isolates.
+- **Competence via a mid-run change to the substrate law (the arc's *last* untried move).** exp049
+  tested the obvious competence analogue of reification — promote the most closure-central *competent*
+  module to a new atom — and it **does not** compound competence (slopes ≈ 0, indistinguishable from
+  reifying common structure or not reifying), because reifying a competent module hides its structure
+  in an **opaque atom**, out of the measured network, even as it grows the alphabet and novelty. That
+  rules out the reification lever and, with exp044–048, every selection/representation/replicator route.
+  The competence ceiling is set by the substrate's **fixed reaction law**; the one class of move never
+  tried is to make that **law itself competence-dependent during the run** (a reaction physics whose
+  rates or products change as a collective's competence rises) — a substrate change, not a selection
+  knob, and a genuinely harder experiment. That is the real open problem the arc isolates.
 - **A strong non-type law.** exp035's tree law reached the "both corner" only weakly (~10× lower
   heredity than linear paths). Is there a genuinely different law with *strong* both-corner heredity?
 - **Fully heterogeneous per-level physics.** The tower is still largely the self-similar engine;
