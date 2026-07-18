@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.30).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.32).
 
 ## Where we are
 
@@ -12,29 +12,29 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   *continuing* construction (a rate, not a stock).
 - **Scale** — bounded-memory long-run mode + a 3× faster kernel, validated (Ω-0.21).
 - **A living world** — persistent, checkpointing, watchable, spatial, steerable (Ω-0.22–0.23).
-- **Toward minds** — the self-improvement machinery is present, the heredity ceiling is broken, and
-  the remaining blocker is now precisely located (Ω-0.24–0.30): collectives carry evolvable internal
-  state (exp037) and are selectable on emergent coherence (exp038); developmental inheritance broke
-  the exp028 heredity ceiling (exp040, 8–9× null, world still open); but exp041 showed a higher
-  heredity *level* is **not enough** (competence erodes under a fixed objective), and exp042 showed
-  even a **self-expanding** objective does not ratchet — it is *worse*, because a moving scalar bar
-  flattens its own selection gradient and the substrate has no *goal* to reify. The barrier is now
-  **goal representation**, and it needs new representational machinery, not another selection rule.
+- **Toward minds** — the arc reached its **first sustained compounding** (Ω-0.24–0.32): collectives
+  carry evolvable internal state (exp037) and are selectable on emergent coherence (exp038);
+  developmental inheritance broke the exp028 heredity ceiling (exp040); a higher heredity level
+  (exp041) and even a self-expanding scalar objective (exp042) still don't compound → the barrier was
+  **goal representation**; and exp044 supplied it — a *heritable, composable target path* — producing
+  the arc's first over-generations **ratchet** (goal depth 2.4→4.0, max 10, vs a fixed-goal control
+  pinned at 2). But the ratchet is **narrow and costly**: chasing a deeper idiosyncratic goal
+  *cannibalizes* generic competence (closure/heredity/breadth). The barrier is now **goal alignment /
+  credit assignment**.
 
 ## The next frontier (highest priority)
 
-**1. Heritable, composable goals (a representational faculty, not a selection rule).** exp042 ran the
-arc's predicted falsification: even a *self-expanding* objective (a monotonic competence bar chasing
-the frontier) failed to make competence ratchet — worse than the fixed objective, robustly across
-chase-rates — for two reasons past the objective's mobility: a self-referential bar **removes its own
-selection gradient** once competence stops rising, and, more deeply, the bar is a single
-**non-heritable, non-composable scalar** — the substrate can reify *structure* (Ω-0.20) but has no
-representation of a *goal* to reify. The decisive next experiment (exp043) is therefore a **substrate
-extension**: give collectives a *transmissible, mutating, recombining representation of what to build
-next* (a goal that inherits and composes like the type-path structure does), then test whether
-competence ratchets. *Predicted falsification:* if heritable goals still don't compound, the missing
-piece is not representation but *credit assignment* — the collective cannot tell which of its parts
-caused its competence — which would redirect the arc a third time.
+**1. Goal alignment / credit assignment (exp045).** exp044 confirmed exp042's diagnosis from the
+other side — given a heritable, composable goal the collective *does* accumulate deeper achievements
+across generations (the first compounding in the program) — but the represented goal ratchets
+*itself*, not general competence, and the two are in tension: selecting for deeper goal-achievement
+trades away closure and heredity. The decisive next experiment makes goal reification **align with the
+collective's own self-maintenance** — extend a goal only in directions that *increase* the deme's
+closure/heredity/breadth (credit-assign the goal to what actually makes the collective competent) —
+then test whether the now-aligned ratchet lifts generic competence instead of cannibalizing it.
+*Predicted falsification:* if aligned goals still trade off, the collective genuinely cannot
+attribute its competence to its parts, and the missing faculty is an explicit **credit-assignment
+mechanism** (which parts caused achievement), not just an aligned target.
 
 **2. Truly unbounded, not in-miniature.** Every open-endedness result is ≤ 250k ticks / few seeds.
 With the Ω-0.21 instrument, run 10⁶–10⁷ ticks, multi-seed, and deep towers (50+), with a *streaming*

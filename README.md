@@ -5,7 +5,7 @@
 <p align="center">
   <a href="#quickstart"><img src="https://img.shields.io/badge/python-3.10%2B-blue" alt="python 3.10+"></a>
   <img src="https://img.shields.io/badge/dependencies-none%20(stdlib%20only)-8affc1" alt="stdlib only">
-  <img src="https://img.shields.io/badge/tests-70%20passing-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/tests-71%20passing-brightgreen" alt="tests">
   <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="license">
 </p>
 
@@ -63,7 +63,7 @@ Each row is a falsifiable experiment (or milestone) with a matched control. Full
 | **Ω-0.20** sustained novelty | Does open-endedness need *continuing* construction? | **Yes** — a one-time alphabet bump still closes; only *ongoing* reification holds the novelty rate. Constructibility is a **rate, not a stock**. |
 | **Ω-0.21** scaling | Can it run at 10⁶ ticks? | Bounded-memory mode + a **3× faster** kernel, validated against known results — the "in-miniature" cap lifted. |
 | **Ω-0.22–23** the living world | Can you *watch* it? | A persistent, checkpointing **world** with a live dashboard: named lifeforms, cultures, a novelty pulse, geography, and the ability to reach in and steer it. |
-| **Ω-0.24–30** toward minds | Can collectives become self-improving? | **A precise, honest arc that ends at a named frontier.** The machinery is present (evolvable state; selectable coherence); exp039 pinned the missing piece — collective heredity — and **exp040 broke that ceiling** (8–9× heredity, world still open). But **exp041**: a higher heredity *level* isn't enough (competence still erodes under a *fixed* objective), and **exp042**: even a *self-expanding* objective doesn't ratchet — it's *worse*, because a moving scalar bar flattens its own selection gradient and the substrate has no *goal* to reify. The barrier lands on **goal representation**: open-endedness needs *heritable, composable goals*, not just heritable structure. |
+| **Ω-0.24–32** toward minds | Can collectives become self-improving? | **A precise, honest arc that reaches its first compounding.** exp039 pinned the missing piece — collective heredity — and **exp040 broke that ceiling** (8–9×, world still open); **exp041/042** showed a higher heredity level and even a *self-expanding* scalar objective still don't compound → the barrier is **goal representation**. **exp044** supplies it (a heritable, composable target *path*) and gets the **arc's first sustained ratchet** — achieved goal depth climbs 2.4→4.0 (max 10) vs a fixed-goal control pinned at 2 — **but narrowly**: chasing a deeper idiosyncratic goal *cannibalizes* generic competence. Next barrier: **goal alignment / credit assignment**. |
 
 *(Kept honestly: exp003 was a retracted false positive; exp009/010/011/018–020/028/036 are
 informative **negatives**. The program is organized against closure, not for hype.)*
@@ -90,7 +90,7 @@ git clone https://github.com/homeo-x/alife && cd alife
 python -m omega.cli list                    # list experiments
 python -m omega.cli run exp030 --seed 0     # a completed transition to collective individuality
 python -m omega.cli run exp002 --set bind=false   # a matched control
-python -m unittest discover -s omega/tests  # run the test suite (70 tests)
+python -m unittest discover -s omega/tests  # run the test suite (71 tests)
 ```
 
 More runnable one-liners are in [`examples/`](examples/).
@@ -101,7 +101,7 @@ More runnable one-liners are in [`examples/`](examples/).
   our simulations almost always stall. Ω isolates *why*, and shows one mechanism that doesn't.
 - **Major evolutionary transitions** (genes → cells → organisms → societies) are re-derived here
   as a single recursive move — and the exact substrate condition that enables them is measured.
-- **Honest AI-relevance**: the self-improvement arc (Ω-0.24–30) asks whether evolved collectives
+- **Honest AI-relevance**: the self-improvement arc (Ω-0.24–32) asks whether evolved collectives
   could become mind-like, and answers with a *specific, quantified blocker* rather than hype.
 
 ## Repository map
@@ -122,7 +122,7 @@ docs/               presentation: this banner, ROADMAP, CONTRIBUTING
 
 **Status:** the constructibility hypothesis is confirmed *in miniature* and consolidated; a
 living world exists; the self-improvement question is answered with a located blocker. Full
-history in [`omega/docs/RESEARCH_LOG.md`](omega/docs/RESEARCH_LOG.md) (milestones Ω-0.1 → Ω-0.31).
+history in [`omega/docs/RESEARCH_LOG.md`](omega/docs/RESEARCH_LOG.md) (milestones Ω-0.1 → Ω-0.32).
 
 **Next frontier** (see [`docs/ROADMAP.md`](docs/ROADMAP.md)): an **open-ended, self-expanding
 objective** — collective-level reification of *goals* (the analogue of substrate-level reification

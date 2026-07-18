@@ -80,6 +80,19 @@ def _path_build(nodes: list):
     return state
 
 
+def _contig_subseq(sub: list, seq: list) -> bool:
+    """True if ``sub`` appears as a contiguous run inside ``seq`` (exp044 goal achievement:
+    a deme realizes its target path when that path is a contiguous stretch of a produced
+    class, or of producer++product node-lists laid end to end across a cross-production edge)."""
+    n, m = len(sub), len(seq)
+    if n == 0 or n > m:
+        return False
+    for i in range(m - n + 1):
+        if seq[i:i + n] == sub:
+            return True
+    return False
+
+
 def compose_path(fs, xs, max_size, resolution=0):
     """exp030 open-ended AND modular substrate. A morphism is a variable-length type
     *path* (t0->t1->...->tk). Composition is concatenation when endpoints match:
@@ -332,6 +345,20 @@ class CombinatorPhysics:
         # _ratchet_bar is the current (non-decreasing) target. 0 => off (byte-identical).
         self.ratchet_lr = 0.0
         self._ratchet_bar = 0.0
+        # exp044 THE FRONTIER — heritable, composable GOALS. exp042 showed competence does not
+        # compound even with a self-expanding objective, and diagnosed the barrier as *goal
+        # representation*: the substrate can reify structure but has no heritable, composable
+        # representation of a GOAL to reify. In typed_path a goal can be an object of the very same
+        # kind the substrate builds — a target PATH — so it is natively heritable (data, transmitted
+        # like the exp037 _deme_res genome), mutable (_mutate_path), and composable (path
+        # concatenation). Each deme carries a target path it is rewarded for CONSTRUCTING; when it
+        # robustly achieves it the goal is EXTENDED (goal reification, gated goal_reify) — deeper
+        # goals demand more construction, so competence must rise to keep achieving. deme_fitness=
+        # "goal" selects on achievement × depth. All default off => byte-identical.
+        self.goal_reify = False               # composability/ratchet toggle (the independent variable)
+        self.goal_mut = 0.3                   # per-inheritance goal point-mutation probability
+        self._deme_goal: dict[int, object] = {}   # each deme's heritable target path (state tuple)
+        self._deme_goal_hit: dict[int, int] = {}  # per-generation achievement tally
         # exp018 collective fitness: how a surviving deme's chance of founding a
         # propagule is set. "size" (the exp017 default) weights by deme headcount —
         # but the global reservoir cap pins every deme to ~the same size, so
@@ -747,6 +774,17 @@ class CombinatorPhysics:
                     # clear it; all keep a small floor so selection never fully dies.
                     weights = [0.05 + max(0.0, self._deme_competence(s) - self._ratchet_bar)
                                for s in survivors]
+                elif self.deme_fitness == "goal":
+                    # exp044: reward demes for CONSTRUCTING their heritable target path, weighted by
+                    # the target's DEPTH — so achieving a deeper goal wins, driving competence upward.
+                    # A deme whose goal keeps deepening (goal_reify) must keep building more to keep
+                    # scoring: the ratchet exp042's scalar bar could not express, because the goal is
+                    # now a heritable, composable object of the substrate's own kind.
+                    def _goalw(s):
+                        g = self._deme_goal.get(s)
+                        depth = (len(_path_nodes(g)) if g is not None else 0)
+                        return 0.05 + self._deme_goal_hit.get(s, 0) * (1 + depth)
+                    weights = [_goalw(s) for s in survivors]
                 else:
                     weights = [len(by_patch[s]) for s in survivors]
                 if self.coop:
@@ -770,6 +808,13 @@ class CombinatorPhysics:
                     if rng.random() < self.genome_mut:
                         r = max(lo, min(hi, r + rng.choice((-1, 1))))
                     self._deme_res[kp] = r
+                if self.deme_fitness == "goal":  # exp044: the child inherits src's GOAL (+ mut)
+                    g = self._deme_goal.get(src)
+                    if g is not None and self.atoms:
+                        if rng.random() < self.goal_mut:
+                            g = _mutate_path(g, rng, self.atoms)
+                        self._deme_goal[kp] = g
+                    self._deme_goal_hit[kp] = 0
             else:  # "mixed" null — propagule from the whole survivor pool
                 pool = [o for s in survivors for o in by_patch[s]]
             k = min(self.propagule_size, len(pool))
@@ -842,10 +887,36 @@ class CombinatorPhysics:
             frontier = max(self._deme_competence(p) for p in alive)
             if frontier > self._ratchet_bar:
                 self._ratchet_bar += self.ratchet_lr * (frontier - self._ratchet_bar)
+        if self.goal_reify and self.deme_fitness == "goal" and self.atoms and alive:
+            # exp044 GOAL REIFICATION (the ratchet): a deme that ROBUSTLY built its target this
+            # generation gets the target EXTENDED by one node, so the goal deepens and the deme must
+            # build more to keep achieving. Faithful to reification (Ω-0.20, which promotes ACHIEVED
+            # structure): the new node is DIRECTED — the atom the deme most produces — so the goal
+            # grows along the collective's own construction, not blindly (a random atom would jump the
+            # target to something unachievable and guarantee a stall). This is reifying an achieved
+            # GOAL into a bigger one, the analogue of reifying achieved structure into a primitive —
+            # the piece exp042's non-composable scalar bar could not express. Capped at max_size.
+            for p in alive:
+                if self._deme_goal_hit.get(p, 0) >= 2:
+                    g = self._deme_goal.get(p)
+                    if g is None:
+                        continue
+                    nodes = _path_nodes(g)
+                    if len(nodes) >= self.max_size:
+                        continue
+                    freq: dict = {}
+                    for o in by_patch.get(p, ()):        # atoms the deme actually builds
+                        for a in _path_nodes(o.state):
+                            freq[a] = freq.get(a, 0) + 1
+                    if freq:
+                        nodes.append(max(freq, key=freq.get))   # extend toward achievable structure
+                        self._deme_goal[p] = _path_build(nodes)
         self._deme_prod.clear()  # start a fresh productivity window for next gen
         self._xprod.clear()
         self._deme_edges.clear()
         self._deme_atoms.clear()  # exp036: fresh product-atom window each generation
+        if self.deme_fitness == "goal":
+            self._deme_goal_hit.clear()  # exp044: achievement is per-generation
 
     def _reify_promote(self) -> None:
         """exp034: promote the most common recent non-trivial product to a NEW atom,
@@ -1003,7 +1074,7 @@ class CombinatorPhysics:
                         seen[0] += 1
                 if patches is not None and (self.measure_xprod or self.track_signature
                         or self.deme_fitness in ("productivity", "network", "anticipation",
-                                                 "closure", "composite", "ratchet")):
+                                                 "closure", "composite", "ratchet", "goal")):
                     # credit this deme's fitness. identity lookup consumes no RNG, so
                     # non-collective runs and every other experiment stay identical.
                     # "productivity": any viable construction. cross-production
@@ -1031,6 +1102,24 @@ class CombinatorPhysics:
                                 d = self._deme_atoms.setdefault(pi, {})
                                 for a in _path_nodes(product):
                                     d[a] = d.get(a, 0) + 1
+                            if self.deme_fitness == "goal":
+                                # exp044: does this deme's construction realize its heritable target
+                                # PATH? Goal is achieved when it is a contiguous stretch of a produced
+                                # class, OR of producer++product laid end to end across a
+                                # cross-production edge (so a goal deeper than type_resolution is
+                                # realized only by BUILDING the pathway — achievement is genuine
+                                # construction). Goals are seeded deterministically per patch (no
+                                # shared-RNG draw here); variation enters via inheritance mutation.
+                                g = self._deme_goal.get(pi)
+                                if g is None and self.atoms:
+                                    na = len(self.atoms)
+                                    g = _path_build([self.atoms[pi % na], self.atoms[(pi + 1) % na]])
+                                    self._deme_goal[pi] = g
+                                if g is not None:
+                                    gn = _path_nodes(g)
+                                    if _contig_subseq(gn, _path_nodes(product)) or _contig_subseq(
+                                            gn, _path_nodes(f.state) + _path_nodes(product)):
+                                        self._deme_goal_hit[pi] = self._deme_goal_hit.get(pi, 0) + 1
                             break
                 if self.mut_prob > 0.0 and rng.random() < self.mut_prob:
                     if self.substrate == "typed_path":
@@ -1186,6 +1275,8 @@ def _make(seed, experiment, **overrides):
     physics.genome_mut = float(overrides.get("genome_mut", 0.3))
     physics.network_template = float(overrides.get("network_template", 0.0))  # exp040 strength
     physics.ratchet_lr = float(overrides.get("ratchet_lr", 0.0))              # exp042 bar chase-rate
+    physics.goal_reify = bool(overrides.get("goal_reify", False))             # exp044 goal composability
+    physics.goal_mut = float(overrides.get("goal_mut", 0.3))                  # exp044 goal mutation rate
     physics.reify_period = int(overrides.get("reify_period", 0))
     physics.reify_max_atoms = int(overrides.get("reify_max_atoms", 0))
     if physics.substrate in ("typed", "typed_path", "tree"):  # atoms over n_types base types
@@ -1880,3 +1971,37 @@ def build_ratchet(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("network_template", 0.5)       # exp040 heredity channel — ON
     overrides.setdefault("ratchet_lr", 0.25)            # exp042 self-expanding objective — ON
     return _make(seed, "exp042", **overrides)
+
+
+@register("exp044")
+def build_goals(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp044 — THE FRONTIER: heritable, composable GOALS. exp042 proved competence does not compound
+    even with a self-expanding objective, and diagnosed the barrier as *goal representation*: the
+    substrate can reify structure (Ω-0.20) but has no heritable, composable representation of a GOAL to
+    reify, and a scalar moving bar flattens its own selection gradient. In `typed_path` a goal can be
+    an object of the very same kind the substrate builds — a target PATH — so it is natively heritable
+    (transmitted like the exp037 genome), mutable (`_mutate_path`), and composable (path
+    concatenation). Each deme carries a target path it is rewarded for CONSTRUCTING (`deme_fitness=
+    "goal"`, achievement × depth); when it robustly achieves it the goal is EXTENDED (`goal_reify` —
+    reification of goals), so achieving demes get deeper goals and competence must rise to keep
+    achieving. Runs with the exp040 heredity channel so achieved goals are inherited. Question: does
+    achieved GOAL DEPTH ratchet UP over generations — competence compounds at last — or plateau (a
+    deeper barrier still: credit assignment)? Matched controls: `goal_reify=False` (fixed goals,
+    isolating composability), exp042 `ratchet`, and `size`. Off (`deme_fitness` default) ⇒ exp001–043
+    byte-identical."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "goal")
+    overrides.setdefault("goal_reify", True)            # composability / the ratchet — ON
+    overrides.setdefault("propagule_bias", "network")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("network_template", 0.5)       # exp040 heredity channel — ON
+    return _make(seed, "exp044", **overrides)

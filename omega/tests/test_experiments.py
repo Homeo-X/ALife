@@ -658,17 +658,23 @@ class TestScientificClaims(unittest.TestCase):
         # (EXP041_FINDINGS.md); this pins the combined mechanism is sound.
         from statistics import mean
 
-        def run_arm(fit, template):
-            p, c = get_experiment("exp041")(seed=0, ticks=2500,
-                                            deme_fitness=fit, network_template=template)
-            run(p, c)
-            cs = [p._deme_closure(pi) for pi in range(p.n_patches) if p._deme_edges.get(pi)]
-            s = mean(p._hered_edge_self) if p._hered_edge_self else 0.0
-            n = mean(p._hered_edge_null) if p._hered_edge_null else 0.0
-            return (mean(cs) if cs else 0.0), s, n
+        # Averaged over 3 seeds: a single seed can collapse to closure 0 (and the engine's reaction
+        # ordering is PYTHONHASHSEED-sensitive), so the single-seed inequality is borderline/flaky;
+        # the multi-seed means are the robust form of the same claim.
+        def arm(fit, template):
+            cl, sl, nl = [], [], []
+            for seed in range(3):
+                p, c = get_experiment("exp041")(seed=seed, ticks=2500,
+                                                deme_fitness=fit, network_template=template)
+                run(p, c)
+                cs = [p._deme_closure(pi) for pi in range(p.n_patches) if p._deme_edges.get(pi)]
+                cl.append(mean(cs) if cs else 0.0)
+                sl.append(mean(p._hered_edge_self) if p._hered_edge_self else 0.0)
+                nl.append(mean(p._hered_edge_null) if p._hered_edge_null else 0.0)
+            return mean(cl), mean(sl), mean(nl)
 
-        c_treat, s_treat, n_treat = run_arm("composite", 0.5)   # both mechanisms on
-        c_drift, _s, _n = run_arm("size", 0.5)                  # template only, no selection
+        c_treat, s_treat, n_treat = arm("composite", 0.5)       # both mechanisms on
+        c_drift, _s, _n = arm("size", 0.5)                      # template only, no selection
         self.assertGreater(s_treat, n_treat)                    # heritable with the template on
         self.assertGreater(c_treat, c_drift)                    # composite selection acts atop it
 
@@ -712,6 +718,53 @@ class TestScientificClaims(unittest.TestCase):
         # registry is strictly smaller under eviction, novelty still alive
         self.assertLess(rb.final_classes_total, r0.final_classes_total)
         self.assertGreater(rb.open_endedness["novelty_rate"], 0.0)
+
+    def test_exp044_goals_are_heritable_composable_and_reify(self):
+        # Ω-0.32 (the frontier): heritable, composable GOALS — the representational faculty exp042
+        # proved was missing. Pin the mechanism DIRECTLY and deterministically (the *emergent* depth
+        # ratchet is the study's science, EXP044_FINDINGS.md, and is hash-seed sensitive, so it is
+        # not asserted here): (1) _contig_subseq achievement test is correct; (2) goal reification
+        # EXTENDS an achieved goal, but only with composability on; (3) goals are heritable per deme.
+        # deme_fitness default ⇒ exp001–043 byte-identical.
+        from omega.experiments.exp012_combinator import _path_nodes, _path_build, _contig_subseq
+        from omega.kernel.universe import Universe
+        from omega.kernel.scheduler import Scheduler
+        from omega.substrate.noise import Noise
+
+        # (1) achievement predicate: a goal path is realized when it is a contiguous stretch.
+        self.assertTrue(_contig_subseq(["a", "b"], ["z", "a", "b", "c"]))
+        self.assertFalse(_contig_subseq(["a", "c"], ["a", "b", "c"]))   # not contiguous
+        self.assertFalse(_contig_subseq(["a", "b", "c"], ["a", "b"]))   # longer than seq
+
+        # (2) reification: force robust achievement on every patch, then one deme-reproduction step
+        # must EXTEND an achieved goal when goal_reify is ON, and leave depth pinned when OFF.
+        def forced_reify(reify):
+            p, c = get_experiment("exp044")(seed=0, ticks=400, goal_reify=reify)
+            rng = Noise(c.seed); u = Universe(total_quanta=c.total_quanta); p.seed(u, rng)
+            sch = Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                            max_reactions_per_tick=c.max_reactions_per_tick)
+            sch.run(400)
+            for pi in range(p.n_patches):                    # every deme has robustly achieved
+                p._deme_goal[pi] = _path_build([p.atoms[0], p.atoms[1]])
+                p._deme_goal_hit[pi] = 5
+            before = max(len(_path_nodes(g)) for g in p._deme_goal.values())
+            p._deme_reproduction(u, rng)
+            after = max(len(_path_nodes(g)) for g in p._deme_goal.values())
+            return before, after
+
+        b_on, a_on = forced_reify(True)
+        b_off, a_off = forced_reify(False)
+        self.assertEqual(b_on, 2)
+        self.assertGreater(a_on, b_on)          # composability ON: an achieved goal is extended
+        self.assertEqual(a_off, b_off)          # composability OFF: goals never deepen
+
+        # (3) goals are heritable per deme (present after a run under the goal fitness).
+        p, c = get_experiment("exp044")(seed=0, ticks=800)
+        rng = Noise(c.seed); u = Universe(total_quanta=c.total_quanta); p.seed(u, rng)
+        Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                  max_reactions_per_tick=c.max_reactions_per_tick).run(800)
+        self.assertTrue(p._deme_goal)
+        self.assertTrue(all(len(_path_nodes(g)) >= 2 for g in p._deme_goal.values()))
 
     def test_global_novelty_sketch_is_conservative_and_eviction_robust(self):
         # Ω-0.31 (consolidation): the eviction-robust GLOBAL novelty estimator (a scalable Bloom

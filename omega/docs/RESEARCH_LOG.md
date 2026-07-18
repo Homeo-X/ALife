@@ -6,6 +6,50 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.32 — The frontier: heritable, composable GOALS make competence ratchet at last — but narrowly, and at the cost of generic competence (exp044)
+
+**Date:** 2026-07-18 · **Status:** complete · **Verdict:** the **first sustained over-generations
+compounding in the entire arc** — a real partial positive — with an equally important honest caveat
+that names the next frontier. Detail: `studies/EXP044_FINDINGS.md`. Gated; exp001–043 byte-identical
+(71 tests green).
+
+exp042 diagnosed the barrier to self-improvement as **goal representation**: the substrate can reify
+*structure* but has no heritable, composable representation of a *goal* to reify. exp044 supplies it —
+in `typed_path` a goal can be an object of the substrate's own kind, a **target path**: each deme
+carries one that is heritable (transmitted + `_mutate_path`), achievement-measured (the path realized
+as a contiguous stretch of a produced class or across a producer→product edge), and composable
+(robust achievement **extends** the goal by one node, *directed* toward the atom the deme most
+produces — faithful reification of achieved structure). Fitness = achievement × depth; controls are
+`goal_reify=False` (fixed goals, isolating composability), the exp042 scalar `ratchet`, and `size`.
+
+**Result (12k ticks, 4 seeds):** (1) **the faculty works** — composable goal depth **ratchets 2.4 →
+4.0 (max depth 10)**, robustly across seeds, while fixed goals stay pinned at exactly 2. Nothing in
+exp039/041/042 compounded over generations; here something does, and composability is the active
+ingredient. exp042's diagnosis is confirmed from the other side: goal representation **was** the
+missing piece. (2) **But the ratchet is narrow and costly** — the composable arm's *generic*
+competence (closure + breed-true heredity + breadth) is the **lowest of all arms** (mean 0.28 vs
+fixed 0.47, ratchet 0.51, drift 0.57) and declines: chasing a deeper *idiosyncratic* target
+cannibalizes self-maintenance rather than lifting it.
+
+**Interpretation.** The arc advances from "no compounding" to "**compounding, but narrow**". Open-ended
+accumulation *is* possible in this substrate once collectives have a heritable, composable goal — but
+a represented goal ratchets *itself*, not general competence, and the two are in tension. The barrier
+past goal representation is **goal alignment / credit assignment**: the collective can extend and
+pursue a target but cannot tell *which of its parts* makes it competent, so it cannot aim the goal at
+its own self-maintenance. The full sequence: exp039 (fixed multi-obj) → exp040 (break heredity
+ceiling) → exp041 (fixed target) → exp042 (scalar self-expand → goal representation missing) → exp044
+(heritable composable goals → ratchets, but narrowly → **goal alignment / credit assignment**).
+
+### Is / is not
+- **Is:** the first sustained over-generations ratchet the program has produced (goal depth, 4 seeds,
+  max 10), decisively above a matched fixed-goal control — the represented faculty demonstrably
+  enables compounding; and a precisely named next rung (exp045: align goal reification with the
+  collective's own closure/heredity/breadth).
+- **Is not:** mind-like self-improvement, nor a lift in *generic* competence — the ratchet is
+  specialized and costly. "Competence"/"goal depth" are within-substrate measures.
+
+---
+
 ## Milestone Ω-0.31 — "Stays open forever" settled with an eviction-robust metric: a genuine positive floor — and the old "flat rate" was ~4× a measurement artifact (exp043 / consolidation)
 
 **Date:** 2026-07-18 · **Status:** complete · **Verdict:** the program's most load-bearing claim is
