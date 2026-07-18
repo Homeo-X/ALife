@@ -4,46 +4,46 @@ exp042 — does a self-expanding objective make competence RATCHET? (8000 ticks,
 
   [ratchet@0.10]
       window      0      1      2      3      4      5      6      7
-    frontier   0.74   1.03   0.97   0.93   0.79   0.96   0.94   0.73
-        mean   0.39   0.63   0.62   0.63   0.49   0.63   0.52   0.46
-    frontier trend: full -0.0087/win, steady -0.0292/win, Δ(last−first) -0.016
-    heredity self/null = 0.283/0.058 = 4.9x
+    frontier   0.71   0.84   1.05   1.06   0.87   0.58   0.33   0.40
+        mean   0.40   0.63   0.67   0.62   0.57   0.35   0.26   0.28
+    frontier trend: full -0.0744/win, steady -0.1629/win, Δ(last−first) -0.305
+    heredity self/null = 0.211/0.043 = 4.9x
 
   [ratchet@0.25]
       window      0      1      2      3      4      5      6      7
-    frontier   0.71   0.96   0.71   0.70   0.56   0.61   0.60   0.58
-        mean   0.40   0.63   0.61   0.50   0.44   0.50   0.43   0.47
-    frontier trend: full -0.0376/win, steady -0.0250/win, Δ(last−first) -0.129
-    heredity self/null = 0.215/0.026 = 8.2x
+    frontier   1.03   1.06   0.72   0.64   0.66   0.58   0.29   0.37
+        mean   0.57   0.76   0.42   0.41   0.36   0.29   0.21   0.27
+    frontier trend: full -0.1053/win, steady -0.0824/win, Δ(last−first) -0.653
+    heredity self/null = 0.229/0.051 = 4.5x
 
   [ratchet@0.50]
       window      0      1      2      3      4      5      6      7
-    frontier   1.15   1.36   1.15   0.90   0.99   0.66   0.60   0.82
-        mean   0.66   0.78   0.66   0.60   0.64   0.38   0.41   0.63
-    frontier trend: full -0.0895/win, steady -0.0835/win, Δ(last−first) -0.336
-    heredity self/null = 0.237/0.050 = 4.7x
+    frontier   1.10   1.31   1.19   0.93   0.74   1.07   0.75   0.61
+        mean   0.61   0.74   0.68   0.57   0.46   0.63   0.46   0.41
+    frontier trend: full -0.0801/win, steady -0.0882/win, Δ(last−first) -0.485
+    heredity self/null = 0.282/0.053 = 5.3x
 
   [composite]
       window      0      1      2      3      4      5      6      7
-    frontier   1.09   1.09   1.16   1.08   1.15   1.09   0.97   0.99
-        mean   0.57   0.66   0.70   0.66   0.72   0.64   0.55   0.57
-    frontier trend: full -0.0171/win, steady -0.0342/win, Δ(last−first) -0.097
-    heredity self/null = 0.230/0.044 = 5.3x
+    frontier   1.26   1.35   1.40   1.34   1.28   1.33   1.29   1.29
+        mean   0.69   0.79   0.79   0.77   0.72   0.75   0.72   0.73
+    frontier trend: full -0.0050/win, steady -0.0194/win, Δ(last−first) +0.030
+    heredity self/null = 0.208/0.055 = 3.8x
 
   [size]
       window      0      1      2      3      4      5      6      7
-    frontier   0.90   0.92   0.61   0.92   0.65   0.55   0.35   0.57
-        mean   0.46   0.60   0.43   0.66   0.37   0.42   0.34   0.54
-    frontier trend: full -0.0668/win, steady -0.0579/win, Δ(last−first) -0.327
-    heredity self/null = 0.183/0.040 = 4.5x
+    frontier   1.21   1.09   1.04   0.93   0.85   0.94   1.02   0.85
+        mean   0.66   0.67   0.74   0.68   0.61   0.57   0.58   0.52
+    frontier trend: full -0.0390/win, steady -0.0166/win, Δ(last−first) -0.357
+    heredity self/null = 0.243/0.054 = 4.5x
 
   best ratchet rate by steady-state frontier slope: ratchet@0.25
-  frontier steady-state slope: ratchet@0.25 -0.0250/win vs fixed-composite -0.0342/win
-  frontier final: ratchet@0.25 0.583 vs fixed-composite 0.993
+  frontier steady-state slope: ratchet@0.25 -0.0824/win vs fixed-composite -0.0194/win
+  frontier final: ratchet@0.25 0.373 vs fixed-composite 1.292
 
   => DOES NOT RATCHET: even a self-expanding objective does not make the competence
-     frontier climb over generations (ratchet steady slope -0.0250, vs fixed
-     -0.0342). Raising the bar cannot pull competence up faster than mutation
+     frontier climb over generations (ratchet steady slope -0.0824, vs fixed
+     -0.0194). Raising the bar cannot pull competence up faster than mutation
      erodes it and the substrate re-forms it: the barrier is deeper than the objective
      — the collective cannot accumulate an open-ended goal without a representational
      faculty the substrate does not yet have (heritable, composable GOALS, not just

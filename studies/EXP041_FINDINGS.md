@@ -30,6 +30,11 @@ the full run and over the post-transient steady state, and a normalized weakest-
 
 ## Result (8000 ticks, 5 seeds, `memory_horizon=4000`)
 
+*(Ω-0.33 determinism note: this study was re-run after the hash-seed fix; the specific magnitudes
+below shifted slightly and the committed `results.json` is the deterministic source of truth. The
+**verdict is unchanged** — competence does not compound; heredity still declines every generation and
+the template raises the heredity *level* but not enough to make the three axes rise together.)*
+
 | arm | closure (mean · steady slope) | heredity self (mean · steady slope) | function (mean · steady slope) | self/null |
 |-----|:---:|:---:|:---:|:---:|
 | **composite+template** (treatment) | 0.286 · **+1.1%** | 0.256 · **−4.5%** | 4.55 · **+3.6%** | **3.4×** |

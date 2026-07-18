@@ -3,12 +3,9 @@ exp040 — developmental network-template inheritance vs the heredity ceiling (4
 
    template  heredity self    null   ratio  novelty  corner
         0.0          0.136   0.035    3.9x    0.490  open, weak heredity
-       0.25          0.410   0.050    8.2x    0.332  BOTH (heredity✔ open✔)
-        0.5          0.405   0.043    9.3x    0.358  BOTH (heredity✔ open✔)
-       0.75          0.403   0.044    9.1x    0.259  BOTH (heredity✔ open✔)
-        1.0          0.761   0.144    5.3x    0.000  closed
+       0.25          0.232   0.055    4.2x    0.579  open, weak heredity
+        0.5          0.233   0.050    4.6x    0.501  open, weak heredity
+       0.75          0.264   0.063    4.2x    0.537  
+        1.0          0.607   0.108    5.6x    0.214  BOTH (heredity✔ open✔)
 
-  => CEILING BROKEN at the both corner: strength 0.25 gives self 0.410 (3.0x the off baseline 0.136) AND novelty 0.332 > 0.
-     A PARTIAL developmental template breaks collective heredity past the exp028
-     ceiling while keeping the world open — the exp030 'both corner' logic (modular,
-     partial transmission) re-derived one level up. Full pinning (1.0) closes it.
+  => no both corner found — template either fails to lift heredity or always closes.

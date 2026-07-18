@@ -4,36 +4,31 @@ exp044 — do heritable, composable GOALS make competence ratchet? (12000 ticks,
 
   [goals+reify]
         window      0      1      2      3      4      5      6      7
-    goal_depth   2.41   3.40   3.41   3.43   3.34   3.42   3.80   4.05
-    competence  0.552  0.676  0.579  0.459  0.359  0.000  0.199  0.101
-    goal-depth steady slope +0.1261/win  competence steady slope -0.1008/win  max depth 10
+    goal_depth   2.60   3.32   3.39   4.11   4.25   3.43   3.69   3.26
+    competence  0.609  0.535  0.544  0.535  0.320  0.416  0.379  0.360
+    goal-depth steady slope -0.0778/win  competence steady slope -0.0368/win  max depth 7
 
   [goals-fixed]
         window      0      1      2      3      4      5      6      7
     goal_depth   2.00   2.00   2.00   2.00   2.00   2.00   2.00   2.00
-    competence  0.534  0.682  0.766  0.598  0.602  0.285  0.250  0.339
-    goal-depth steady slope +0.0000/win  competence steady slope -0.0999/win  max depth 2
+    competence  0.572  0.537  0.660  0.385  0.259  0.230  0.282  0.215
+    goal-depth steady slope +0.0000/win  competence steady slope -0.0733/win  max depth 2
 
   [ratchet]
         window      0      1      2      3      4      5      6      7
-    competence  0.511  0.784  0.454  0.469  0.561  0.456  0.518  0.627
-    goal-depth steady slope +0.0000/win  competence steady slope +0.0260/win  max depth 0
+    competence  0.396  0.305  0.251  0.272  0.238  0.287  0.294  0.341
+    goal-depth steady slope +0.0000/win  competence steady slope +0.0161/win  max depth 0
 
   [size]
         window      0      1      2      3      4      5      6      7
-    competence  0.565  0.508  0.656  0.672  0.509  0.495  0.708  0.367
-    goal-depth steady slope +0.0000/win  competence steady slope -0.0385/win  max depth 0
+    competence  0.676  0.716  0.629  0.602  0.539  0.528  0.534  0.572
+    goal-depth steady slope +0.0000/win  competence steady slope -0.0142/win  max depth 0
 
-  (1) achieved GOAL DEPTH ratchet: composable 2.41->4.05 (slope +0.1261/win) vs fixed 2.00->2.00 (slope +0.0000/win) => RATCHETS
-  (2) does it lift GENERIC competence? composable slope -0.1008/win, mean 0.283 vs fixed 0.473 / ratchet 0.514 / size 0.568 => no (narrow)
+  (1) achieved GOAL DEPTH ratchet: composable 2.60->3.26 (slope -0.0778/win) vs fixed 2.00->2.00 (slope +0.0000/win) => flat
+  (2) does it lift GENERIC competence? composable slope -0.0368/win, mean 0.426 vs fixed 0.338 / ratchet 0.281 / size 0.567 => no (narrow)
 
-  => THE FACULTY WORKS, BUT NARROWLY (a partial positive — the first compounding in the
-     whole arc). Heritable, composable goals produce a genuine over-generations RATCHET
-     in the represented dimension: achieved goal depth climbs (composable ≫ fixed),
-     where exp041/042 could not make anything compound. So goal representation WAS a
-     real missing piece — given it, the collective accumulates deeper achievements. BUT
-     the ratchet is *specialized*: chasing a deeper idiosyncratic target does not lift
-     GENERIC competence (closure/heredity/breadth). The next rung is to ALIGN the goal
-     with self-maintenance — a credit-assignment / goal-alignment problem — so the
-     represented ratchet also generalizes. The arc advances from 'no compounding' to
-     'compounding, but narrow'.
+  => DOES NOT RATCHET: even heritable, composable goals do not make achieved depth
+     climb (composable slope -0.0778 vs fixed +0.0000). The collective
+     builds toward a target but cannot tell WHICH of its parts caused achievement, so it
+     cannot direct construction to extend the pathway — the barrier past goal
+     representation is CREDIT ASSIGNMENT, the ROADMAP-predicted third redirection.

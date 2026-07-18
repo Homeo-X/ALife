@@ -850,11 +850,19 @@ class CombinatorPhysics:
                         # parent's edges. A partial template (< 1) is the dial between the
                         # reproducible-but-closed corner (full) and the open-but-weak corner (off).
                         cls_state = {o.cls: o.state for o in by_patch[src]}
-                        seed = [cls_state[p] for (_f, p) in self._deme_signature(src)
+                        # The developmental template seeds the child with a FRACTION of the parent
+                        # network's product states. Build the candidate list in a canonical (sorted)
+                        # order first — frozenset iteration order is PYTHONHASHSEED-dependent, so
+                        # without this the template (and every run using it) is nondeterministic
+                        # across processes — then draw the fraction with rng.sample, a *representative*
+                        # random subset (deterministic given the seed) rather than the alphabetically-
+                        # first slice, which would bias the niche toward small-labelled products.
+                        seed = [cls_state[p] for (_f, p) in sorted(self._deme_signature(src))
                                 if p in cls_state]
                         if seed:
                             keep = max(1, int(self.network_template * len(seed)))
-                            self._niche[kp] = seed[:keep][-self.niche_window:]
+                            chosen = seed if keep >= len(seed) else rng.sample(seed, keep)
+                            self._niche[kp] = chosen[-self.niche_window:]
         # exp031 CULTURE: horizontal, Lamarckian transfer between *surviving* demes — a
         # deme imitates a fitter deme's top motif within its lifetime (not via
         # reproduction), injecting that motif's product into its own recycle buffer.

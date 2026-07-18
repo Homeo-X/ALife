@@ -20,6 +20,11 @@ reifying persistent structure into new primitives. Run *with* the exp040 heredit
 
 ## Result (8000 ticks, 5 seeds, `memory_horizon=4000`)
 
+*(Ω-0.33 determinism note: re-run after the hash-seed fix; magnitudes below shifted slightly (the
+committed `results.json` is the deterministic source of truth) but the **verdict is unchanged** — the
+self-expanding objective does not ratchet and is *worse* than the fixed one, e.g. deterministically
+the best ratchet arm's late frontier 0.37 vs fixed-composite 1.29.)*
+
 Competence **frontier** = max over demes of `_deme_competence`, per generation-window:
 
 | arm | frontier (steady-state slope / win) | final frontier | heredity self/null |

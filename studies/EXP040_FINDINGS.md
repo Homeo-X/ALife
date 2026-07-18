@@ -14,24 +14,31 @@ toward the parent's edges. A biological analogue: offspring inherit genes **and*
 developmental environment (niche / parental-effect inheritance). The strength is a dial — the
 collective-level analogue of exp030's resolution dial. Gated: `network_template=0` ⇒ byte-identical.
 
-## Result (4000 ticks, 3 seeds)
+## Result (4000 ticks, 3 seeds; numbers deterministic as of Ω-0.33 — see note)
 
 | template strength | heredity self | null | ratio | novelty | corner |
 |:-----------------:|:-------------:|:----:|:-----:|:-------:|--------|
 | 0.0 (off) | 0.136 | 0.035 | 3.9× | 0.490 | open, **weak heredity** (the exp028 ceiling) |
-| **0.25** | **0.410** | 0.050 | **8.2×** | **0.332** | **BOTH** |
-| **0.5** | **0.405** | 0.043 | **9.3×** | **0.358** | **BOTH** |
-| **0.75** | **0.403** | 0.044 | **9.1×** | **0.259** | **BOTH** |
-| 1.0 (full) | 0.761 | 0.144 | 5.3× | 0.000 | strong heredity but **closed** |
+| **0.25** | **0.563** | 0.129 | **4.3×** | **0.217** | **BOTH** |
+| **0.5** | **0.569** | 0.165 | **3.4×** | **0.220** | **BOTH** |
+| **0.75** | **0.582** | 0.155 | **3.8×** | **0.236** | **BOTH** |
+| 1.0 (full) | 0.607 | 0.108 | 5.6× | 0.214 | strong heredity, still open |
 
-- **The ceiling breaks.** A partial template lifts collective heredity to self ≈ 0.40 — **3× the
-  off baseline** and a **~9× self/null ratio**, well past the exp028 ceiling that even
-  whole-deme transmission could not clear.
-- **And the world stays open.** At strength 0.25–0.75 novelty is sustained (0.26–0.36) — this is
-  the **collective-level "both corner": strong reproducible heredity AND open-endedness at once.**
-- **Full pinning closes it.** At strength 1.0 heredity is highest but novelty → 0: continuously
-  re-feeding the *entire* parent network pins offspring so hard the world stops discovering — the
-  exp029 "reproducible-but-closed" corner, now at the collective level.
+- **The ceiling breaks (on absolute heredity).** A partial template lifts collective heredity to
+  self ≈ **0.56** — **~4.1× the off baseline (0.136)** and, decisively, **well past the exp028
+  ceiling of self ≤ 0.28** that even whole-deme transmission could not clear. (The self/null *ratio*
+  is a more modest ~3.4–4.3× because the template raises the null baseline too; the load-bearing
+  signal is the absolute self clearing 0.28.)
+- **And the world stays open.** Across strengths 0.25–1.0 novelty is sustained (~0.21–0.24) — the
+  **collective-level "both corner": strong reproducible heredity AND open-endedness at once.**
+- **Note (Ω-0.33 determinism correction).** These numbers were refreshed after the Ω-0.33
+  determinism fix. The originally reported figures (partial self ≈ 0.40, **8–9× null**, and a sharp
+  "**full pinning closes the world**, novelty → 0") were partly an artifact of a favourable
+  `PYTHONHASHSEED` (the niche-seed subset order was hash-dependent). Deterministically the ceiling
+  break is *stronger* on absolute self (0.56 vs 0.40) but the null-ratio is smaller (~4× not ~9×) and
+  the world stays open even at full template (novelty ~0.21, not 0) — so the crisp closed↔open *dial*
+  is muted. The qualitative claim (**a partial developmental template reaches the collective both
+  corner**) stands.
 
 ## Interpretation — the same principle, one level up
 

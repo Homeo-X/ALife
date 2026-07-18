@@ -5,7 +5,7 @@
 <p align="center">
   <a href="#quickstart"><img src="https://img.shields.io/badge/python-3.10%2B-blue" alt="python 3.10+"></a>
   <img src="https://img.shields.io/badge/dependencies-none%20(stdlib%20only)-8affc1" alt="stdlib only">
-  <img src="https://img.shields.io/badge/tests-71%20passing-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/tests-72%20passing-brightgreen" alt="tests">
   <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="license">
 </p>
 
@@ -63,7 +63,7 @@ Each row is a falsifiable experiment (or milestone) with a matched control. Full
 | **Ω-0.20** sustained novelty | Does open-endedness need *continuing* construction? | **Yes** — a one-time alphabet bump still closes; only *ongoing* reification holds the novelty rate. Constructibility is a **rate, not a stock**. |
 | **Ω-0.21** scaling | Can it run at 10⁶ ticks? | Bounded-memory mode + a **3× faster** kernel, validated against known results — the "in-miniature" cap lifted. |
 | **Ω-0.22–23** the living world | Can you *watch* it? | A persistent, checkpointing **world** with a live dashboard: named lifeforms, cultures, a novelty pulse, geography, and the ability to reach in and steer it. |
-| **Ω-0.24–32** toward minds | Can collectives become self-improving? | **A precise, honest arc that reaches its first compounding.** exp039 pinned the missing piece — collective heredity — and **exp040 broke that ceiling** (8–9×, world still open); **exp041/042** showed a higher heredity level and even a *self-expanding* scalar objective still don't compound → the barrier is **goal representation**. **exp044** supplies it (a heritable, composable target *path*) and gets the **arc's first sustained ratchet** — achieved goal depth climbs 2.4→4.0 (max 10) vs a fixed-goal control pinned at 2 — **but narrowly**: chasing a deeper idiosyncratic goal *cannibalizes* generic competence. Next barrier: **goal alignment / credit assignment**. |
+| **Ω-0.24–32** toward minds | Can collectives become self-improving? | **A precise, honest arc that reaches its first compounding.** exp039 pinned the missing piece — collective heredity — and **exp040 broke that ceiling** (self ≈ 0.56, past the exp028 ≤ 0.28 ceiling, world still open); **exp041/042** showed a higher heredity level and even a *self-expanding* scalar objective still don't compound → the barrier is **goal representation**. **exp044** supplies it (a heritable, composable target *path*) and gets the **arc's first over-generations *deepening*** — achieved goal depth climbs far above a fixed-goal control pinned at 2 — **but the ratchet is transient** (it peaks then partially collapses) and doesn't lift generic competence. Next barrier: **goal alignment / credit assignment**. |
 
 *(Kept honestly: exp003 was a retracted false positive; exp009/010/011/018–020/028/036 are
 informative **negatives**. The program is organized against closure, not for hype.)*
@@ -90,7 +90,7 @@ git clone https://github.com/homeo-x/alife && cd alife
 python -m omega.cli list                    # list experiments
 python -m omega.cli run exp030 --seed 0     # a completed transition to collective individuality
 python -m omega.cli run exp002 --set bind=false   # a matched control
-python -m unittest discover -s omega/tests  # run the test suite (71 tests)
+python -m unittest discover -s omega/tests  # run the test suite (72 tests)
 ```
 
 More runnable one-liners are in [`examples/`](examples/).

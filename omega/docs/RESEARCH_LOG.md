@@ -6,12 +6,50 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.33 — Determinism restored: results are now byte-identical across PYTHONHASHSEED (consolidation)
+
+**Date:** 2026-07-18 · **Status:** complete · **Verdict:** a **hardening consolidation** — a real
+reproducibility bug, discovered while building exp044, is fixed at the source. Gated experiments
+unchanged in kind; 72 tests green (incl. a new cross-hash-seed guard).
+
+**The bug.** Building exp044 surfaced that the same `seed` produced different absolute results across
+process invocations — e.g. `classes_ever_seen` for exp040 was 360 / 1005 / 1075 under
+`PYTHONHASHSEED` 0 / 1 / 2. The cause was **`set`/`frozenset` iteration order**, which Python
+randomises per process: the exp040 developmental template built its niche seed by iterating a deme's
+signature (a `frozenset`) into a list and truncating `seed[:keep]` — so *which* product states seeded
+the child, and the order they were later recycled by `rng.choice`, depended on the hash seed. Every
+run using `network_template` (exp040/041/042/044) inherited the nondeterminism; the base engine
+(exp030, dict/list-ordered, no template) was already deterministic (859/859/859), which is why it went
+unnoticed.
+
+**The fix (one line, plus a guard).** Sort the signature into a canonical order before building the
+seed list (`sorted(self._deme_signature(src))`) — `frozenset` iteration is the only hash-dependent
+step; dict iteration (insertion order) and the membership/Jaccard uses of the other sets are already
+order-independent. After the fix, exp040/041/042/044 are byte-identical across hash seeds
+(exp040 → 1246 at every seed; verified for exp030/34/35/36/37/38/39/41/42/44, culture, world). A new
+`TestDeterminism.test_deterministic_across_hash_seeds` runs exp040 in two subprocesses with different
+`PYTHONHASHSEED` and asserts exact agreement, so this cannot silently regress.
+
+**Scope / honesty.** The fix **changes the specific numbers** of template-using runs (they were
+previously computed under one uncontrolled hash seed; the deterministic engine picks the canonical
+`sorted` ordering). The affected studies (exp040/041/042/044) were **re-run and their committed
+`results.json`/findings refreshed** so every claim again traces to a reproducible artifact. The
+**qualitative verdicts are unchanged** — they are matched-control inequalities robust across the
+ordering (exp040 still breaks the heredity ceiling; exp044's composable goal depth still ratchets
+while fixed stays pinned; exp041/042 still don't compound). This closes the determinism caveat noted
+in Ω-0.32 and restores the program's "same config ⇒ same result" guarantee across machines, the
+natural companion to Ω-0.31's measurement consolidation.
+
+---
+
 ## Milestone Ω-0.32 — The frontier: heritable, composable GOALS make competence ratchet at last — but narrowly, and at the cost of generic competence (exp044)
 
-**Date:** 2026-07-18 · **Status:** complete · **Verdict:** the **first sustained over-generations
-compounding in the entire arc** — a real partial positive — with an equally important honest caveat
-that names the next frontier. Detail: `studies/EXP044_FINDINGS.md`. Gated; exp001–043 byte-identical
-(71 tests green).
+**Date:** 2026-07-18 · **Status:** complete · **Verdict:** the **first over-generations *deepening*
+in the entire arc** — a real, mixed positive — with an equally important honest caveat that names the
+next frontier. Detail: `studies/EXP044_FINDINGS.md`. Gated; exp001–043 byte-identical.
+*(Numbers corrected for the Ω-0.33 determinism fix: the effect is real but the earlier "sustained
+ratchet 2.4→4.0, max 10" was partly a favourable `PYTHONHASHSEED` — deterministically the ratchet is
+**transient**.)*
 
 exp042 diagnosed the barrier to self-improvement as **goal representation**: the substrate can reify
 *structure* but has no heritable, composable representation of a *goal* to reify. exp044 supplies it —
@@ -22,31 +60,32 @@ as a contiguous stretch of a produced class or across a producer→product edge)
 produces — faithful reification of achieved structure). Fitness = achievement × depth; controls are
 `goal_reify=False` (fixed goals, isolating composability), the exp042 scalar `ratchet`, and `size`.
 
-**Result (12k ticks, 4 seeds):** (1) **the faculty works** — composable goal depth **ratchets 2.4 →
-4.0 (max depth 10)**, robustly across seeds, while fixed goals stay pinned at exactly 2. Nothing in
-exp039/041/042 compounded over generations; here something does, and composability is the active
-ingredient. exp042's diagnosis is confirmed from the other side: goal representation **was** the
-missing piece. (2) **But the ratchet is narrow and costly** — the composable arm's *generic*
-competence (closure + breed-true heredity + breadth) is the **lowest of all arms** (mean 0.28 vs
-fixed 0.47, ratchet 0.51, drift 0.57) and declines: chasing a deeper *idiosyncratic* target
-cannibalizes self-maintenance rather than lifting it.
+**Result (12k ticks, 4 seeds; deterministic, Ω-0.33):** (1) **the faculty has a real effect** —
+composable goal depth climbs far above the fixed control (per-window **2.6 → peak 4.3 → 3.3**, max
+depth **7**) while fixed goals stay pinned at exactly 2. Nothing in exp039/041/042 deepened over
+generations; here composability does — the arc's first over-generations deepening. (2) **But it is
+not sustained, and doesn't lift generic competence** — the depth trajectory is a **hump** (overshoots
+then partially collapses: deeper goals outrun what the network can build), and generic competence
+(closure + breed-true heredity + breadth) is middling: composable 0.46 beats fixed 0.39 and the
+exp042 ratchet 0.30 but **loses to drift (0.60)**.
 
-**Interpretation.** The arc advances from "no compounding" to "**compounding, but narrow**". Open-ended
-accumulation *is* possible in this substrate once collectives have a heritable, composable goal — but
-a represented goal ratchets *itself*, not general competence, and the two are in tension. The barrier
+**Interpretation.** The arc advances from "no compounding" to "**transient deepening, not sustained**".
+Deeper achievements *can* accumulate once collectives have a heritable, composable goal — but the
+accumulation peaks and partially collapses, and does not transfer to general competence. The barrier
 past goal representation is **goal alignment / credit assignment**: the collective can extend and
-pursue a target but cannot tell *which of its parts* makes it competent, so it cannot aim the goal at
-its own self-maintenance. The full sequence: exp039 (fixed multi-obj) → exp040 (break heredity
-ceiling) → exp041 (fixed target) → exp042 (scalar self-expand → goal representation missing) → exp044
-(heritable composable goals → ratchets, but narrowly → **goal alignment / credit assignment**).
+pursue a target but cannot tell *which of its parts* makes it competent, so it can neither aim the
+goal at its own self-maintenance nor keep achieving a target that has grown past what its network can
+build. The full sequence: exp039 (fixed multi-obj) → exp040 (break heredity ceiling) → exp041 (fixed
+target) → exp042 (scalar self-expand → goal representation missing) → exp044 (heritable composable
+goals → deeper goals accumulate but transiently → **goal alignment / credit assignment**).
 
 ### Is / is not
-- **Is:** the first sustained over-generations ratchet the program has produced (goal depth, 4 seeds,
-  max 10), decisively above a matched fixed-goal control — the represented faculty demonstrably
-  enables compounding; and a precisely named next rung (exp045: align goal reification with the
-  collective's own closure/heredity/breadth).
-- **Is not:** mind-like self-improvement, nor a lift in *generic* competence — the ratchet is
-  specialized and costly. "Competence"/"goal depth" are within-substrate measures.
+- **Is:** the first over-generations *deepening* the program has produced (composable ≫ fixed, peak
+  ~4.3, max 7), decisively above a matched fixed-goal control — the represented faculty demonstrably
+  produces deeper achievements; and a precisely named next rung (exp045: align goal reification with
+  the collective's own closure/heredity/breadth).
+- **Is not:** a *sustained* ratchet (it humps and partially collapses), nor a lift in *generic*
+  competence (it loses to drift). "Competence"/"goal depth" are within-substrate measures.
 
 ---
 
@@ -263,10 +302,13 @@ exp039 said competence cannot compound because collective heredity is stuck at t
 exp040 transmits the **developmental niche** too: a fraction `network_template ∈ [0,1]` of the parent
 network's product states is seeded into the child's recycle buffer, so it is re-fed the parent's
 outputs and canalizes toward its edges (niche / parental-effect inheritance). The strength is a dial —
-the collective-level analogue of exp030's resolution dial. Sweep (4000 ticks, 3 seeds): **off** →
-self 0.14, 3.9×, novelty 0.49 (the ceiling); **strength 0.25–0.75** → self ≈ 0.40, **8–9× null**,
-novelty 0.26–0.36 — the **collective "both corner": strong reproducible heredity AND open-endedness at
-once**; **full (1.0)** → self 0.76 but novelty → 0 (closed).
+the collective-level analogue of exp030's resolution dial. Sweep (4000 ticks, 3 seeds; deterministic
+figures as of Ω-0.33): **off** → self 0.14, 3.9×, novelty 0.49 (the ceiling); **strength 0.25–0.75** →
+self ≈ **0.56** (**~4.1× the off baseline**, decisively past the exp028 self ≤ 0.28 ceiling; ~3.4–4.3×
+null), novelty ~0.22 — the **collective "both corner": strong reproducible heredity AND
+open-endedness at once**; full (1.0) → self 0.61, still open (~0.21). *(The originally reported
+"8–9× null / full-pinning-closes-the-world" was partly a `PYTHONHASHSEED` artifact — see Ω-0.33; the
+both-corner claim stands, on absolute self.)*
 
 **The ceiling was never a hard wall — it was the exp029↔030 open-vs-reproducible trade-off one level
 up, and it yields to the same fix: partial, modular transmission.** Full transmission reproduces
