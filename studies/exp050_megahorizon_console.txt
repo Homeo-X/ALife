@@ -1,0 +1,32 @@
+[done open-s2] registry=3299 global_distinct=127597 late_global=0.0973
+[done open-s1] registry=2965 global_distinct=131920 late_global=0.0931
+[done open-s3] registry=3097 global_distinct=133155 late_global=0.1004
+[done open-s0] registry=3082 global_distinct=130614 late_global=0.0807
+[done closed-s0] registry=144 global_distinct=144 late_global=0.0000
+[done closed-s1] registry=135 global_distinct=144 late_global=0.0000
+[done closed-s2] registry=142 global_distinct=144 late_global=0.0000
+[done closed-s4] registry=143 global_distinct=144 late_global=0.0000
+[done closed-s3] registry=143 global_distinct=144 late_global=0.0000
+[done open-s4] registry=3109 global_distinct=129821 late_global=0.0972
+
+exp050 — is the genuine-novelty floor REAL at 10⁶ or does it DILUTE? (1000000 ticks, 5 seeds, mem_h=5000, 10 windows)
+
+  [open = exp030]
+       window       0       1       2       3       4       5       6       7       8       9
+     windowed  0.4667  0.4646  0.4590  0.4625  0.4649  0.4596  0.4675  0.4651  0.4651  0.4648
+       global  0.2989  0.1714  0.1303  0.1281  0.1038  0.1009  0.0916  0.1011  0.0954  0.0847
+    late windowed/global inflation factor = 4.96
+
+  [closed = exp029]
+       window       0       1       2       3       4       5       6       7       8       9
+     windowed  0.0022  0.0006  0.0005  0.0005  0.0007  0.0006  0.0006  0.0009  0.0006  0.0009
+       global  0.0014  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000
+    late windowed/global inflation factor = inf
+
+  open global novelty: early(w1-2)=0.1509  late(w-3..)=0.0937  retention=0.62  distinct-ever≈130621
+  closed global novelty late = 0.0000 (instrument sanity: must be ~0)
+
+  => POSITIVE FLOOR HOLDS AT 10⁶ (settled an order of magnitude out): with all eviction-
+     recycling stripped, the open engine STILL discovers genuinely-never-seen classes to
+     the 10⁶ horizon, decisively above the closed control. 'Stays open forever' is a real
+     property of the global novelty rate at the long horizon, not a windowing artifact.

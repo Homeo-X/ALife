@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.38).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.39).
 
 ## Where we are
 
@@ -37,10 +37,15 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
 
 ## The next frontier (highest priority)
 
-**1. Truly unbounded, not in-miniature.** Every open-endedness result is ≤ 300k ticks / few seeds.
-With the Ω-0.21 instrument, run 10⁶–10⁷ ticks, multi-seed, and deep towers (50+), with a *streaming*
-novelty metric that does not retain the full class registry. *Predicted falsification:* the novelty
-rate finds a positive floor, or it dilutes to zero at some horizon.
+**1. Truly unbounded — the novelty axis is SETTLED at 10⁶ (Ω-0.39); the tower axis is not.** The
+streaming-novelty question is answered: on the eviction-robust global sketch, the open engine's genuine
+rate **finds a positive floor** (~0.09 new classes/tick, ~130k distinct in 10⁶ ticks / 5 seeds,
+decisively above the closed control's exact 0) — the steep early decline is a transient, not dilution.
+What remains open on this axis is a **10⁷ stress** (windows 4–9 still sag ~18%, so a slower second-order
+decline is not ruled out) and, separately, **deep towers (50+ levels)** at the long horizon — the tower
+depth has only been pushed in-miniature (Ω-0.17), never to 10⁶ ticks with the streaming instrument.
+*Predicted falsification:* at 10⁷ the floor finally dilutes to zero, or tower depth hits an intrinsic
+ceiling under bounded memory.
 
 ## Secondary threads
 

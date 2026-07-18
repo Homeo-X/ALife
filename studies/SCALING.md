@@ -107,3 +107,17 @@ inflated** by recycling — the true genuine rate is positive but **slowly decli
 ranking claims (open ≫ closed; continuing ≫ capped construction) are unaffected. See
 `studies/EXP043_FINDINGS.md` and `RESEARCH_LOG` Ω-0.31. Residual: does the global rate asymptote
 above zero at 10⁶–10⁷ ticks? — now a clean run, not a conceptual gap.
+
+## Update (Ω-0.39) — settled at 10⁶: the floor is real, the decline was a transient
+
+That residual is now closed. `studies/exp050_megahorizon.py` (**10⁶ ticks, 5 seeds**, open exp030 vs
+closed exp029, `global_novelty=True`, parallel arms with reclaim-safe partial writes) runs the literal
+long horizon. The eviction-robust global rate falls 0.30 → 0.10 over the first ~400k ticks and then
+**levels onto ~0.085–0.10 genuinely-new classes/tick for the entire second half** — ~**130,600 distinct
+classes ever per seed** (registry held flat ~3.1k by eviction), decisively above the closed control's
+**exact 0.0000** (144 classes ever). The Ω-0.31 "slowly declining, halves over 300k" worry is resolved
+in favor of a **floor, not dilution**: the steep drop is a transient (67% over the first 400k) that
+decelerates to a ~18% sag across the next 600k — a curve converging to a positive constant. The
+windowed rate stays flat ~0.465 (≈5× the genuine rate: recycling). See `studies/EXP050_FINDINGS.md`
+and `RESEARCH_LOG` Ω-0.39. Residual now: a 10⁷ stress (rule out a slower second-order decline) and deep
+towers (50+) at the long horizon.

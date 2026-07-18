@@ -6,6 +6,49 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.39 — "Stays open forever" settled at 10⁶ ticks: the genuine-novelty floor is REAL, and the Ω-0.31 decline was a transient (exp050)
+
+**Date:** 2026-07-18 · **Status:** complete · **Verdict:** the program's **load-bearing claim, settled
+at the literal long horizon** — a positive, asymptotic genuine-novelty floor. Detail:
+`studies/EXP050_FINDINGS.md`. Measurement only (no physics change); `global_novelty=False` ⇒ every
+experiment byte-identical, deterministic across `PYTHONHASHSEED`.
+
+Ω-0.31 settled "constructibility keeps the world open" *honestly but partially*: on the eviction-robust
+**global** novelty sketch (each class counted once *ever*, stripping the recycling that inflates the
+windowed rate under bounded memory), the open engine's genuine rate was **positive but slowly declining**
+— it *halved* over 300k ticks / 3 seeds, leaving open whether it floors or dilutes to zero. exp050 runs
+the literal **10⁶-tick × 5-seed** campaign the thesis is stated for: open engine (exp030, the both
+corner) vs closed control (exp029), both metrics over 10 windows of 100k ticks.
+
+**Result (10⁶ ticks, 5 seeds):** the floor is **real**. The eviction-robust global rate runs
+0.30 → 0.10 over the first ~400k ticks and then **levels onto ~0.085–0.10 genuinely-new classes/tick for
+the entire second half**, decisively above the closed control's **exact 0.0000** — ~**130,600 distinct
+classes ever per seed** (registry held flat at ~3,100 by eviction) vs the closed alphabet's **144**. The
+late windowed/global inflation factor is **~5.0**, confirming Ω-0.31's diagnosis that the *windowed* rate
+(flat ~0.465) is ~5× inflated by recycling. **The Ω-0.31 "slow decline" was a transient, not dilution:**
+the steep drop is confined to the first ~400k ticks (a 67% fall), after which the rate sags only ~18%
+across the next 600k — a decelerating curve converging to a positive constant, not descending toward
+zero. Ω-0.31's open worry is resolved in favor of **floor**.
+
+**Interpretation.** This is the strongest form of the program's central thesis, at the horizon it was
+always stated for: **open-endedness of *construction* is genuine and asymptotic**, not a finite budget
+draining through a measurement window. A *modular-and-open* both-corner substrate keeps building
+genuinely-new organization at a stable positive rate to 10⁶ ticks; a *closed* substrate stops dead at
+144 classes. Constructibility is a **rate with a positive floor** (~0.09 new classes/tick), and the
+both-corner condition is what sustains it. Read with Ω-0.38: **construction is open-ended; competence is
+not** — the world compounds *what it builds* (forever, measurably) but not *how good its collectives get*.
+
+### Is / is not
+- **Is:** the load-bearing claim ("stays open") settled on the conservative, eviction-robust metric at
+  10⁶ ticks / 5 seeds, an order of magnitude beyond Ω-0.31, with the closed control as the exact-zero
+  null and the "slow decline" worry resolved as a transient.
+- **Is not:** a proof of a *perfectly* flat rate forever — windows 4–9 still sag ~18%, so a 10⁷ run
+  could reveal a slower second-order decline (the deceleration argues against it). Within the both-corner
+  substrate; bounded-memory measurement (exactly why the registry-independent global sketch is the
+  instrument).
+
+---
+
 ## Milestone Ω-0.38 — Competence as a *rate*, not a *stock*: reifying achieved competence does **not** raise the ceiling — the arc's open problem, closed (exp049)
 
 **Date:** 2026-07-18 · **Status:** complete · **Verdict:** an **honest negative that resolves the arc's
