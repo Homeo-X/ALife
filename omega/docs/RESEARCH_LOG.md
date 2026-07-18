@@ -6,6 +6,51 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.36 — Within-collective selection *collapses* the collective: competence is irreducibly collective — the self-improvement arc's terminal diagnosis (exp047)
+
+**Date:** 2026-07-18 · **Status:** complete · **Verdict:** a **deep negative that closes the arc** with
+a structural conclusion, connecting its end back to its origin (exp012). Detail:
+`studies/EXP047_FINDINGS.md`. Gated; exp001–046 byte-identical (deterministic across `PYTHONHASHSEED`).
+
+exp046 blamed the failure of credit-in-the-fitness on the selection *grain* — deme reproduction copies
+a whole propagule and can't retain the credited parts. exp047 adds the missing grain: `within_select`
+founds each offspring from the source deme's members sampled with probability rising in their credit
+(Efraimidis–Spirakis weighted, with a floor) — parts competing *inside* the collective, a second
+selection level below the deme. Control: exp046 (`within_select=False`).
+
+**Result (12k ticks, 6 seeds):** it **collapses the collective.** Within-selection competence (mean
+0.363, declining) is far *below* deme-only credit (0.615) and drift (0.613), and network survival falls
+to **0.29** of demes (vs 0.43) — biasing reproduction toward high-credit members erodes the diversity
+the cross-production network needs, so fewer demes sustain a network at all. Holds for both the strict
+top-k and the gentler weighted form.
+
+**Interpretation — the terminal diagnosis.** The credited parts have no value in isolation: a deme's
+competence is a property of a *diverse, complementary* network of members that produce each other.
+Select hard for those parts as individuals and you strip out their partners, destroying the network
+and the competence it carried — part-level selection on credit is **self-defeating**. So **collective
+competence is not decomposable into independently selectable part contributions** — the credit is not
+localizable to parts, it lives in their relations. Credit assignment failed not because credit couldn't
+be represented (exp046) or acted on at grain (exp047) but because it isn't *localizable*. The
+resolution connects the arc to its origin: compounding would require the parts to be **replicators**
+(units carrying/copying their own context-independent heritable value — the exp012 `C·x → C` lesson);
+the type-path parts are context-dependent network components, not replicators, so no route through
+goal representation (exp044), goal alignment (exp045), credit-in-fitness (exp046), or within-collective
+selection (exp047) makes collective competence compound.
+
+**The self-improvement arc (exp036–047) is complete** as a falsifiable sequence: it ruled out every
+selection/representation route to compounding collective competence and terminated in a *substrate*
+reason. The honest next move is not another deme-selection knob but revisiting whether a substrate
+whose parts are themselves replicators lets collective competence compound.
+
+### Is / is not
+- **Is:** a robust, multi-seed, structural negative (within < credit on competence and network survival
+  every window past the transient; both strict and weighted forms) that closes the arc with a
+  substrate-level diagnosis and a named loop-back to exp012.
+- **Is not:** proof no substrate can compound collective competence — it shows *this* one cannot via
+  selection alone, and names the missing ingredient (part-level replicators), a substrate property.
+
+---
+
 ## Milestone Ω-0.35 — Credit in the fitness still doesn't compound: the limit is the selection *grain* → within-collective selection (exp046)
 
 **Date:** 2026-07-18 · **Status:** complete · **Verdict:** an **informative negative** that isolates

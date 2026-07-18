@@ -858,6 +858,31 @@ class TestScientificClaims(unittest.TestCase):
             return rr.final_classes_total
         self.assertGreater(classes("exp030"), 0)   # base engine still runs, credit code never touched
 
+    def test_exp047_within_selection_biases_the_propagule_by_credit(self):
+        # Ω-0.36 (within-collective selection): exp047 founds each offspring from the source deme's
+        # members sampled by their credit (parts competing inside the deme). Pin the mechanism
+        # deterministically and its gating: within_select is a live gated knob; with it OFF exp047 is
+        # exactly exp046 (byte-identical), and the credit machinery still builds a heritable map.
+        # Whether within-collective selection COMPOUNDS or COLLAPSES competence is the study's science
+        # (EXP047_FINDINGS.md).
+        p_on, _c = get_experiment("exp047")(seed=0, ticks=1500)
+        self.assertTrue(p_on.within_select)                 # exp047 turns within-collective selection on
+        self.assertEqual(p_on.deme_fitness, "credit")       # built on the exp046 credit machinery
+
+        def classes(exp, **ov):
+            from omega.kernel.universe import Universe
+            from omega.kernel.scheduler import Scheduler
+            from omega.substrate.noise import Noise
+            p, c = get_experiment(exp)(seed=1, ticks=1500, **ov)
+            rng = Noise(c.seed); u = Universe(total_quanta=c.total_quanta); p.seed(u, rng)
+            Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                      max_reactions_per_tick=c.max_reactions_per_tick).run(1500)
+            return u.classes_ever_seen, dict(p._deme_credit)
+        c_off, credit_off = classes("exp047", within_select=False)
+        c_credit, _ = classes("exp046")
+        self.assertEqual(c_off, c_credit)                   # within_select off ⇒ exp046 byte-identical
+        self.assertTrue(credit_off)                         # the heritable credit map is still built
+
     def test_global_novelty_sketch_is_conservative_and_eviction_robust(self):
         # Ω-0.31 (consolidation): the eviction-robust GLOBAL novelty estimator (a scalable Bloom
         # 'ever-seen' set) is the instrument that settles "stays open forever". Its two load-bearing

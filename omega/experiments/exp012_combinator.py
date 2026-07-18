@@ -375,6 +375,13 @@ class CombinatorPhysics:
         # collective competent, and the credit model is inherited so it accumulates down a lineage.
         self.credit_decay = 0.9
         self._deme_credit: dict[int, dict] = {}   # per-deme heritable {cls: contribution score}
+        # exp047 WITHIN-COLLECTIVE SELECTION. exp046 found credit-in-fitness insufficient because
+        # deme reproduction copies a whole propagule and cannot retain the credited PARTS. This adds a
+        # second selection level BELOW the deme: when founding an offspring, the propagule is drawn
+        # preferentially from the source deme's HIGH-CREDIT members, so competence-causing parts are
+        # differentially transmitted (parts competing inside the collective, not only whole demes
+        # against each other). Off => the exp046 random/network propagule.
+        self.within_select = False
         # exp018 collective fitness: how a surviving deme's chance of founding a
         # propagule is set. "size" (the exp017 default) weights by deme headcount —
         # but the global reservoir cap pins every deme to ~the same size, so
@@ -849,7 +856,19 @@ class CombinatorPhysics:
             else:  # "mixed" null — propagule from the whole survivor pool
                 pool = [o for s in survivors for o in by_patch[s]]
             k = min(self.propagule_size, len(pool))
-            if (self.propagule_bias == "network" and self.propagule_mode == "source"
+            if (self.within_select and self.deme_fitness == "credit"
+                    and self.propagule_mode == "source"):
+                # exp047 WITHIN-COLLECTIVE SELECTION: found the child from the source deme's members
+                # sampled with probability rising in their CREDIT (the parts its heritable credit map
+                # has learned cause its competence). A *probabilistic* bias — not a strict top-k, which
+                # collapses diversity and kills the network — via Efraimidis-Spirakis weighted sampling
+                # without replacement: key = U^(1/weight), take the k largest. A floor keeps
+                # zero-credit members in play so the deme retains the diversity its network needs.
+                cr = self._deme_credit.get(src, {})
+                keyed = [(rng.random() ** (1.0 / (cr.get(o.cls, 0.0) + 0.1)), o) for o in pool]
+                keyed.sort(key=lambda t: -t[0])
+                propagule = [o for _key, o in keyed[:k]]
+            elif (self.propagule_bias == "network" and self.propagule_mode == "source"
                     and self.track_signature):
                 # prioritize members whose class participates in the source deme's
                 # cross-production signature, so the network (not a random sample) is
@@ -1350,6 +1369,7 @@ def _make(seed, experiment, **overrides):
     physics.goal_reify = bool(overrides.get("goal_reify", False))             # exp044 goal composability
     physics.goal_align = bool(overrides.get("goal_align", False))             # exp045 goal↔competence align
     physics.credit_decay = float(overrides.get("credit_decay", 0.9))          # exp046 credit EMA decay
+    physics.within_select = bool(overrides.get("within_select", False))       # exp047 within-collective
     physics.goal_mut = float(overrides.get("goal_mut", 0.3))                  # exp044 goal mutation rate
     physics.reify_period = int(overrides.get("reify_period", 0))
     physics.reify_max_atoms = int(overrides.get("reify_max_atoms", 0))
@@ -2128,3 +2148,21 @@ def build_credit(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("type_resolution", 3)
     overrides.setdefault("network_template", 0.5)       # exp040 heredity channel — ON
     return _make(seed, "exp046", **overrides)
+
+
+@register("exp047")
+def build_within(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp047 — WITHIN-COLLECTIVE SELECTION. exp046 showed a heritable per-part credit model in the deme
+    fitness still doesn't compound, because deme-level reproduction copies a whole propagule and cannot
+    retain the credited PARTS against within-deme drift — the selection *grain* is wrong. This adds a
+    second selection level *below* the deme: `within_select=True` founds each offspring from the source
+    deme's HIGHEST-CREDIT members (the parts its heritable credit map has learned cause its competence),
+    so competence-causing parts are differentially transmitted — parts competing inside the collective,
+    not only whole collectives against each other. Builds on exp046 (`deme_fitness="credit"` + the
+    heritable credit map + the exp040 heredity channel). Question: does adding within-collective
+    selection finally make competence COMPOUND over generations, or does even part-level selection fail
+    — pointing to the deeper need for a heritable part-level *replicator* (a part that copies itself
+    with its credit, the exp012 lesson one level up)? Matched control: exp046 (`within_select=False`).
+    Off (`deme_fitness` default) ⇒ exp001–046 byte-identical."""
+    overrides.setdefault("within_select", True)         # exp047 within-collective selection — ON
+    return build_credit(seed, **overrides)
