@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.32).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.34).
 
 ## Where we are
 
@@ -24,17 +24,20 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
 
 ## The next frontier (highest priority)
 
-**1. Goal alignment / credit assignment (exp045).** exp044 confirmed exp042's diagnosis from the
-other side — given a heritable, composable goal the collective *does* accumulate deeper achievements
-across generations (the first compounding in the program) — but the represented goal ratchets
-*itself*, not general competence, and the two are in tension: selecting for deeper goal-achievement
-trades away closure and heredity. The decisive next experiment makes goal reification **align with the
-collective's own self-maintenance** — extend a goal only in directions that *increase* the deme's
-closure/heredity/breadth (credit-assign the goal to what actually makes the collective competent) —
-then test whether the now-aligned ratchet lifts generic competence instead of cannibalizing it.
-*Predicted falsification:* if aligned goals still trade off, the collective genuinely cannot
-attribute its competence to its parts, and the missing faculty is an explicit **credit-assignment
-mechanism** (which parts caused achievement), not just an aligned target.
+**1. Represent the credit in *selection* (exp046).** The arc's predicted falsification came in:
+exp044 gave collectives heritable, composable goals (first over-generations deepening, but transient
+and no competence lift), and exp045 tried the direct fix — aim goal growth at the deme's own
+autocatalytic closure core — which **still did not compound, and was slightly worse**. The reason
+exp045 isolates: aligning the goal moved its *direction* but not the *selection pressure* (still
+achievement × depth), which is what trades competence away. So credit assignment is a **representation
+problem, not a targeting one**: the substrate transmits a goal *path* and a developmental *niche* but
+no transmissible per-part *contribution* signal. The decisive next experiment gives each deme a
+**heritable, mutable per-part (per-class or per-edge) contribution score** that is itself transmitted,
+and makes deme fitness reward demes whose high-contribution parts persist — putting credit into the
+*fitness*, not the goal — then tests whether competence finally rises with construction. *Predicted
+falsification:* if an explicit heritable contribution signal still doesn't compound, the limit is the
+selection *grain* (deme-level selection cannot reward sub-deme parts) and the frontier moves to
+within-collective selection.
 
 **2. Truly unbounded, not in-miniature.** Every open-endedness result is ≤ 250k ticks / few seeds.
 With the Ω-0.21 instrument, run 10⁶–10⁷ ticks, multi-seed, and deep towers (50+), with a *streaming*

@@ -6,6 +6,46 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.34 — Credit assignment is a representation problem, not a targeting one: aiming the goal at the closure core still doesn't compound (exp045)
+
+**Date:** 2026-07-18 · **Status:** complete · **Verdict:** an **informative negative** that sharpens
+the arc's final frontier. Detail: `studies/EXP045_FINDINGS.md`. Gated; exp001–044 byte-identical
+(deterministic across `PYTHONHASHSEED`).
+
+exp044 diagnosed the barrier past *goal representation* as **goal alignment / credit assignment** — the
+collective deepens goals but can't attribute its competence to its parts, so pursuing a deeper goal
+cannibalises self-maintenance. exp045 tries the most direct fix: `goal_align=True` aims goal
+reification at the deme's **autocatalytic closure core** (classes that are both producers AND products
+— the self-maintaining loop that *is* its competence), so growing the goal should reinforce closure.
+Matched control is exactly exp044 (`goal_align=False`).
+
+**Result (12k ticks, 6 seeds):** it **still does not compound — and alignment is slightly worse.**
+Aligned generic competence (mean 0.38, slope −0.083/win) is *below* the unaligned exp044 control
+(0.41), and **both goal arms are far below the drift floor (0.63)** — selecting on goal achievement,
+aligned or not, *degrades* competence. Aiming at the closure core did not even raise closure (aligned
+0.047 < unaligned 0.053 < drift 0.097).
+
+**Interpretation.** The fix was aimed at the wrong thing. Alignment changed the goal's **direction**
+(grow it along the closure core) but not the **selection pressure**, which is still `achievement ×
+depth` — so selection keeps rewarding *building the goal path* whether or not that maintains closure,
+and merely pointing the target at the core does not change the trade. The lesson: **credit assignment
+is a representation problem, not a targeting one.** For competence to compound, the collective needs an
+*explicit, heritable model of which parts cause its competence that selection itself acts on* — not a
+goal aimed at those parts. The substrate transmits a goal path and a developmental niche, but no
+transmissible per-part *contribution* signal; without one, selection on any single achievement scalar
+reverts to the same trade-off. Arc: exp039 → exp040 (break heredity ceiling) → exp041 → exp042 (goal
+representation missing) → exp044 (composable goals, transient deepening, no competence lift) → exp045
+(aim the goal at closure → still no compounding → **credit must live in the *fitness*, not the goal**).
+
+### Is / is not
+- **Is:** a robust, multi-seed negative (aligned ≤ unaligned ≤ drift on competence past the transient)
+  that isolates *why* a natural credit-assignment fix fails, and names the next rung (exp046: a
+  heritable, selectable per-part contribution representation).
+- **Is not:** proof no alignment can work — it shows *this* direct target-aiming rule does not, and
+  diagnoses the reason (it moves the target, not the selection pressure). Within-substrate measures.
+
+---
+
 ## Milestone Ω-0.33 — Determinism restored: results are now byte-identical across PYTHONHASHSEED (consolidation)
 
 **Date:** 2026-07-18 · **Status:** complete · **Verdict:** a **hardening consolidation** — a real

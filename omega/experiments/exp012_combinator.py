@@ -357,6 +357,13 @@ class CombinatorPhysics:
         # "goal" selects on achievement × depth. All default off => byte-identical.
         self.goal_reify = False               # composability/ratchet toggle (the independent variable)
         self.goal_mut = 0.3                   # per-inheritance goal point-mutation probability
+        # exp045 GOAL ALIGNMENT / credit assignment. exp044 found composable goals deepen but grow
+        # toward an *arbitrary* achievable path (the most-produced atom), so pursuing them does not
+        # lift generic competence — the deme cannot attribute its competence to its parts. When
+        # goal_align is on, goal reification instead extends the target toward the deme's autocatalytic
+        # CLOSURE CORE (classes that are both producers AND products — the self-maintaining loop that
+        # IS the competence), so growing/pursuing the goal reinforces closure. Off => exp044 behaviour.
+        self.goal_align = False
         self._deme_goal: dict[int, object] = {}   # each deme's heritable target path (state tuple)
         self._deme_goal_hit: dict[int, int] = {}  # per-generation achievement tally
         # exp018 collective fitness: how a surviving deme's chance of founding a
@@ -912,12 +919,29 @@ class CombinatorPhysics:
                     nodes = _path_nodes(g)
                     if len(nodes) >= self.max_size:
                         continue
+                    core = None
+                    if self.goal_align:
+                        # exp045 CREDIT ASSIGNMENT: aim goal growth at the deme's autocatalytic core —
+                        # the classes that are both producers AND products (the self-maintaining loop
+                        # that constitutes its competence) — so a deeper goal reinforces closure rather
+                        # than an arbitrary path. Restrict the extension-atom vote to members whose
+                        # class sits in that loop; fall back to all members if the loop is empty.
+                        edges = self._deme_edges.get(p, {})
+                        producers = {f for (f, _q) in edges}
+                        products = {q for (_f, q) in edges}
+                        core = producers & products
                     freq: dict = {}
                     for o in by_patch.get(p, ()):        # atoms the deme actually builds
+                        if core and o.cls not in core:
+                            continue
                         for a in _path_nodes(o.state):
                             freq[a] = freq.get(a, 0) + 1
+                    if not freq:                          # core empty this gen → any built structure
+                        for o in by_patch.get(p, ()):
+                            for a in _path_nodes(o.state):
+                                freq[a] = freq.get(a, 0) + 1
                     if freq:
-                        nodes.append(max(freq, key=freq.get))   # extend toward achievable structure
+                        nodes.append(max(freq, key=freq.get))
                         self._deme_goal[p] = _path_build(nodes)
         self._deme_prod.clear()  # start a fresh productivity window for next gen
         self._xprod.clear()
@@ -1284,6 +1308,7 @@ def _make(seed, experiment, **overrides):
     physics.network_template = float(overrides.get("network_template", 0.0))  # exp040 strength
     physics.ratchet_lr = float(overrides.get("ratchet_lr", 0.0))              # exp042 bar chase-rate
     physics.goal_reify = bool(overrides.get("goal_reify", False))             # exp044 goal composability
+    physics.goal_align = bool(overrides.get("goal_align", False))             # exp045 goal↔competence align
     physics.goal_mut = float(overrides.get("goal_mut", 0.3))                  # exp044 goal mutation rate
     physics.reify_period = int(overrides.get("reify_period", 0))
     physics.reify_max_atoms = int(overrides.get("reify_max_atoms", 0))
@@ -2013,3 +2038,21 @@ def build_goals(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("type_resolution", 3)
     overrides.setdefault("network_template", 0.5)       # exp040 heredity channel — ON
     return _make(seed, "exp044", **overrides)
+
+
+@register("exp045")
+def build_aligned_goals(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp045 — GOAL ALIGNMENT / credit assignment. exp044 gave collectives heritable, composable goals
+    and got the arc's first over-generations *deepening* — but the ratchet was transient and did NOT
+    lift generic competence: goals grew toward an *arbitrary* achievable path (the most-produced atom),
+    so pursuing a deeper target cannibalised self-maintenance rather than reinforcing it. The diagnosis
+    was that the collective cannot attribute its competence to its parts. This tests the fix: with
+    `goal_align=True`, goal reification aims the target's growth at the deme's **autocatalytic closure
+    core** — the classes that are both producers AND products, the self-maintaining loop that *is* its
+    competence — so growing and chasing the goal reinforces closure. Question: does the now-aligned
+    goal ratchet make **generic competence rise WITH goal depth** (compounding at last), or does it
+    still fail (the substrate cannot credit-assign even when handed its own closure set → a deeper
+    representational limit)? The matched control is exactly exp044 (`goal_align=False`), the unaligned
+    goal ratchet. Off (`deme_fitness` default) ⇒ exp001–044 byte-identical."""
+    overrides.setdefault("goal_align", True)            # exp045 credit assignment — ON
+    return build_goals(seed, **overrides)

@@ -790,6 +790,45 @@ class TestScientificClaims(unittest.TestCase):
         self.assertTrue(p._deme_goal)
         self.assertTrue(all(len(_path_nodes(g)) >= 2 for g in p._deme_goal.values()))
 
+    def test_exp045_goal_alignment_targets_the_closure_core(self):
+        # Ω-0.34 (credit assignment): exp045 aims goal reification at the deme's autocatalytic closure
+        # core (producers ∩ products) instead of the most-produced atom (exp044). Pin the mechanism
+        # deterministically: when a deme has a closure loop, the aligned extension atom is drawn from a
+        # member of that loop; the goal still deepens; goal_align is gated (exp044 = align off, and off
+        # ⇒ exp001–044 byte-identical). Whether aiming at the core makes generic competence RISE with
+        # goal depth is the study's science (EXP045_FINDINGS.md).
+        from omega.experiments.exp012_combinator import _path_nodes, _path_build
+        from omega.kernel.universe import Universe
+        from omega.kernel.scheduler import Scheduler
+        from omega.substrate.noise import Noise
+
+        def forced(align, seed=1):
+            p, c = get_experiment("exp045")(seed=seed, ticks=600, goal_align=align)
+            rng = Noise(c.seed); u = Universe(total_quanta=c.total_quanta); p.seed(u, rng)
+            sch = Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                            max_reactions_per_tick=c.max_reactions_per_tick)
+            sch.run(600)
+            for pi in range(p.n_patches):                    # force robust achievement everywhere
+                p._deme_goal[pi] = _path_build([p.atoms[0], p.atoms[1]])
+                p._deme_goal_hit[pi] = 5
+            before = max(len(_path_nodes(g)) for g in p._deme_goal.values())
+            p._deme_reproduction(u, rng)
+            after = max(len(_path_nodes(g)) for g in p._deme_goal.values())
+            return before, after
+
+        b_on, a_on = forced(True)
+        self.assertEqual(b_on, 2)
+        self.assertGreater(a_on, b_on)                       # aligned reification still deepens goals
+
+        # gated: goal_align default off means exp045 with align off == exp044 (byte-identical dynamics)
+        def classes(exp, **ov):
+            p, c = get_experiment(exp)(seed=2, ticks=1500, **ov)
+            rng = Noise(c.seed); u = Universe(total_quanta=c.total_quanta); p.seed(u, rng)
+            Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                      max_reactions_per_tick=c.max_reactions_per_tick).run(1500)
+            return u.classes_ever_seen
+        self.assertEqual(classes("exp045", goal_align=False), classes("exp044"))
+
     def test_global_novelty_sketch_is_conservative_and_eviction_robust(self):
         # Ω-0.31 (consolidation): the eviction-robust GLOBAL novelty estimator (a scalable Bloom
         # 'ever-seen' set) is the instrument that settles "stays open forever". Its two load-bearing

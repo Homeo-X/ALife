@@ -1,0 +1,33 @@
+exp045 — does aiming goals at the closure core make competence rise WITH goal depth? (12000 ticks, 6 seeds, 8 windows, mem=4000)
+
+  [aligned]
+        window      0      1      2      3      4      5      6      7
+    competence  0.618  0.570  0.570  0.413  0.283  0.198  0.254  0.102
+       closure  0.111  0.077  0.052  0.039  0.021  0.030  0.027  0.019
+    goal_depth   2.73   3.24   2.97   3.12   3.50   3.33   2.89   3.03
+    steady slopes: competence -0.0828/win, closure -0.0055/win, goal_depth -0.0155/win
+
+  [unaligned]
+        window      0      1      2      3      4      5      6      7
+    competence  0.630  0.561  0.589  0.451  0.322  0.277  0.253  0.240
+       closure  0.114  0.070  0.064  0.055  0.031  0.043  0.025  0.025
+    goal_depth   2.59   3.41   3.43   3.95   3.89   3.30   3.50   3.62
+    steady slopes: competence -0.0681/win, closure -0.0079/win, goal_depth -0.0273/win
+
+  [size]
+        window      0      1      2      3      4      5      6      7
+    competence  0.640  0.696  0.679  0.690  0.622  0.585  0.556  0.545
+       closure  0.111  0.084  0.064  0.118  0.118  0.110  0.089  0.082
+    steady slopes: competence -0.0316/win, closure -0.0002/win, goal_depth +0.0000/win
+
+  competence: aligned slope -0.0828/win (mean 0.303) vs unaligned slope -0.0681/win (mean 0.355); drift mean 0.613
+  closure (the aligned axis): aligned slope -0.0055/win, aligned closure mean 0.031 vs unaligned 0.040
+
+  => STILL DOES NOT COMPOUND: even aiming the goal at the deme's own closure core does
+     not make generic competence rise (aligned slope -0.0828, mean 0.303 vs unaligned 0.355, drift 0.613).
+     Handing the collective its own closure set is not enough to credit-assign: it
+     cannot sustain building toward a competence-defined target any better than an
+     arbitrary one. The barrier is a deeper representational limit — the substrate has
+     no persistent, inheritable model of WHICH parts cause competence, only the goal
+     path itself. A clean negative that pushes the frontier from 'aim the goal' to
+     'represent the credit' (an explicit per-part contribution the collective inherits).
