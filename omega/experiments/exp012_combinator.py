@@ -2166,3 +2166,21 @@ def build_within(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     Off (`deme_fitness` default) ⇒ exp001–046 byte-identical."""
     overrides.setdefault("within_select", True)         # exp047 within-collective selection — ON
     return build_credit(seed, **overrides)
+
+
+@register("exp048")
+def build_replicator_credit(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp048 — THE LOOP-BACK. exp047 closed the self-improvement arc with a terminal diagnosis:
+    collective competence is *irreducibly collective* and the typed_path substrate's parts are not
+    replicators (context-dependent network components), so no selection/representation route makes it
+    compound. exp012 found the one place genuine PART-LEVEL replicators emerge — the behaviour-first
+    SKI-combinator soup, where an organization can emit a copy of *itself* (`C·x → C`). This runs the
+    exp046 credit machinery on that **combinator substrate** instead of typed_path: now a credited part
+    can carry and copy its OWN heritable value, so selecting it should preserve rather than destroy it.
+    Question: does collective competence finally compound over generations where the parts are
+    replicators — closing the arc's end back to its beginning — or does it still fail (the limit is not
+    the parts but the irreducibly-collective nature of competence, deeper than exp012)? Matched control
+    is exp046 (same credit machinery, `substrate="typed_path"`, non-replicating parts). `deme_fitness`
+    default ⇒ exp001–047 byte-identical."""
+    overrides.setdefault("substrate", "combinator")     # parts CAN self-replicate (exp012 C·x → C)
+    return build_credit(seed, **overrides)

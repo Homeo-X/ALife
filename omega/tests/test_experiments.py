@@ -883,6 +883,29 @@ class TestScientificClaims(unittest.TestCase):
         self.assertEqual(c_off, c_credit)                   # within_select off ⇒ exp046 byte-identical
         self.assertTrue(credit_off)                         # the heritable credit map is still built
 
+    def test_exp048_loopback_runs_credit_on_the_replicator_substrate(self):
+        # Ω-0.37 (the loop-back): exp048 runs the exp046 credit machinery on the COMBINATOR substrate
+        # (where parts can self-replicate, exp012) instead of typed_path. Pin the mechanism: exp048 is
+        # on the combinator substrate with credit selection and builds a heritable credit map and a
+        # cross-production network there; and it is gated (substrate override; deme_fitness default ⇒
+        # exp001–047 unaffected). Whether competence COMPOUNDS with replicating parts is the study's
+        # science (EXP048_FINDINGS.md).
+        from statistics import mean
+        from omega.kernel.universe import Universe
+        from omega.kernel.scheduler import Scheduler
+        from omega.substrate.noise import Noise
+
+        p, c = get_experiment("exp048")(seed=0, ticks=3000)
+        self.assertEqual(p.substrate, "combinator")         # loop-back runs on the replicator substrate
+        self.assertEqual(p.deme_fitness, "credit")           # with the exp046 credit machinery
+        rng = Noise(c.seed); u = Universe(total_quanta=c.total_quanta); p.seed(u, rng)
+        Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                  max_reactions_per_tick=c.max_reactions_per_tick).run(3000)
+        self.assertTrue(p._deme_credit)                      # a heritable credit map is built
+        self.assertTrue(p._deme_edges)                       # a cross-production network forms here too
+        cs = [p._deme_closure(pi) for pi in range(p.n_patches) if p._deme_edges.get(pi)]
+        self.assertGreater(mean(cs) if cs else 0.0, 0.0)     # the combinator soup forms closure loops
+
     def test_global_novelty_sketch_is_conservative_and_eviction_robust(self):
         # Ω-0.31 (consolidation): the eviction-robust GLOBAL novelty estimator (a scalable Bloom
         # 'ever-seen' set) is the instrument that settles "stays open forever". Its two load-bearing

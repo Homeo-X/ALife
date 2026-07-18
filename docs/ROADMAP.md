@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.36).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.37).
 
 ## Where we are
 
@@ -12,7 +12,7 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   *continuing* construction (a rate, not a stock).
 - **Scale** — bounded-memory long-run mode + a 3× faster kernel, validated (Ω-0.21).
 - **A living world** — persistent, checkpointing, watchable, spatial, steerable (Ω-0.22–0.23).
-- **Toward minds — the self-improvement arc is COMPLETE (Ω-0.24–0.36).** A precise, honest,
+- **Toward minds — the self-improvement arc is COMPLETE (Ω-0.24–0.37).** A precise, honest,
   falsifiable sequence that ruled out every selection/representation route to compounding collective
   competence and terminated in a *substrate* reason. Collectives carry evolvable state (exp037) and
   selectable coherence (exp038); developmental inheritance broke the exp028 heredity ceiling (exp040);
@@ -20,10 +20,13 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   **goal representation** missing; exp044 supplied it (heritable composable goals → first
   over-generations deepening, but transient) → **credit assignment**; exp045 (aim goal at closure) and
   exp046 (credit in the fitness) still don't compound → the **selection grain**; and exp047 (within-
-  collective selection) **collapses the collective** → the terminal diagnosis: **competence is
-  irreducibly collective, and its parts are not replicators**. Compounding self-improvement would need
-  a substrate whose *parts are themselves replicators* (carrying context-independent heritable value —
-  the exp012 `C·x → C` lesson), not another deme-selection knob.
+  collective selection) **collapses the collective** → competence is **irreducibly collective**, and
+  the type-path parts are not replicators. The loop-back (exp048) ran it on the combinator substrate,
+  where parts *are* replicators (exp012 `C·x → C`): replicating parts **lift the competence ceiling ~2×**
+  (1.09 vs 0.62, closure 0.36 vs 0.13) but competence stays **high-and-flat**, not rising. The arc's
+  closing lesson: **open-ended novelty ≠ open-ended competence** — the world compounds *what it builds*
+  (Ω-0.31), not *how good its collectives are*. Compounding competence is **not achieved** in either
+  substrate; the real open problem is *what makes competence a rate, not a stock*.
 
 ## The next frontier (highest priority)
 
@@ -34,12 +37,14 @@ rate finds a positive floor, or it dilutes to zero at some horizon.
 
 ## Secondary threads
 
-- **Part-level replicators (the self-improvement arc's loop-back).** exp047 concluded collective
-  competence can't be made to compound by selection because competence is irreducibly collective and
-  the type-path parts aren't replicators. The decisive follow-on revisits exp012's genuine replicators
-  (behaviour-first SKI soup, `C·x → C`): does a substrate whose *parts* carry and copy their own
-  context-independent heritable value let collective competence compound where the type-path substrate
-  could not? A yes/no with the same matched-control discipline, closing the arc's end back to its start.
+- **Competence as a *rate*, not a *stock* (the arc's sharpened open problem).** exp048 closed the
+  loop-back: part-level replicators lift the competence *ceiling* but competence still plateaus — the
+  world has open-ended *novelty* but not open-ended *competence*. The Ω-0.20 lesson (open-endedness is
+  a rate, sustained only by *continuing* construction) has never been applied to competence. The open
+  question: is there a dynamical coupling that makes a collective's competence *keep rising* — a
+  competence analogue of reification, where achieved competence feeds back to raise the ceiling itself
+  — or is bounded competence intrinsic to selection over a fixed substrate? A matched-control yes/no,
+  and the real unsolved problem the self-improvement arc isolates.
 - **A strong non-type law.** exp035's tree law reached the "both corner" only weakly (~10× lower
   heredity than linear paths). Is there a genuinely different law with *strong* both-corner heredity?
 - **Fully heterogeneous per-level physics.** The tower is still largely the self-similar engine;

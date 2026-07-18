@@ -5,7 +5,7 @@
 <p align="center">
   <a href="#quickstart"><img src="https://img.shields.io/badge/python-3.10%2B-blue" alt="python 3.10+"></a>
   <img src="https://img.shields.io/badge/dependencies-none%20(stdlib%20only)-8affc1" alt="stdlib only">
-  <img src="https://img.shields.io/badge/tests-75%20passing-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/tests-76%20passing-brightgreen" alt="tests">
   <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="license">
 </p>
 
@@ -63,7 +63,7 @@ Each row is a falsifiable experiment (or milestone) with a matched control. Full
 | **Ω-0.20** sustained novelty | Does open-endedness need *continuing* construction? | **Yes** — a one-time alphabet bump still closes; only *ongoing* reification holds the novelty rate. Constructibility is a **rate, not a stock**. |
 | **Ω-0.21** scaling | Can it run at 10⁶ ticks? | Bounded-memory mode + a **3× faster** kernel, validated against known results — the "in-miniature" cap lifted. |
 | **Ω-0.22–23** the living world | Can you *watch* it? | A persistent, checkpointing **world** with a live dashboard: named lifeforms, cultures, a novelty pulse, geography, and the ability to reach in and steer it. |
-| **Ω-0.24–36** toward minds | Can collectives become self-improving? | **A precise, honest arc that keeps naming the next barrier.** exp039 pinned collective heredity → **exp040 broke that ceiling** (self ≈ 0.56, world still open); **exp041/042** showed a higher heredity level and even a *self-expanding* scalar objective don't compound → barrier is **goal representation**. **exp044** supplies it (a heritable, composable target *path*) and gets the arc's first over-generations *deepening* — but *transient* and without lifting competence → barrier is **credit assignment**. **exp045** tries the direct fix (aim the goal at the closure core) — **still no compounding**: it moves the goal's *direction* but not the *selection pressure*, so credit is a *representation* problem (put it in the fitness). **exp046** does that (a heritable per-part credit model in deme selection) — **still no compounding, worse than plain closure selection** → the limit is the **selection grain**. **exp047** adds within-collective selection (parts competing inside the deme) — it **collapses the collective** (competence 0.36 < 0.62, network survival 0.29 < 0.43): selecting the "credited parts" strips out the partners the network needs. **Competence is irreducibly collective** — the arc's terminal diagnosis — and compounding would need **part-level replicators** (the exp012 lesson). The arc **rests here**. |
+| **Ω-0.24–37** toward minds | Can collectives become self-improving? | **A precise, honest arc that keeps naming the next barrier.** exp039 pinned collective heredity → **exp040 broke that ceiling** (self ≈ 0.56, world still open); **exp041/042** showed a higher heredity level and even a *self-expanding* scalar objective don't compound → barrier is **goal representation**. **exp044** supplies it (a heritable, composable target *path*) and gets the arc's first over-generations *deepening* — but *transient* and without lifting competence → barrier is **credit assignment**. **exp045** tries the direct fix (aim the goal at the closure core) — **still no compounding**: it moves the goal's *direction* but not the *selection pressure*, so credit is a *representation* problem (put it in the fitness). **exp046** does that (a heritable per-part credit model in deme selection) — **still no compounding, worse than plain closure selection** → the limit is the **selection grain**. **exp047** adds within-collective selection (parts competing inside the deme) — it **collapses the collective** (competence 0.36 < 0.62, network survival 0.29 < 0.43): selecting the "credited parts" strips out the partners the network needs. **Competence is irreducibly collective**, and compounding would need **part-level replicators** (the exp012 lesson). **exp048** runs it on the replicator (combinator) substrate — replicating parts **lift the competence ceiling ~2×** (1.09 vs 0.62) but competence stays **high-and-flat**, not rising. The arc's closing lesson: **open-ended novelty ≠ open-ended competence** — the world compounds *what it builds* (Ω-0.31), not *how good its collectives are*. The arc **rests here**; the real open problem is *competence as a rate, not a stock*. |
 
 *(Kept honestly: exp003 was a retracted false positive; exp009/010/011/018–020/028/036 are
 informative **negatives**. The program is organized against closure, not for hype.)*
@@ -90,7 +90,7 @@ git clone https://github.com/homeo-x/alife && cd alife
 python -m omega.cli list                    # list experiments
 python -m omega.cli run exp030 --seed 0     # a completed transition to collective individuality
 python -m omega.cli run exp002 --set bind=false   # a matched control
-python -m unittest discover -s omega/tests  # run the test suite (75 tests)
+python -m unittest discover -s omega/tests  # run the test suite (76 tests)
 ```
 
 More runnable one-liners are in [`examples/`](examples/).
@@ -101,7 +101,7 @@ More runnable one-liners are in [`examples/`](examples/).
   our simulations almost always stall. Ω isolates *why*, and shows one mechanism that doesn't.
 - **Major evolutionary transitions** (genes → cells → organisms → societies) are re-derived here
   as a single recursive move — and the exact substrate condition that enables them is measured.
-- **Honest AI-relevance**: the self-improvement arc (Ω-0.24–36) asks whether evolved collectives
+- **Honest AI-relevance**: the self-improvement arc (Ω-0.24–37) asks whether evolved collectives
   could become mind-like, and answers with a *specific, quantified blocker* rather than hype.
 
 ## Repository map
@@ -122,7 +122,7 @@ docs/               presentation: this banner, ROADMAP, CONTRIBUTING
 
 **Status:** the constructibility hypothesis is confirmed *in miniature* and consolidated; a
 living world exists; the self-improvement question is answered with a located blocker. Full
-history in [`omega/docs/RESEARCH_LOG.md`](omega/docs/RESEARCH_LOG.md) (milestones Ω-0.1 → Ω-0.36).
+history in [`omega/docs/RESEARCH_LOG.md`](omega/docs/RESEARCH_LOG.md) (milestones Ω-0.1 → Ω-0.37).
 
 **Next frontier** (see [`docs/ROADMAP.md`](docs/ROADMAP.md)): an **open-ended, self-expanding
 objective** — collective-level reification of *goals* (the analogue of substrate-level reification

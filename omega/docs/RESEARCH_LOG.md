@@ -6,6 +6,50 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.37 — The loop-back: part-level replicators lift the competence *ceiling* (~2×) but competence still doesn't *compound* — open-ended novelty ≠ open-ended competence (exp048)
+
+**Date:** 2026-07-18 · **Status:** complete · **Verdict:** the arc's **closing result** — a mixed
+outcome that separates two kinds of open-endedness. Detail: `studies/EXP048_FINDINGS.md`. Gated;
+exp001–047 byte-identical (deterministic across `PYTHONHASHSEED`).
+
+exp047's terminal diagnosis was that the typed_path substrate's parts are not replicators, so
+collective competence can't compound. exp012 found genuine part-level replicators in the SKI-combinator
+soup (`C·x → C`). exp048 runs the exp046 credit machinery on that **combinator substrate** — so a
+credited part can copy its own heritable value — and closes the loop from the arc's end to its start.
+Arms: `replicator` (combinator + credit), `network` (typed_path + credit = exp046), `replicator-drift`
+(combinator + size).
+
+**Result (12k ticks, 6 seeds):** part-level replicators **lift the ceiling but don't close the
+compounding gap.** On the combinator substrate competence reaches **~1.09** (vs typed_path's 0.62) and
+closure **~0.36** (vs 0.13), with ~6× more distinct classes — a large, robust *substrate* effect that
+partially vindicates exp047 (whether parts are replicators strongly sets *how competent* collectives
+get). **But competence is high-and-flat, not rising**: replicator+credit slope +0.001, drift +0.006,
+network −0.008 — all ≈ 0. Credit is not the lever even here (it raises the plateau, flattens the slope).
+
+**Interpretation.** The loop-back resolves the arc by separating two open-endednesses the program had
+conflated. Ω-0.31 showed **construction is open-ended** — the genuine novelty rate stays positive, the
+world keeps building never-seen classes forever (here ~19–23k distinct classes). exp048 shows
+**competence is *not* open-ended** — collectives get more competent up to a substrate-set ceiling and
+plateau, regardless of selection or the parts' replicator status. **Open-ended novelty ≠ open-ended
+competence:** the world compounds *what it builds*, not *how good its collectives are*.
+Self-improvement-as-unbounded-competence-growth is not achieved in this substrate family, and the
+obstacle is deeper than "the parts aren't replicators" (fixing that only lifts the ceiling): nothing
+in the dynamics couples a collective's competence to an *ever-rising* target. The sharpened open
+problem is the Ω-0.20 lesson applied to competence — **what makes competence a *rate*, not a *stock***
+— a substrate/measurement question, not another selection knob.
+
+**The self-improvement arc (exp036–048) is complete.**
+
+### Is / is not
+- **Is:** a robust, multi-seed result that separates open-ended novelty (achieved) from open-ended
+  competence (not achieved), shows part-level replicators raise the competence ceiling ~2× without
+  tilting the trajectory, and names the real unsolved problem (competence as a rate).
+- **Is not:** a clean "yes" to the loop-back, nor proof no substrate can compound competence — it shows
+  the program's two substrates both plateau. Within-substrate measures; the combinator both-corner is
+  weak (exp024–028 heredity wall).
+
+---
+
 ## Milestone Ω-0.36 — Within-collective selection *collapses* the collective: competence is irreducibly collective — the self-improvement arc's terminal diagnosis (exp047)
 
 **Date:** 2026-07-18 · **Status:** complete · **Verdict:** a **deep negative that closes the arc** with

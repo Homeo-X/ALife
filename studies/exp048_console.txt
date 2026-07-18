@@ -1,0 +1,30 @@
+exp048 — does collective competence compound when the PARTS are replicators? (12000 ticks, 6 seeds, 8 windows, mem=4000)
+
+  [replicator]
+          window      0      1      2      3      4      5      6      7
+      competence  1.064  1.064  1.060  1.093  1.151  1.083  1.116  1.070
+         closure  0.376  0.359  0.353  0.357  0.387  0.358  0.368  0.349
+    competence slope +0.0014/win, mean 1.096, classes 19050
+
+  [network]
+          window      0      1      2      3      4      5      6      7
+      competence  0.661  0.729  0.679  0.588  0.631  0.620  0.488  0.685
+         closure  0.123  0.148  0.133  0.118  0.140  0.140  0.096  0.142
+    competence slope -0.0081/win, mean 0.615, classes 3283
+
+  [replicator-drift]
+          window      0      1      2      3      4      5      6      7
+      competence  0.868  0.915  0.964  0.907  0.950  0.955  0.912  0.999
+         closure  0.309  0.308  0.320  0.304  0.313  0.320  0.308  0.336
+    competence slope +0.0057/win, mean 0.948, classes 23171
+
+  competence slope: replicator +0.0014/win (mean 1.096) vs typed_path/exp046 -0.0081/win (mean 0.615)
+  credit vs drift ON the replicator substrate: 1.096 vs 0.948
+
+  => THE LOOP-BACK DOES NOT CLOSE (a deeper negative): even with part-level replicators
+     (combinator substrate), competence does not compound (slope +0.0014, mean
+     1.096 vs drift 0.948, vs typed_path 0.615). Replicating parts are
+     NOT sufficient — the irreducibly-collective nature of competence blocks compounding
+     even where parts carry their own value. The limit is deeper than exp012's replicator
+     lesson: a collective's competence and its parts' self-replication pull apart (the
+     exp012 'replicator takeover collapses diversity' wall, now at the competence level).
