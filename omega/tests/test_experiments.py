@@ -713,6 +713,41 @@ class TestScientificClaims(unittest.TestCase):
         self.assertLess(rb.final_classes_total, r0.final_classes_total)
         self.assertGreater(rb.open_endedness["novelty_rate"], 0.0)
 
+    def test_global_novelty_sketch_is_conservative_and_eviction_robust(self):
+        # Ω-0.31 (consolidation): the eviction-robust GLOBAL novelty estimator (a scalable Bloom
+        # 'ever-seen' set) is the instrument that settles "stays open forever". Its two load-bearing
+        # properties, plus byte-identity when off:
+        from omega.emergence.global_novelty import GlobalNoveltySketch
+
+        # (i) never counts a repeat as new (no Bloom false negatives) => strips all recycling; and it
+        #     only ever UNDER-counts genuine novelty (a new id may collide) — never over-counts.
+        s = GlobalNoveltySketch(initial_capacity=2048, fp_rate=0.005)
+        ids = [f"c{i}" for i in range(20000)]
+        first = sum(s.add_if_new(x) for x in ids)
+        self.assertLessEqual(first, len(ids))                    # under-count only (<= true distinct)
+        self.assertGreater(first, 0.97 * len(ids))              # bounded ~1% false-positive under-count
+        self.assertEqual(sum(s.add_if_new(x) for x in ids), 0)  # every repeat recognized as old
+
+        # (ii) on an UNBOUNDED run (no eviction) global == windowed (nothing to recycle, class count
+        #      well below filter capacity so no under-count); byte-identical when off.
+        pu, cu = get_experiment("exp030")(seed=0, ticks=1500)
+        ru = run(pu, cu, global_novelty=True)
+        win_u, glob_u = sum(ru.novelty_new_per_tick), sum(ru.novelty_global_new_per_tick)
+        self.assertEqual(win_u, glob_u)
+        pf, cf = get_experiment("exp030")(seed=0, ticks=1500)
+        rf = run(pf, cf)                                        # off
+        self.assertEqual((rf.final_population, rf.final_classes_total, sum(rf.novelty_new_per_tick)),
+                         (ru.final_population, ru.final_classes_total, win_u))  # off == on-metrics
+
+        # (iii) on a BOUNDED run with heavy eviction the windowed rate INFLATES (evicted classes
+        #       reappear and re-count) while the global rate strips it: global < windowed, and the
+        #       true distinct-ever count is invariant to eviction (equals the unbounded global).
+        pb, cb = get_experiment("exp030")(seed=0, ticks=1500)
+        rb = run(pb, cb, memory_horizon=300, relation_cap=2000, global_novelty=True)
+        win_b, glob_b = sum(rb.novelty_new_per_tick), sum(rb.novelty_global_new_per_tick)
+        self.assertLess(glob_b, win_b)                          # inflation stripped
+        self.assertEqual(glob_b, glob_u)                        # global count invariant to eviction
+
     def test_exp035_new_tree_law_reaches_the_both_corner(self):
         # Ω-0.31: the both-corner CONDITION is substrate-general, not special to the type
         # substrates. A genuinely different law — binary-tree grafting (f,x) with a depth

@@ -68,6 +68,13 @@ class Universe:
         # this count differenced over ticks) stays exact even when the registry is bounded
         # for a very long run. This decoupling is what lets the registry shrink.
         self.classes_ever_seen: int = 0
+        # Optional eviction-robust GLOBAL novelty estimator (a scalable Bloom "ever-seen" set).
+        # Off (None) by default => never touched => every experiment byte-identical. When the harness
+        # attaches one (global_novelty=True), a class is counted here only the FIRST time it is ever
+        # seen — an evicted class that reappears is recognized as old, stripping the windowed-novelty
+        # inflation that bounded memory otherwise introduces (see omega/emergence/global_novelty.py).
+        self.novelty_sketch = None
+        self.classes_ever_seen_global: int = 0
         self.class_births: dict[str, int] = {}  # lifetime (re)creation count per class
         self.class_fed: dict[str, int] = {}      # births from the reservoir (feed)
         self.class_constructed: dict[str, int] = {}  # births from other organizations
@@ -235,6 +242,8 @@ class Universe:
                                   kind=example.kind, rep_state=example.state)
                 self.class_registry[cls] = rec
                 self.classes_ever_seen += 1
+                if self.novelty_sketch is not None and self.novelty_sketch.add_if_new(cls):
+                    self.classes_ever_seen_global += 1
             rec.last_seen = self.tick
             rec.peak_population = max(rec.peak_population, n)
             rec.total_observations += n

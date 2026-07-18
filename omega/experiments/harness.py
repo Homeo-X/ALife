@@ -36,6 +36,10 @@ class RunResult:
     open_endedness: dict[str, Any]
     final_population: int
     final_classes_total: int
+    #: eviction-robust GLOBAL novelty (per tick) — non-empty only when run(global_novelty=True);
+    #: strips the windowed-novelty inflation bounded memory introduces (see global_novelty.py).
+    novelty_global_new_per_tick: list = field(default_factory=list)
+    final_classes_global: int = 0
 
     def to_json(self, path: str | Path) -> None:
         payload = asdict(self)
@@ -57,7 +61,7 @@ class RunResult:
 
 def run(physics: Physics, config: Config, *, novelty_window: int | None = None,
         record_stride: int = 1, memory_horizon: int = 0,
-        relation_cap: int = 0) -> RunResult:
+        relation_cap: int = 0, global_novelty: bool = False) -> RunResult:
     # The rate-measurement window must be long enough to *resolve* a slow but
     # sustained discovery rate. A fixed 50-tick window quantizes a ~0.05/tick rate
     # to zero over long runs and reports a spurious CLOSED verdict (the mirror of
@@ -70,6 +74,13 @@ def run(physics: Physics, config: Config, *, novelty_window: int | None = None,
     # ticks with flat memory by evicting cold classes and capping provenance relations.
     universe.memory_horizon = memory_horizon
     universe.relation_cap = relation_cap
+    # Eviction-robust GLOBAL novelty estimator (default off => byte-identical). At 10^6+ ticks the
+    # bounded registry re-counts evicted-then-reappearing classes, inflating the windowed novelty
+    # rate; this fixed-memory sketch counts each class only once ever, so a positive long-run rate
+    # can be told apart from eviction-window recycling.
+    if global_novelty:
+        from omega.emergence.global_novelty import GlobalNoveltySketch
+        universe.novelty_sketch = GlobalNoveltySketch()
     physics.seed(universe, rng)
 
     scheduler = Scheduler(
@@ -123,4 +134,6 @@ def run(physics: Physics, config: Config, *, novelty_window: int | None = None,
         },
         final_population=len(universe.organizations),
         final_classes_total=len(universe.class_registry),
+        novelty_global_new_per_tick=novelty.new_per_tick_global,
+        final_classes_global=universe.classes_ever_seen_global,
     )
