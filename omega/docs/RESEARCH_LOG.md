@@ -6,6 +6,45 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.35 — Credit in the fitness still doesn't compound: the limit is the selection *grain* → within-collective selection (exp046)
+
+**Date:** 2026-07-18 · **Status:** complete · **Verdict:** an **informative negative** that isolates
+the deepest limit of the arc and names its final structural move. Detail: `studies/EXP046_FINDINGS.md`.
+Gated; exp001–045 byte-identical (deterministic across `PYTHONHASHSEED`).
+
+exp045 concluded credit assignment must live in the *fitness*, not the goal. exp046 does exactly that:
+`deme_fitness="credit"` gives each deme a **heritable per-class contribution map** that accrues credit
+for its autocatalytic closure-core classes (the parts that cause self-maintenance) each generation, and
+selection rewards demes that **retain** their high-credit parts; the map is inherited so credit
+accumulates down a lineage. Controls: exp038 `closure` (instantaneous closure selection) and `size`.
+
+**Result (12k ticks, 6 seeds):** it **still does not compound — and is worse than plain closure
+selection.** The credit arm's competence (mean 0.635, slope −0.008/win) does not rise and sits *below*
+instantaneous closure selection (0.692), barely above drift (0.627); on closure itself the credit arm
+(0.130) trails closure-select (0.188). (A 3-seed/4k pilot showed a spurious positive that did not
+survive scale — the Ω-0.33 lesson applied.)
+
+**Interpretation.** The credit signal is present, heritable, and correct — but **deme-level selection
+cannot act on it at the right grain.** Reproduction copies a whole propagule; it can favour a deme that
+currently *contains* high-credit parts but cannot preferentially **keep those specific parts** against
+within-deme drift and recolonization sampling, so the fitness rewards *having* the parts, not
+*retaining* them, and they wash out — the credit map becomes a passenger. An explicit heritable
+contribution signal is **necessary but not sufficient**; the missing faculty is *acting* on it at
+sub-collective granularity. **The frontier is the selection grain: parts must compete WITHIN the
+collective.** Arc: exp044 (composable goals, transient) → exp045 (aim goal at closure → credit is a
+representation problem) → exp046 (credit in the fitness → still no compounding → **within-collective
+selection**, a second level *below* the deme).
+
+### Is / is not
+- **Is:** a robust multi-seed negative (credit ≤ closure-select on competence and closure past the
+  transient) that isolates *why* an explicit credit model fails — the selection grain — and names the
+  next rung (exp047: within-collective selection, differentially retaining high-credit parts inside a
+  deme).
+- **Is not:** proof no credit mechanism can work — it shows *this* whole-deme-granularity one does not.
+  Within-substrate measures; one credit rule.
+
+---
+
 ## Milestone Ω-0.34 — Credit assignment is a representation problem, not a targeting one: aiming the goal at the closure core still doesn't compound (exp045)
 
 **Date:** 2026-07-18 · **Status:** complete · **Verdict:** an **informative negative** that sharpens

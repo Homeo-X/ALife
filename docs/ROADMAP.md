@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.34).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.35).
 
 ## Where we are
 
@@ -12,32 +12,30 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   *continuing* construction (a rate, not a stock).
 - **Scale** — bounded-memory long-run mode + a 3× faster kernel, validated (Ω-0.21).
 - **A living world** — persistent, checkpointing, watchable, spatial, steerable (Ω-0.22–0.23).
-- **Toward minds** — the arc reached its **first sustained compounding** (Ω-0.24–0.32): collectives
-  carry evolvable internal state (exp037) and are selectable on emergent coherence (exp038);
-  developmental inheritance broke the exp028 heredity ceiling (exp040); a higher heredity level
-  (exp041) and even a self-expanding scalar objective (exp042) still don't compound → the barrier was
-  **goal representation**; and exp044 supplied it — a *heritable, composable target path* — producing
-  the arc's first over-generations **ratchet** (goal depth 2.4→4.0, max 10, vs a fixed-goal control
-  pinned at 2). But the ratchet is **narrow and costly**: chasing a deeper idiosyncratic goal
-  *cannibalizes* generic competence (closure/heredity/breadth). The barrier is now **goal alignment /
-  credit assignment**.
+- **Toward minds** — a precise, honest arc that keeps naming the next barrier (Ω-0.24–0.35).
+  Collectives carry evolvable internal state (exp037) and are selectable on emergent coherence
+  (exp038); developmental inheritance broke the exp028 heredity ceiling (exp040); a higher heredity
+  level (exp041) and even a self-expanding scalar objective (exp042) don't compound → **goal
+  representation** was missing; exp044 supplied it (a heritable, composable target path) → the arc's
+  first over-generations **deepening**, but *transient* and without lifting competence → **credit
+  assignment**; exp045 aimed the goal at the closure core (no compounding → credit is a representation
+  problem, put it in the fitness); exp046 put a heritable per-part credit model in the fitness (**still
+  no compounding, worse than plain closure selection**) → the limit is the **selection grain**: deme
+  reproduction copies a whole propagule and cannot retain the credited *parts*.
 
 ## The next frontier (highest priority)
 
-**1. Represent the credit in *selection* (exp046).** The arc's predicted falsification came in:
-exp044 gave collectives heritable, composable goals (first over-generations deepening, but transient
-and no competence lift), and exp045 tried the direct fix — aim goal growth at the deme's own
-autocatalytic closure core — which **still did not compound, and was slightly worse**. The reason
-exp045 isolates: aligning the goal moved its *direction* but not the *selection pressure* (still
-achievement × depth), which is what trades competence away. So credit assignment is a **representation
-problem, not a targeting one**: the substrate transmits a goal *path* and a developmental *niche* but
-no transmissible per-part *contribution* signal. The decisive next experiment gives each deme a
-**heritable, mutable per-part (per-class or per-edge) contribution score** that is itself transmitted,
-and makes deme fitness reward demes whose high-contribution parts persist — putting credit into the
-*fitness*, not the goal — then tests whether competence finally rises with construction. *Predicted
-falsification:* if an explicit heritable contribution signal still doesn't compound, the limit is the
-selection *grain* (deme-level selection cannot reward sub-deme parts) and the frontier moves to
-within-collective selection.
+**1. Within-collective selection (exp047).** exp046 ran the arc's predicted falsification: an explicit,
+heritable per-part credit model in the deme fitness still did not make competence compound (and
+underperformed instantaneous closure selection), because whole-deme reproduction cannot preferentially
+keep the high-credit *parts* against within-deme drift — the credit signal is necessary but the
+selection **grain** is wrong. The decisive next experiment adds a **second selection level *below* the
+deme**: bias which members survive decay / seed the next generation by their credit (parts competing
+*inside* the collective), so competence-causing parts are differentially retained within a deme, not
+only across demes. Then test whether competence finally compounds. *Predicted falsification:* if parts
+competing within the collective still don't compound, the limit is not the grain but the substrate's
+lack of a *heritable part-level replicator* (a part that copies itself with its credit) — pointing back
+to the exp012 von-Neumann-replicator lesson one level up.
 
 **2. Truly unbounded, not in-miniature.** Every open-endedness result is ≤ 250k ticks / few seeds.
 With the Ω-0.21 instrument, run 10⁶–10⁷ ticks, multi-seed, and deep towers (50+), with a *streaming*

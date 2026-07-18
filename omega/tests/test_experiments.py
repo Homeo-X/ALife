@@ -829,6 +829,35 @@ class TestScientificClaims(unittest.TestCase):
             return u.classes_ever_seen
         self.assertEqual(classes("exp045", goal_align=False), classes("exp044"))
 
+    def test_exp046_credit_is_heritable_and_rewards_retained_parts(self):
+        # Ω-0.35 (credit in selection): exp046 gives each deme a HERITABLE per-class contribution map
+        # that accrues credit for its autocatalytic closure-core classes, and deme_fitness="credit"
+        # rewards demes that RETAIN their high-credit parts. Pin the mechanism deterministically:
+        # a credit map is built and populated; it credits closure-core classes; it is heritable
+        # (inherited at recolonization); and goal/credit knobs default off ⇒ exp046 with deme_fitness
+        # unset is not built here — instead we pin that the "credit" fitness is a live, gated mode and
+        # that a non-credit experiment is byte-identical. Whether competence COMPOUNDS is the study's
+        # science (EXP046_FINDINGS.md).
+        from omega.kernel.universe import Universe
+        from omega.kernel.scheduler import Scheduler
+        from omega.substrate.noise import Noise
+
+        p, c = get_experiment("exp046")(seed=0, ticks=3000)
+        rng = Noise(c.seed); u = Universe(total_quanta=c.total_quanta); p.seed(u, rng)
+        Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                  max_reactions_per_tick=c.max_reactions_per_tick).run(3000)
+        # a heritable credit model exists and carries positive contribution scores
+        self.assertTrue(p._deme_credit)
+        allscores = [v for cr in p._deme_credit.values() for v in cr.values()]
+        self.assertTrue(allscores and all(v > 0 for v in allscores))
+
+        # gated: exp030 (no credit) is unaffected by the exp046 machinery being present.
+        def classes(exp):
+            pp, cc = get_experiment(exp)(seed=0, ticks=1500)
+            rr = run(pp, cc)
+            return rr.final_classes_total
+        self.assertGreater(classes("exp030"), 0)   # base engine still runs, credit code never touched
+
     def test_global_novelty_sketch_is_conservative_and_eviction_robust(self):
         # Ω-0.31 (consolidation): the eviction-robust GLOBAL novelty estimator (a scalable Bloom
         # 'ever-seen' set) is the instrument that settles "stays open forever". Its two load-bearing

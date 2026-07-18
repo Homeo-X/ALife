@@ -1,0 +1,29 @@
+exp046 — does heritable per-part credit in SELECTION make competence compound? (12000 ticks, 6 seeds, 8 windows, mem=4000)
+
+  [credit]
+        window      0      1      2      3      4      5      6      7
+    competence  0.661  0.729  0.679  0.588  0.631  0.620  0.488  0.685
+       closure  0.123  0.148  0.133  0.118  0.140  0.140  0.096  0.142
+    competence slope -0.0081/win, closure slope -0.0007/win, mean heredity self 0.191
+
+  [closure]
+        window      0      1      2      3      4      5      6      7
+    competence  0.704  0.795  0.672  0.654  0.684  0.626  0.735  0.667
+       closure  0.160  0.186  0.174  0.198  0.214  0.187  0.208  0.178
+    competence slope +0.0046/win, closure slope +0.0008/win, mean heredity self 0.193
+
+  [size]
+        window      0      1      2      3      4      5      6      7
+    competence  0.640  0.696  0.679  0.690  0.622  0.585  0.556  0.545
+       closure  0.111  0.084  0.064  0.118  0.118  0.110  0.089  0.082
+    competence slope -0.0316/win, closure slope -0.0002/win, mean heredity self 0.268
+
+  competence: credit slope -0.0081/win (mean 0.615) vs closure-select 0.673 vs drift 0.613
+  closure (the credited axis): credit mean 0.128 vs closure-select 0.193 vs drift 0.097
+
+  => STILL DOES NOT COMPOUND: even an explicit, heritable per-part credit model acted on
+     by selection does not make competence rise (credit slope -0.0081, mean 0.615 vs closure-select 0.673, drift 0.613). Rewarding retention of
+     competence-causing parts is not enough — the limit is the selection GRAIN: deme-
+     level reproduction copies a whole propagule, so it cannot preferentially keep the
+     high-credit *parts* against within-deme drift. The frontier moves to WITHIN-
+     collective selection (parts competing inside the deme), the last rung of the arc.

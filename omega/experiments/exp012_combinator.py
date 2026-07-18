@@ -366,6 +366,15 @@ class CombinatorPhysics:
         self.goal_align = False
         self._deme_goal: dict[int, object] = {}   # each deme's heritable target path (state tuple)
         self._deme_goal_hit: dict[int, int] = {}  # per-generation achievement tally
+        # exp046 CREDIT ASSIGNMENT IN SELECTION. exp045 showed aiming the *goal* at the closure core
+        # fails because selection pressure is unchanged; the fix must put credit into the *fitness*.
+        # Each deme carries a HERITABLE per-class contribution map (`_deme_credit`): each generation the
+        # classes in its autocatalytic closure core (producers ∩ products — the parts that cause
+        # self-maintenance) accrue credit (EMA-decayed), and `deme_fitness="credit"` rewards demes that
+        # RETAIN their high-credit parts. So selection directly preserves the parts that make the
+        # collective competent, and the credit model is inherited so it accumulates down a lineage.
+        self.credit_decay = 0.9
+        self._deme_credit: dict[int, dict] = {}   # per-deme heritable {cls: contribution score}
         # exp018 collective fitness: how a surviving deme's chance of founding a
         # propagule is set. "size" (the exp017 default) weights by deme headcount —
         # but the global reservoir cap pins every deme to ~the same size, so
@@ -792,6 +801,19 @@ class CombinatorPhysics:
                         depth = (len(_path_nodes(g)) if g is not None else 0)
                         return 0.05 + self._deme_goal_hit.get(s, 0) * (1 + depth)
                     weights = [_goalw(s) for s in survivors]
+                elif self.deme_fitness == "credit":
+                    # exp046: reward a deme for RETAINING its high-credit parts — the classes its
+                    # heritable contribution map has learned cause its competence (accrued from the
+                    # closure core each generation, below). weight = credit still PRESENT in the deme's
+                    # current members. Selection thus directly preserves competence-causing structure
+                    # across generations (credit lives in the fitness, not the goal — the exp045 fix).
+                    def _creditw(s):
+                        cr = self._deme_credit.get(s)
+                        if not cr:
+                            return 0.05
+                        present = {o.cls for o in by_patch.get(s, ())}
+                        return 0.05 + sum(v for cls, v in cr.items() if cls in present)
+                    weights = [_creditw(s) for s in survivors]
                 else:
                     weights = [len(by_patch[s]) for s in survivors]
                 if self.coop:
@@ -822,6 +844,8 @@ class CombinatorPhysics:
                             g = _mutate_path(g, rng, self.atoms)
                         self._deme_goal[kp] = g
                     self._deme_goal_hit[kp] = 0
+                if self.deme_fitness == "credit":  # exp046: child inherits src's CREDIT model
+                    self._deme_credit[kp] = dict(self._deme_credit.get(src, {}))
             else:  # "mixed" null — propagule from the whole survivor pool
                 pool = [o for s in survivors for o in by_patch[s]]
             k = min(self.propagule_size, len(pool))
@@ -943,6 +967,22 @@ class CombinatorPhysics:
                     if freq:
                         nodes.append(max(freq, key=freq.get))
                         self._deme_goal[p] = _path_build(nodes)
+        if self.deme_fitness == "credit" and alive:
+            # exp046: update each alive deme's heritable credit map — decay all scores, then credit the
+            # classes in its autocatalytic closure core (producers ∩ products, the parts that caused
+            # self-maintenance THIS generation). Computed before the edge buffers are cleared below, so
+            # next generation's fitness rewards demes that RETAIN these competence-causing parts.
+            for p in alive:
+                cr = self._deme_credit.setdefault(p, {})
+                for cls in list(cr):
+                    cr[cls] *= self.credit_decay
+                    if cr[cls] < 1e-3:
+                        del cr[cls]
+                edges = self._deme_edges.get(p, {})
+                producers = {f for (f, _q) in edges}
+                products = {q for (_f, q) in edges}
+                for cls in (producers & products):
+                    cr[cls] = cr.get(cls, 0.0) + 1.0
         self._deme_prod.clear()  # start a fresh productivity window for next gen
         self._xprod.clear()
         self._deme_edges.clear()
@@ -1106,7 +1146,7 @@ class CombinatorPhysics:
                         seen[0] += 1
                 if patches is not None and (self.measure_xprod or self.track_signature
                         or self.deme_fitness in ("productivity", "network", "anticipation",
-                                                 "closure", "composite", "ratchet", "goal")):
+                                                 "closure", "composite", "ratchet", "goal", "credit")):
                     # credit this deme's fitness. identity lookup consumes no RNG, so
                     # non-collective runs and every other experiment stay identical.
                     # "productivity": any viable construction. cross-production
@@ -1309,6 +1349,7 @@ def _make(seed, experiment, **overrides):
     physics.ratchet_lr = float(overrides.get("ratchet_lr", 0.0))              # exp042 bar chase-rate
     physics.goal_reify = bool(overrides.get("goal_reify", False))             # exp044 goal composability
     physics.goal_align = bool(overrides.get("goal_align", False))             # exp045 goal↔competence align
+    physics.credit_decay = float(overrides.get("credit_decay", 0.9))          # exp046 credit EMA decay
     physics.goal_mut = float(overrides.get("goal_mut", 0.3))                  # exp044 goal mutation rate
     physics.reify_period = int(overrides.get("reify_period", 0))
     physics.reify_max_atoms = int(overrides.get("reify_max_atoms", 0))
@@ -2056,3 +2097,34 @@ def build_aligned_goals(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     goal ratchet. Off (`deme_fitness` default) ⇒ exp001–044 byte-identical."""
     overrides.setdefault("goal_align", True)            # exp045 credit assignment — ON
     return build_goals(seed, **overrides)
+
+
+@register("exp046")
+def build_credit(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp046 — CREDIT ASSIGNMENT IN SELECTION. exp045 showed that *aiming the goal* at the collective's
+    closure core does not make competence compound, because it moves the goal's direction but not the
+    selection pressure. This puts credit into the FITNESS instead: `deme_fitness="credit"` gives each
+    deme a HERITABLE per-class contribution map that accrues credit for the classes in its autocatalytic
+    closure core (the parts that cause self-maintenance) each generation, and selection rewards demes
+    that RETAIN their high-credit parts. So selection directly preserves competence-causing structure,
+    and the credit model is inherited so it accumulates down a lineage — an explicit, evolvable model of
+    *which parts make the collective competent*. Question: does competence finally RISE over generations
+    (compounding at last), or does even explicit heritable credit fail — pointing to the selection
+    *grain* (deme-level selection cannot reward sub-deme parts) as the deeper limit? Matched controls:
+    exp038 `closure` (select on instantaneous closure — the snapshot that traded off) and `size` (drift).
+    Runs the exp040 heredity channel. Off (`deme_fitness` default) ⇒ exp001–045 byte-identical."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "credit")
+    overrides.setdefault("propagule_bias", "network")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("network_template", 0.5)       # exp040 heredity channel — ON
+    return _make(seed, "exp046", **overrides)
