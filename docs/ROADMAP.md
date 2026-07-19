@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.41).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.42).
 
 ## Where we are
 
@@ -12,9 +12,10 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   *continuing* construction (a rate, not a stock).
 - **Scale** — bounded-memory long-run mode + a 3× faster kernel, validated (Ω-0.21).
 - **A living world** — persistent, checkpointing, watchable, spatial, steerable (Ω-0.22–0.23).
-- **Toward minds — the self-improvement arc is COMPLETE (Ω-0.24–0.38).** A precise, honest,
-  falsifiable sequence that ruled out every selection/representation route to compounding collective
-  competence and terminated in a *substrate* reason. Collectives carry evolvable state (exp037) and
+- **Toward minds — the self-improvement arc found the answer (Ω-0.24–0.42).** A precise, honest,
+  falsifiable sequence that ruled out every *selection/representation* route to compounding collective
+  competence, located the reason in the *substrate law*, and then **broke the wall** with a
+  substrate-law feedback (exp053). Collectives carry evolvable state (exp037) and
   selectable coherence (exp038); developmental inheritance broke the exp028 heredity ceiling (exp040);
   a higher heredity level (exp041) and a self-expanding scalar objective (exp042) don't compound →
   **goal representation** missing; exp044 supplied it (heritable composable goals → first
@@ -29,11 +30,19 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   module to a new atom) and it **stays flat** (slopes ≈ 0; reifying competent structure is
   indistinguishable from reifying common structure or not reifying), even as the alphabet grows 32→53 and
   novelty compounds — because reifying a competent module hides its structure in an **opaque atom**, out
-  of the measured network. The arc's closing lesson: **open-ended novelty ≠ open-ended competence** — the
-  world compounds *what it builds* (Ω-0.31), not *how good its collectives are*. Compounding competence is
-  **not achieved** in either substrate by any selection/representation/replicator/reification move; the
-  competence ceiling is set by the substrate's **fixed reaction law**, and the one untried class of move
-  is to make that law itself competence-dependent *during the run*.
+  of the measured network. This located the reason — the competence ceiling
+  is set by the substrate's **fixed reaction law** — and named the fix: make the law itself
+  competence-dependent, but keep the promoted structure *network-visible* (exp049 failed because a new
+  *atom* is opaque). **exp053 (Ω-0.42) does exactly that and breaks the wall:** the **Catalytic Law**
+  promotes the highest-competence deme's closure loop to a shared *reaction* (`anchor → product`, injected
+  every tick, not an opaque atom), so competent structure becomes a reusable construction operation later
+  collectives build on. Competence **compounds** — catalytic×Red-Queen rises monotonically 0.89 → 1.24
+  (slope +0.019, the arc's highest level; closure and survival rising) where every fixed-law cell is flat,
+  and a random-injection control (3× shallower) shows the ratchet is genuinely *competence-dependent*, not
+  mechanical. The refined lesson: **open-ended novelty ≠ open-ended competence was true only for a *fixed*
+  substrate law** — once the law grows with achieved competence (network-visibly), competence is a *rate*
+  too, the exp053 analogue of the Ω-0.20 reification-of-novelty result. Open edge: **saturation** (does it
+  rise without bound or fill the catalyst repertoire?).
 
 ## The next frontier (highest priority)
 
@@ -51,20 +60,18 @@ open piece of "truly unbounded."
 
 ## Secondary threads
 
-- **Competence via a mid-run change to the substrate law — the arc's *last* untried move (exp053).**
-  Two levers have now been tried and both raise the competence *level* without tilting the *slope*.
-  exp049 reified competent modules to new atoms — no compounding (the atom is **opaque**, hiding the
-  structure out of the measured network). exp052 (Ω-0.41) grounded a **Red Queen** (a receding,
-  coevolutionary target): it is the strongest competence-*level* lever the program has found — coevolve
-  competence 0.820 beats plain closure selection (0.673) and the frozen-rival control (0.630, a +0.19
-  receding-target effect), with healthy rising network survival — **yet competence still does not
-  compound** (slope −0.021). Both confirm: the ceiling is set by the substrate's **fixed reaction law**,
-  and selection/coevolution move the plateau but not the rate. The one class of move never tried is to
-  make that **law itself competence-dependent during the run** — a **Catalytic Law**: promote a
-  collective's achieved closure loops to shared *reactions* (not opaque atoms), so competent structure
-  becomes new construction *operations* later collectives build on. **exp053** (the user's staged plan)
-  combines it with the Red Queen: the receding pressure plus a substrate-level feedback that could turn
-  that pressure into a rising ceiling. A substrate change, not a selection knob — the real open problem.
+- **Does compounding competence rise without bound, or saturate? (the exp053 follow-on, now highest-
+  value on the competence axis).** exp053 (Ω-0.42) **broke the competence-flat wall**: a **Catalytic Law**
+  (promote the highest-competence deme's closure loop to a shared, network-visible *reaction*) makes
+  competence **compound** — catalytic×Red-Queen rises monotonically to the arc's highest level (slope
+  +0.019 vs flat fixed-law cells), and a random-injection control (3× shallower) confirms the ratchet is
+  competence-dependent, not mechanical. The open question is now the **shape of the rise**: competence
+  climbs over 12k ticks / ~600 generations, but the catalyst repertoire (`catalyst_max=16`) reached ~11–14
+  near the cap, so a longer-horizon / larger-cap run must show whether competence keeps rising (a genuine
+  unbounded ratchet — the strongest possible result) or saturates as the repertoire fills. *Predicted
+  falsification:* the slope decays to zero once the repertoire is full → competence is a *larger stock*,
+  not truly unbounded. Secondary: separate the mechanical injection floor (random ≈ +0.006) more tightly;
+  test whether the Red Queen is necessary or merely maximal (catalytic×closure also compounds, +0.017).
 - **A strong non-type law.** exp035's tree law reached the "both corner" only weakly (~10× lower
   heredity than linear paths). Is there a genuinely different law with *strong* both-corner heredity?
 - **Fully heterogeneous per-level physics.** The tower is still largely the self-similar engine;

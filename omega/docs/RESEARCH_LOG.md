@@ -6,6 +6,59 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.42 — The Catalytic Law breaks the competence-flat wall: competence COMPOUNDS, and it is a genuine ratchet (exp053)
+
+**Date:** 2026-07-19 · **Status:** complete · **Verdict:** the self-improvement arc's **first
+compounding-competence result** — competence becomes a *rate*, properly controlled. Detail:
+`studies/EXP053_FINDINGS.md`. Gated; exp001–052 byte-identical (deterministic across `PYTHONHASHSEED`).
+
+The arc (exp044–052) found competence never compounds — every selection/representation/replicator/
+coevolution lever moved the *level* but never the *slope*. exp049 named the one untried move and diagnosed
+why its own attempt failed: reifying a competent module to a **new atom** hides its structure in an
+**opaque** primitive, out of the measured network. exp053 does it as a **reaction** instead. Every
+`catalyst_period` ticks, `catalytic_law` promotes the busiest closure-core edge of the **highest-competence
+deme** (achieved *competent* structure) to a persistent shared catalyst — a reaction `anchor_cls →
+product_state` injected every tick — so the motif is re-supplied everywhere as a **network-visible class**
+(not an opaque atom, the exp049 fix) and later collectives build closures on top of it. The reaction
+repertoire tracks the rising frontier: a substrate law that changes with achieved competence. Run on the
+exp052 Red Queen base as a 2×2 factorial (`catalytic_law` × {closure, redqueen}).
+
+**Result 1 — the factorial (12k ticks, 6 seeds): both catalytic cells COMPOUND.** catalytic×Red-Queen
+rises **monotonically 0.893 → 1.237** (slope **+0.0186/win**, mean **1.183** — the arc's highest level),
+with closure (0.26 → 0.43) and survival (0.57 → 0.79) also rising; catalytic×closure +0.0166/win. Both
+**fixed-law** cells are flat/declining (Red Queen −0.021, closure +0.004). The Catalytic Law lifts
+competence **+0.36** over its no-law control. The **Catalytic Law tilts the slope**; the Red Queen
+maximizes level and slope but compounding does not strictly require it.
+
+**Result 2 — the discriminating control (genuine ratchet vs mechanical injection).** `catalyst_random`
+promotes a **random edge from a random deme** (same injection rate, no competence-dependence). Random
+injection compounds a *little* (+0.0058, mean 0.915 — a small mechanical floor from re-supplying
+network-visible reactions), but the **competence-dependent** harvest climbs **3× steeper** (+0.0186) to a
+**much higher** level (1.183 vs 0.915). The rise **requires promoting achieved competent structure** — it
+is not an artifact of injection. (Catalyst reactions also do not directly write `_deme_edges`; they
+re-supply competent product *instances* the composition loop builds on, so the metric is not padded.)
+
+**Interpretation — the competence analogue of Ω-0.20.** Ω-0.20 showed *novelty* is a rate, sustained by
+promoting achieved structure to new **primitives**; exp049 tried the literal analogue for competence and
+failed because a new **atom** is opaque. exp053 promotes achieved competence to a new **reaction**, which
+keeps the structure **in the measured network**, and competence becomes a rate too. This **refines the
+arc's central negative**: "open-ended novelty ≠ open-ended competence" (Ω-0.38) held *for a fixed
+substrate law* — and named the fix. Once the law itself grows with achieved competence (network-visibly),
+competence compounds like novelty does. Self-improvement in this substrate is not impossible; it needs a
+**competence-dependent substrate law**, which pure selection routes could not supply.
+
+### Is / is not
+- **Is:** the arc's first properly-controlled compounding-competence result — a monotonic rising slope
+  (competence-dependent, 3× steeper than random injection) to the arc's highest level, with closure and
+  survival also rising, cleanly attributed to a network-visible substrate-law feedback (strongest under a
+  receding target).
+- **Is not:** unbounded — a small part of the effect is mechanical (random injection ≈ +0.006), and
+  **saturation is untested**: the catalyst repertoire (`catalyst_max=16`) reached ~11–14 near the cap, so
+  whether competence keeps rising or saturates as the repertoire fills is the immediate next question
+  (a longer-horizon / larger-cap run). Within the both-corner typed_path substrate; 6 seeds × 12k.
+
+---
+
 ## Milestone Ω-0.41 — The Red Queen: a coevolutionary target raises the competence *ceiling* to the arc's highest, but competence still does not *compound* (exp052)
 
 **Date:** 2026-07-19 · **Status:** complete · **Verdict:** the boldest attempt on the competence-flat
