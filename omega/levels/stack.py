@@ -84,7 +84,7 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
               base_n_types: int = 32, resolution: int = 3,
               min_collectives: int = 2, levels: tuple | None = None,
               builder: str = "exp030", law_from_competence: bool = False,
-              catalyst_period: int = 400) -> StackResult:
+              catalyst_period: int = 400, competence_pressure: float = 1.0) -> StackResult:
     """Run the recursive tower; return per-tier results and the unfold map.
 
     ``levels`` makes the per-tier physics **first-class** (exp033): a sequence of
@@ -114,7 +114,8 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
         physics, cfg = get_experiment(b)(
             seed=seed, ticks=ticks, n_patches=24, propagule_mode='source',
             explicit_atoms=tuple(alphabet), n_types=len(alphabet),
-            type_resolution=resolution, catalyst_period=period)
+            type_resolution=resolution, catalyst_period=period,
+            competence_pressure=competence_pressure)
         res = _harness_run(physics, cfg)
         collectives = _stable_collectives(physics)
         comp = _tier_competence(physics)

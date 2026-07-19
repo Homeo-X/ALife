@@ -397,6 +397,15 @@ class CombinatorPhysics:
         self.coevolve_frozen = False
         self.freeze_gen = 5
         self._frozen_prod: dict[int, frozenset] = {}   # patch -> producer-set snapshot at freeze_gen (control)
+        # exp056 COMPETENCE PRESSURE (the competence–diversity trade-off dial): exp055 found that a
+        # competence-derived transition compounds competence ACROSS tower levels, but competence selection
+        # thins the collective diversity the transition needs, collapsing ~⅓ of towers. competence_pressure
+        # ∈ [0,1] scales the strength of the Red Queen's competence term (weight = 0.05 +
+        # competence_pressure·(closure + core-novelty)): 1.0 = full selection (exp052/055), 0.0 = uniform
+        # drift (maximal diversity, no competence selection). Sweeping it maps whether the trade-off is
+        # NAVIGABLE (a sweet spot with both compounding competence AND deep towers) or a strict Pareto
+        # frontier (every regime that compounds also collapses). Default 1.0 ⇒ byte-identical.
+        self.competence_pressure = 1.0
         # exp053 CATALYTIC LAW (a substrate law that changes with achieved competence): every lever the arc
         # tried moves the competence LEVEL but never the SLOPE. exp049 named the one untried move and
         # diagnosed why its own attempt failed — reifying a competent module to a NEW ATOM hides its
@@ -922,7 +931,7 @@ class CombinatorPhysics:
                         else:
                             prod_r = {f for (f, _q) in self._deme_edges.get(r, {})}  # live, co-adapting
                         novel = len(core_s - prod_r) / max(1, len(core_s)) if core_s else 0.0
-                        return 0.05 + cl + novel
+                        return 0.05 + self.competence_pressure * (cl + novel)  # exp056: dial selection strength
                     weights = [_rqw(s) for s in survivors]
                 else:
                     weights = [len(by_patch[s]) for s in survivors]
@@ -1578,6 +1587,7 @@ def _make(seed, experiment, **overrides):
     physics.reify_by = str(overrides.get("reify_by", "frequency"))            # exp049 competence reify
     physics.coevolve_frozen = bool(overrides.get("coevolve_frozen", False))   # exp052 Red Queen control
     physics.freeze_gen = int(overrides.get("freeze_gen", 5))                  # exp052 snapshot generation
+    physics.competence_pressure = float(overrides.get("competence_pressure", 1.0))  # exp056 selection dial
     physics.catalytic_law = bool(overrides.get("catalytic_law", False))       # exp053 substrate-law feedback
     physics.catalyst_period = int(overrides.get("catalyst_period", 400))      # exp053 harvest cadence
     physics.catalyst_max = int(overrides.get("catalyst_max", 16))             # exp053 repertoire cap

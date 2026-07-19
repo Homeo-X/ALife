@@ -1063,6 +1063,34 @@ class TestScientificClaims(unittest.TestCase):
         r0 = run_stack(max_tiers=2, seed=0, ticks=1500)
         self.assertTrue(all(t.catalyst_period == 400 for t in r0.tiers))  # no derivation ⇒ fixed law
 
+    def test_exp056_competence_pressure_scales_selection_and_is_byte_identical_at_one(self):
+        # Ω-0.45 (the competence–diversity trade-off dial): exp056 adds competence_pressure ∈ [0,1] scaling
+        # the Red Queen's competence term (weight = 0.05 + pressure·(closure + core-novelty)). Pin it:
+        # pressure=1.0 (default) is byte-identical to exp052; a lower pressure genuinely changes the
+        # dynamics (softer selection); and it threads through the tower. Whether a sweet spot resolves the
+        # trade-off is the study's science (EXP056_FINDINGS.md).
+        from omega.kernel.universe import Universe
+        from omega.kernel.scheduler import Scheduler
+        from omega.substrate.noise import Noise
+
+        def classes(**ov):
+            p, c = get_experiment("exp052")(seed=0, ticks=2500, **ov)
+            self.assertAlmostEqual(p.competence_pressure, ov.get("competence_pressure", 1.0))
+            rng = Noise(c.seed); u = Universe(total_quanta=c.total_quanta); p.seed(u, rng)
+            Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                      max_reactions_per_tick=c.max_reactions_per_tick).run(2500)
+            return u.classes_ever_seen
+
+        base = classes()                                    # default pressure 1.0
+        self.assertEqual(classes(competence_pressure=1.0), base)   # 1.0 ⇒ byte-identical to the default
+        self.assertNotEqual(classes(competence_pressure=0.3), base)  # softer selection ⇒ different dynamics
+
+        # threads through the tower (exp055 derived-law) without error and is recorded on the physics.
+        from omega.levels.stack import run_stack
+        r = run_stack(max_tiers=2, seed=0, ticks=1500, builder="exp053", law_from_competence=True,
+                      competence_pressure=0.5)
+        self.assertGreaterEqual(len(r.tiers), 1)
+
     def test_global_novelty_sketch_is_conservative_and_eviction_robust(self):
         # Ω-0.31 (consolidation): the eviction-robust GLOBAL novelty estimator (a scalable Bloom
         # 'ever-seen' set) is the instrument that settles "stays open forever". Its two load-bearing
