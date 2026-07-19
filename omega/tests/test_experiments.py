@@ -1007,6 +1007,39 @@ class TestScientificClaims(unittest.TestCase):
         p0, _u0 = run(catalytic_law=False)
         self.assertFalse(p0._catalysts)                      # no substrate-law feedback ⇒ repertoire empty
 
+    def test_exp054_earned_law_climbs_construction_reach_with_achieved_closure(self):
+        # Ω-0.43 (the Earned Law): exp054 grows the composition LAW itself — earned_law lets a competent
+        # lineage climb its construction reach (added to type_resolution/max_size) by +1 AT BIRTH iff the
+        # source deme achieved enough closure at its current reach (gradual, non-destructive, fixed per
+        # deme for life). Pin the mechanism: earned_law is the exp054 default on the Red Queen base; a
+        # competent run climbs some deme's reach above 0 and builds competence; and it is gated
+        # (earned_law=False ⇒ reach stays empty, exp001–053 unaffected). Whether the expanding law breaks
+        # exp053's saturation is the study's science (EXP054_FINDINGS.md).
+        from statistics import mean
+        from omega.kernel.universe import Universe
+        from omega.kernel.scheduler import Scheduler
+        from omega.substrate.noise import Noise
+
+        def run(**ov):
+            p, c = get_experiment("exp054")(seed=0, ticks=5000, **ov)
+            rng = Noise(c.seed); u = Universe(total_quanta=c.total_quanta); p.seed(u, rng)
+            Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                      max_reactions_per_tick=c.max_reactions_per_tick).run(5000)
+            return p
+
+        p = run()
+        self.assertTrue(p.earned_law)                        # the expanding law is on by default
+        self.assertEqual(p.deme_fitness, "redqueen")         # runs on the exp052 Red Queen base
+        self.assertTrue(p._deme_reach)                        # some deme earned a reach entry
+        self.assertGreater(max(p._deme_reach.values()), 0)   # a competent lineage climbed the law (reach > 0)
+        self.assertLessEqual(max(p._deme_reach.values()), p.earn_max_bonus)  # bounded by the cap
+        act = [pi for pi in range(p.n_patches) if p._deme_edges.get(pi)]
+        self.assertGreater(mean(p._deme_competence(pi) for pi in act) if act else 0.0, 0.0)  # competence built
+
+        # gating: earned_law=False ⇒ no reach climbed (the fixed-law control), law stays at base.
+        p0 = run(earned_law=False)
+        self.assertFalse(p0._deme_reach)                     # no earned law ⇒ construction reach unchanged
+
     def test_global_novelty_sketch_is_conservative_and_eviction_robust(self):
         # Ω-0.31 (consolidation): the eviction-robust GLOBAL novelty estimator (a scalable Bloom
         # 'ever-seen' set) is the instrument that settles "stays open forever". Its two load-bearing

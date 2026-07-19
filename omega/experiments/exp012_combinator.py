@@ -420,6 +420,20 @@ class CombinatorPhysics:
         self.catalyst_random = False
         self._catalysts: list = []     # list of (anchor_cls, product_state) learned catalytic reactions
         self._catalyst_cls: set = set()  # (anchor_cls, product_cls) pairs already promoted (dedup)
+        # exp054 EARNED LAW (competence-gated kernel-law EXPANSION): exp053's Catalytic Law compounds
+        # competence but its reaction repertoire is BOUNDED (catalyst_max), so the ceiling may just be
+        # higher, not unbounded. earned_law grows the COMPOSITION LAW itself, which has no fixed cap: as a
+        # deme's achieved CLOSURE crosses steps of earn_closure_step, its construction REACH ratchets up
+        # (a per-deme bonus added to max_size and, at half rate, type_resolution), so a competent collective
+        # can build DEEPER, MORE-RESOLVED structure — and those deeper products are REAL classes in the
+        # network (not opaque atoms — the exp049/exp053 lesson), so competence stays measurable. The reach
+        # only rises (an earned capability) and is inherited by founded demes. earned_law=False ⇒
+        # byte-identical. Tests whether an EXPANDING law sustains the competence rise where the bounded
+        # catalytic repertoire saturates.
+        self.earned_law = False
+        self.earn_closure_step = 0.15   # closure increment that earns one reach bump
+        self.earn_max_bonus = 5         # cap on the per-deme reach bonus (still finite per deme, but the
+        self._deme_reach: dict[int, int] = {}   # law expands per-deme with competence, not a shared cap)
         # exp018 collective fitness: how a surviving deme's chance of founding a
         # propagule is set. "size" (the exp017 default) weights by deme headcount —
         # but the global reservoir cap pins every deme to ~the same size, so
@@ -933,6 +947,17 @@ class CombinatorPhysics:
                     if rng.random() < self.genome_mut:
                         r = max(lo, min(hi, r + rng.choice((-1, 1))))
                     self._deme_res[kp] = r
+                if self.earned_law:
+                    # exp054 EARNED LAW (at birth, non-destructive): the child inherits the source's
+                    # construction REACH and climbs it by +1 iff the source achieved enough closure at its
+                    # CURRENT reach — a competent lineage gradually earns a deeper construction law across
+                    # generations, each deme's reach FIXED for its life (so no mid-life re-classification /
+                    # orphaning). Gradual bootstrapping is the hypothesis: earning your way up may reach
+                    # deep regimes a cold high-resolution start (which collapses — too-sparse cross-
+                    # production) cannot. Reach adds to type_resolution/max_size at composition below.
+                    sreach = self._deme_reach.get(src, 0)
+                    earned = self._deme_closure(src) >= self.earn_closure_step * (sreach + 1)
+                    self._deme_reach[kp] = min(self.earn_max_bonus, sreach + (1 if earned else 0))
                 if self.deme_fitness == "goal":  # exp044: the child inherits src's GOAL (+ mut)
                     g = self._deme_goal.get(src)
                     if g is not None and self.atoms:
@@ -1298,6 +1323,11 @@ class CombinatorPhysics:
                 if patches[pi] and pi not in self._deme_res:
                     self._deme_res[pi] = rng.randint(lo, hi)
             genome_ix = {id(m): i for i, m in enumerate(patches)}
+        # exp054: a members->patch-index map so composition can look up a deme's EARNED reach. Built only
+        # when earned_law (and no genome map already gives it) ⇒ off is byte-identical.
+        reach_ix = None
+        if self.earned_law and patches is not None:
+            reach_ix = genome_ix if genome_ix is not None else {id(m): i for i, m in enumerate(patches)}
         if len(pop) >= 2:
             for _ in range(self.apply_attempts):
                 if patches is not None:
@@ -1313,10 +1343,15 @@ class CombinatorPhysics:
                 res = self.type_resolution
                 if genome_ix is not None:
                     res = self._deme_res.get(genome_ix.get(id(members), -1), res)
+                ms = self.max_size
+                if reach_ix is not None:            # exp054: earned reach expands this deme's law
+                    reach = self._deme_reach.get(reach_ix.get(id(members), -1), 0)
+                    ms = self.max_size + reach
+                    res = res + reach              # resolution is the binding lever (res → path depth)
                 if self.substrate == "typed":
-                    product = compose(f.state, x.state, self.max_size)
+                    product = compose(f.state, x.state, ms)
                 elif self.substrate == "typed_path":
-                    product = compose_path(f.state, x.state, self.max_size, res)
+                    product = compose_path(f.state, x.state, ms, res)
                 elif self.substrate == "tree":
                     product = graft(f.state, x.state, self.max_size, self.tree_resolution)
                 else:
@@ -1547,6 +1582,9 @@ def _make(seed, experiment, **overrides):
     physics.catalyst_period = int(overrides.get("catalyst_period", 400))      # exp053 harvest cadence
     physics.catalyst_max = int(overrides.get("catalyst_max", 16))             # exp053 repertoire cap
     physics.catalyst_random = bool(overrides.get("catalyst_random", False))   # exp053 discriminating control
+    physics.earned_law = bool(overrides.get("earned_law", False))             # exp054 competence-gated law
+    physics.earn_closure_step = float(overrides.get("earn_closure_step", 0.15))
+    physics.earn_max_bonus = int(overrides.get("earn_max_bonus", 5))
     if physics.substrate in ("typed", "typed_path", "tree"):  # atoms over n_types base types
         physics.atoms = tuple(f"y{i}" for i in range(physics.n_types))
     # exp031 level stack: an explicit promoted alphabet (a tier's atoms ARE the lower
@@ -2458,3 +2496,34 @@ def build_catalytic(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("catalytic_law", True)         # exp053 — the substrate-law feedback, ON
     overrides.setdefault("catalyst_period", 400)
     return _make(seed, "exp053", **overrides)
+
+
+@register("exp054")
+def build_earned(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp054 — THE EARNED LAW: does an EXPANDING competence-gated law sustain the competence rise where
+    exp053's bounded Catalytic Law saturates? exp053 (Ω-0.42) broke the competence-flat wall — promoting a
+    competent deme's closure loop to a shared network-visible *reaction* makes competence compound — but its
+    reaction repertoire is BOUNDED (catalyst_max), so the ceiling may just be higher, not unbounded. exp054
+    grows the COMPOSITION LAW itself (no fixed cap): `earned_law` ratchets each deme's construction REACH up
+    with its achieved CLOSURE (a per-deme bonus added to max_size and, at half rate, type_resolution), so a
+    competent collective earns the ability to build DEEPER, MORE-RESOLVED structure — real classes in the
+    network (not opaque atoms — the exp049/exp053 lesson). Runs on the exp052 Red Queen base (best platform),
+    catalytic OFF (isolate the law-expansion). Question: does competence rise with a NON-DECAYING slope that
+    does not saturate — and beat a `fixed-high` control (every deme granted the max reach from the start,
+    isolating the *feedback* from raw capacity)? `earned_law=False` ⇒ exp001–053 byte-identical."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "redqueen")    # the receding target (exp052) — best platform
+    overrides.setdefault("propagule_bias", "network")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("network_template", 0.5)       # exp040 heredity channel — ON
+    overrides.setdefault("earned_law", True)            # exp054 — the expanding competence-gated law, ON
+    return _make(seed, "exp054", **overrides)
