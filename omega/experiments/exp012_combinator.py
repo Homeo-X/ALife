@@ -411,6 +411,13 @@ class CombinatorPhysics:
         self.catalytic_law = False
         self.catalyst_period = 400
         self.catalyst_max = 16
+        # exp053 discriminating control: catalyst_random promotes a RANDOM edge from a RANDOM deme instead
+        # of the closure-central edge from the HIGHEST-competence deme. If the competence rise survives
+        # this (i.e. random injection compounds just as well), the effect is mechanical metric-padding by
+        # injecting *any* reactions; if only the competence-dependent harvest compounds, the ratchet is
+        # genuine (achieved competence, fed back, raises achievable competence). catalyst_random=False
+        # (default) ⇒ the real mechanism.
+        self.catalyst_random = False
         self._catalysts: list = []     # list of (anchor_cls, product_state) learned catalytic reactions
         self._catalyst_cls: set = set()  # (anchor_cls, product_cls) pairs already promoted (dedup)
         # exp018 collective fitness: how a surviving deme's chance of founding a
@@ -1130,27 +1137,34 @@ class CombinatorPhysics:
         self._reified[sym] = best[1]
         self._reified_cls.add(best[0])
 
-    def _harvest_catalyst(self) -> None:
+    def _harvest_catalyst(self, rng: Noise) -> None:
         """exp053: promote the most closure-central production of the highest-competence deme to a shared
         catalytic reaction (anchor_cls -> product_state). Reads the previous generation's networks (called
-        before deme reproduction clears them). Deterministic: every set is sorted before use, and the pick
-        consumes no RNG. Stays in the network (a reaction, not an opaque atom — the exp049 fix)."""
+        before deme reproduction clears them). Deterministic: every set is sorted before use. Stays in the
+        network (a reaction, not an opaque atom — the exp049 fix). catalyst_random (control) instead
+        promotes a random edge from a random deme, isolating competence-dependence from mere injection."""
         alive = sorted(pi for pi, e in self._deme_edges.items() if e)
         if not alive:
             return
-        best_pi = max(alive, key=lambda pi: self._deme_competence(pi))  # ties: lowest patch index (alive sorted)
-        edges = self._deme_edges.get(best_pi, {})
-        producers = {f for (f, _q) in edges}
-        products = {q for (_f, q) in edges}
-        core = producers & products                       # the autocatalytic closure core
-        core_edges = [(e, n) for e, n in edges.items() if e[0] in core and e[1] in core]
-        if not core_edges:
-            return
-        (anchor_cls, prod_cls), _ = max(sorted(core_edges), key=lambda kv: kv[1])  # busiest core edge
+        if self.catalyst_random:
+            src_pi = rng.choice(alive)                     # a RANDOM live deme (control)
+            edges = self._deme_edges.get(src_pi, {})
+            (anchor_cls, prod_cls) = rng.choice(sorted(edges))  # a RANDOM edge (sorted before rng)
+        else:
+            best_pi = max(alive, key=lambda pi: self._deme_competence(pi))  # ties: lowest patch index
+            edges = self._deme_edges.get(best_pi, {})
+            producers = {f for (f, _q) in edges}
+            products = {q for (_f, q) in edges}
+            core = producers & products                    # the autocatalytic closure core
+            core_edges = [(e, n) for e, n in edges.items() if e[0] in core and e[1] in core]
+            if not core_edges:
+                return
+            (anchor_cls, prod_cls), _ = max(sorted(core_edges), key=lambda kv: kv[1])  # busiest core edge
+            src_pi = best_pi
         key = (anchor_cls, prod_cls)
         if key in self._catalyst_cls:
             return
-        buf = self._niche.get(best_pi, [])                # recent product states of this deme
+        buf = self._niche.get(src_pi, [])                 # recent product states of the source deme
         prod_state = None
         for st in reversed(buf):                          # most-recent representative state of prod_cls
             if canonical_cls(st) == prod_cls:
@@ -1247,7 +1261,7 @@ class CombinatorPhysics:
         # the networks). No RNG ⇒ catalytic_law=False is byte-identical.
         if (self.catalytic_law and self.catalyst_period and universe.tick > 0
                 and universe.tick % self.catalyst_period == 0):
-            self._harvest_catalyst()
+            self._harvest_catalyst(rng)
 
         # deme-level reproduction round (multi-level selection)
         if (self.deme_gen and self.n_patches > 0 and universe.tick > 0
@@ -1532,6 +1546,7 @@ def _make(seed, experiment, **overrides):
     physics.catalytic_law = bool(overrides.get("catalytic_law", False))       # exp053 substrate-law feedback
     physics.catalyst_period = int(overrides.get("catalyst_period", 400))      # exp053 harvest cadence
     physics.catalyst_max = int(overrides.get("catalyst_max", 16))             # exp053 repertoire cap
+    physics.catalyst_random = bool(overrides.get("catalyst_random", False))   # exp053 discriminating control
     if physics.substrate in ("typed", "typed_path", "tree"):  # atoms over n_types base types
         physics.atoms = tuple(f"y{i}" for i in range(physics.n_types))
     # exp031 level stack: an explicit promoted alphabet (a tier's atoms ARE the lower
