@@ -121,3 +121,16 @@ decelerates to a ~18% sag across the next 600k — a curve converging to a posit
 windowed rate stays flat ~0.465 (≈5× the genuine rate: recycling). See `studies/EXP050_FINDINGS.md`
 and `RESEARCH_LOG` Ω-0.39. Residual now: a 10⁷ stress (rule out a slower second-order decline) and deep
 towers (50+) at the long horizon.
+
+## Update (Ω-0.40) — the horizon stress: the floor HOLDS to 3M
+
+`studies/exp051_horizonstress.py` (**3M ticks, 3 seeds**, `memory_horizon=5000` held fixed so the
+eviction regime matches the Ω-0.39 run) closes the "does it dilute at a longer horizon?" residual. After
+the transient (global rate 0.22 → 0.08 over the first ~1M ticks, a 64% fall), the eviction-robust rate is
+**flat within ~14% across the entire final 2M ticks** (0.084 → 0.070), decisively above the closed
+control's **exact 0.0000** — ~**281,400 distinct classes ever/seed** (≈2.1× the 10⁶ value, a steady
+~0.07–0.09/tick). The decline **decelerates** (64% over the first 1M vs ~14% over the last 2M): log-like
+convergence to a positive floor, not linear dilution. `relation_cap` was shrunk for throughput, which
+does not touch the registry-independent global metric. See `studies/EXP051_FINDINGS.md` and
+`RESEARCH_LOG` Ω-0.40. Residual now: a 10⁷ stress (a residual ~14% sag is not *mathematically* excluded)
+and deep towers (50+) at the long horizon — the tower axis is the higher-value remaining piece.

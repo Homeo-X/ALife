@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.39).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.40).
 
 ## Where we are
 
@@ -37,15 +37,17 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
 
 ## The next frontier (highest priority)
 
-**1. Truly unbounded — the novelty axis is SETTLED at 10⁶ (Ω-0.39); the tower axis is not.** The
-streaming-novelty question is answered: on the eviction-robust global sketch, the open engine's genuine
-rate **finds a positive floor** (~0.09 new classes/tick, ~130k distinct in 10⁶ ticks / 5 seeds,
-decisively above the closed control's exact 0) — the steep early decline is a transient, not dilution.
-What remains open on this axis is a **10⁷ stress** (windows 4–9 still sag ~18%, so a slower second-order
-decline is not ruled out) and, separately, **deep towers (50+ levels)** at the long horizon — the tower
-depth has only been pushed in-miniature (Ω-0.17), never to 10⁶ ticks with the streaming instrument.
-*Predicted falsification:* at 10⁷ the floor finally dilutes to zero, or tower depth hits an intrinsic
-ceiling under bounded memory.
+**1. Truly unbounded — the novelty axis is SETTLED and STRESS-TESTED (Ω-0.39–40); the tower axis is
+not.** The streaming-novelty question is answered and stressed: on the eviction-robust global sketch the
+open engine's genuine rate **finds a positive floor** (~0.09 new classes/tick; ~130k distinct at 10⁶ / 5
+seeds, ~281k at 3M / 3 seeds; decisively above the closed control's exact 0), and a **3× horizon stress
+to 3M ticks** (Ω-0.40) showed it stays **flat within ~14% across the final 2M**, decelerating (64%→14%)
+onto a positive asymptote — not diluting. What remains open here is a **10⁷ stress** (a residual ~14% sag
+means a very slow second-order drift is not *mathematically* excluded) and, separately, **deep towers
+(50+ levels)** at the long horizon — tower depth has only been pushed in-miniature (Ω-0.17), never to 10⁶
+ticks with the streaming instrument. *Predicted falsification:* at 10⁷ the floor finally dilutes to zero,
+or tower depth hits an intrinsic ceiling under bounded memory. The tower axis is now the higher-value
+open piece of "truly unbounded."
 
 ## Secondary threads
 

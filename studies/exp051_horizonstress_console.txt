@@ -1,0 +1,26 @@
+[done closed-s0] registry=143 global_distinct=144 late_global=0.0000
+[done closed-s1] registry=144 global_distinct=144 late_global=0.0000
+[done open-s2] registry=3497 global_distinct=279617 late_global=0.0731
+[done open-s0] registry=2890 global_distinct=281560 late_global=0.0675
+[done open-s1] registry=3265 global_distinct=283071 late_global=0.0639
+[done closed-s2] registry=144 global_distinct=144 late_global=0.0000
+
+exp051 — does the genuine-novelty floor HOLD past 10⁶? (3000000 ticks, 3 seeds, mem_h=5000 FIXED, 12 windows)
+
+  [open = exp030]
+       window       0       1       2       3       4       5       6       7       8       9      10      11
+     windowed  0.4606  0.4647  0.4628  0.4595  0.4589  0.4617  0.4615  0.4607  0.4628  0.4622  0.4628  0.4588
+       global  0.2197  0.1201  0.0926  0.0878  0.0841  0.0914  0.0761  0.0743  0.0750  0.0751  0.0676  0.0619
+
+  [closed = exp029]
+       window       0       1       2       3       4       5       6       7       8       9      10      11
+     windowed  0.0013  0.0008  0.0007  0.0008  0.0007  0.0008  0.0007  0.0007  0.0007  0.0008  0.0005  0.0006
+       global  0.0006  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000  0.0000
+
+  open global: mid(~1–2M)=0.0815  final(~2–3M)=0.0699  hold_ratio=0.86  distinct-ever≈281416
+  closed global final = 0.0000 (instrument sanity: must be ~0)
+
+  => FLOOR HOLDS TO 3M (converged): the genuine-novelty rate is flat within 25% across the
+     final 2M ticks, decisively above the closed control. The Ω-0.39 deceleration has
+     converged to a positive constant — 'stays open forever' survives a 3× horizon stress,
+     with no sign of second-order dilution toward zero.

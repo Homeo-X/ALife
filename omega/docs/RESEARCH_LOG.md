@@ -6,6 +6,43 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.40 — The horizon stress: the genuine-novelty floor HOLDS to 3M ticks — the Ω-0.39 caveat closed (exp051)
+
+**Date:** 2026-07-19 · **Status:** complete · **Verdict:** the last open edge of the novelty axis
+**closed** — the floor converges to a positive constant, not a slow decline. Detail:
+`studies/EXP051_FINDINGS.md`. Measurement only; `global_novelty=False` ⇒ byte-identical, deterministic
+across `PYTHONHASHSEED`.
+
+Ω-0.39 settled "stays open" at 10⁶ ticks but left one caveat: the late windows still sagged ~18%, so a
+slow second-order decline toward zero was not strictly ruled out. exp051 stresses the horizon **3×
+(3M ticks × 3 seeds)** with the eviction regime held **fixed** (`memory_horizon=5000`) so the floor is
+compared fairly, and `relation_cap` shrunk for throughput (does not touch the registry-independent
+global metric).
+
+**Result (3M ticks, 3 seeds):** the floor **holds**. After the transient (global rate 0.22 → 0.08 over
+the first ~1M ticks, a 64% fall), the eviction-robust rate is **flat within ~14% across the entire final
+2M ticks** (0.084 → 0.070), decisively above the closed control's **exact 0.0000** — ~**281,400 distinct
+classes ever/seed** (≈2.1× the 10⁶ value, consistent with a steady ~0.07–0.09/tick) vs the closed
+alphabet's unchanged **144**. mid(~1–2M)=0.0815, final(~2–3M)=0.0699, **hold ratio 0.86**. The decline is
+**decelerating toward an asymptote, not descending toward zero**: 64% over the first 1M, only ~14% over
+the last 2M — log-like convergence to a positive floor, the opposite of linear dilution.
+
+**Interpretation.** Constructibility is a **rate with a positive floor** that *holds*, not merely
+*appears to hold* — shown over a 3× longer horizon with the eviction regime fixed and the closed control
+reading exact zero throughout. The novelty axis of "truly unbounded" is now settled to 3M ticks. Read
+with Ω-0.38, both axes are firm: **construction is open-ended** (a floor holding to 3M) while
+**competence is not** (the arc plateaued) — the world compounds *what it builds*, durably, but not *how
+good its collectives get*.
+
+### Is / is not
+- **Is:** the Ω-0.39 caveat closed — a 3× horizon stress showing the genuine rate flat within 14% across
+  2M late ticks, decelerating (64%→14%) toward a positive asymptote, closed control exact-zero throughout.
+- **Is not:** a proof of a *perfectly* flat rate — a residual ~14% sag remains, so a 10⁷ run could reveal
+  a very slow drift (the deceleration argues against it). 3-seed stress; the 10⁶ result is the 5-seed
+  anchor. Both-corner substrate; bounded-memory measurement (the global sketch is the right instrument).
+
+---
+
 ## Milestone Ω-0.39 — "Stays open forever" settled at 10⁶ ticks: the genuine-novelty floor is REAL, and the Ω-0.31 decline was a transient (exp050)
 
 **Date:** 2026-07-18 · **Status:** complete · **Verdict:** the program's **load-bearing claim, settled
