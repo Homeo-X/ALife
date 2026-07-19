@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.40).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.41).
 
 ## Where we are
 
@@ -51,16 +51,20 @@ open piece of "truly unbounded."
 
 ## Secondary threads
 
-- **Competence via a mid-run change to the substrate law (the arc's *last* untried move).** exp049
-  tested the obvious competence analogue of reification — promote the most closure-central *competent*
-  module to a new atom — and it **does not** compound competence (slopes ≈ 0, indistinguishable from
-  reifying common structure or not reifying), because reifying a competent module hides its structure
-  in an **opaque atom**, out of the measured network, even as it grows the alphabet and novelty. That
-  rules out the reification lever and, with exp044–048, every selection/representation/replicator route.
-  The competence ceiling is set by the substrate's **fixed reaction law**; the one class of move never
-  tried is to make that **law itself competence-dependent during the run** (a reaction physics whose
-  rates or products change as a collective's competence rises) — a substrate change, not a selection
-  knob, and a genuinely harder experiment. That is the real open problem the arc isolates.
+- **Competence via a mid-run change to the substrate law — the arc's *last* untried move (exp053).**
+  Two levers have now been tried and both raise the competence *level* without tilting the *slope*.
+  exp049 reified competent modules to new atoms — no compounding (the atom is **opaque**, hiding the
+  structure out of the measured network). exp052 (Ω-0.41) grounded a **Red Queen** (a receding,
+  coevolutionary target): it is the strongest competence-*level* lever the program has found — coevolve
+  competence 0.820 beats plain closure selection (0.673) and the frozen-rival control (0.630, a +0.19
+  receding-target effect), with healthy rising network survival — **yet competence still does not
+  compound** (slope −0.021). Both confirm: the ceiling is set by the substrate's **fixed reaction law**,
+  and selection/coevolution move the plateau but not the rate. The one class of move never tried is to
+  make that **law itself competence-dependent during the run** — a **Catalytic Law**: promote a
+  collective's achieved closure loops to shared *reactions* (not opaque atoms), so competent structure
+  becomes new construction *operations* later collectives build on. **exp053** (the user's staged plan)
+  combines it with the Red Queen: the receding pressure plus a substrate-level feedback that could turn
+  that pressure into a rising ceiling. A substrate change, not a selection knob — the real open problem.
 - **A strong non-type law.** exp035's tree law reached the "both corner" only weakly (~10× lower
   heredity than linear paths). Is there a genuinely different law with *strong* both-corner heredity?
 - **Fully heterogeneous per-level physics.** The tower is still largely the self-similar engine;

@@ -1,0 +1,38 @@
+exp052 — does a coevolutionary (receding) target break the competence-flat wall? (12000 ticks, 6 seeds, 8 windows, mem=4000)
+
+  [coevolve]
+         window      0      1      2      3      4      5      6      7
+     competence  0.848  0.888  0.877  0.823  0.815  0.854  0.828  0.722
+        closure  0.236  0.262  0.287  0.260  0.255  0.266  0.251  0.200
+       survival   0.56   0.69   0.70   0.70   0.70   0.72   0.73   0.71
+    competence slope -0.0208/win, mean 0.820, classes 5505
+
+  [frozen]
+         window      0      1      2      3      4      5      6      7
+     competence  0.768  0.841  0.643  0.661  0.665  0.584  0.614  0.611
+        closure  0.200  0.235  0.185  0.211  0.200  0.164  0.167  0.167
+       survival   0.52   0.56   0.52   0.56   0.58   0.56   0.57   0.57
+    competence slope -0.0109/win, mean 0.630, classes 4441
+
+  [closure]
+         window      0      1      2      3      4      5      6      7
+     competence  0.707  0.790  0.674  0.655  0.684  0.626  0.737  0.665
+        closure  0.159  0.186  0.170  0.196  0.214  0.187  0.212  0.180
+       survival   0.49   0.58   0.57   0.59   0.59   0.57   0.58   0.57
+    competence slope +0.0041/win, mean 0.673, classes 4594
+
+  [drift]
+         window      0      1      2      3      4      5      6      7
+     competence  0.636  0.689  0.668  0.700  0.631  0.583  0.557  0.550
+        closure  0.110  0.087  0.065  0.118  0.123  0.109  0.088  0.084
+       survival   0.41   0.31   0.25   0.32   0.45   0.40   0.39   0.32
+    competence slope -0.0305/win, mean 0.615, classes 3308
+
+  competence slope (coevolve): -0.0208/win
+  competence mean: coevolve 0.820 | frozen 0.630 | closure 0.673 | drift 0.615
+  receding-target effect (coevolve - frozen): +0.190
+
+  => THE WALL HOLDS, but the receding target LIFTS THE LEVEL (not the slope): coevolve
+     competence exceeds frozen (the receding target does real work) yet does not COMPOUND
+     (slope ≈ 0) — the same level-not-rate pattern as exp048's replicators. Competence
+     remains a STOCK: a coevolutionary target raises the plateau but not the trajectory.

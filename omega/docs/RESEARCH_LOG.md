@@ -6,6 +6,57 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.41 — The Red Queen: a coevolutionary target raises the competence *ceiling* to the arc's highest, but competence still does not *compound* (exp052)
+
+**Date:** 2026-07-19 · **Status:** complete · **Verdict:** the boldest attempt on the competence-flat
+wall — a **level, not rate** result, the strongest yet, that raises the plateau above every fixed-target
+baseline but still does not compound. Detail: `studies/EXP052_FINDINGS.md`. Gated; exp001–051
+byte-identical (deterministic across `PYTHONHASHSEED`).
+
+The arc (exp044–049) showed competence never compounds — it plateaus under every route, all of which
+select against a **fixed target**; exp042's self-expanding scalar bar failed because a global number
+chasing the frontier flattens its own gradient. exp052 grounds a **receding** target in real, local
+rivals — an arms race. `deme_fitness="redqueen"` rewards a deme for its own autocatalytic closure **plus**
+the fraction of its closure core a spatial rival cannot yet produce — a zero-sum, *closure-aligned*
+antagonism whose gradient does not vanish (the rival co-acquires the classes, so the deme must innovate
+new closed structure) and whose winning strategy **builds** competence (novelty inside the
+self-maintaining core, not dead-ends). Decisive control `coevolve_frozen`: the same rule against a
+**frozen** rival snapshot (fixed target), isolating the receding target from the fitness form. *(Iterated
+to this form honestly: raw offense/defense collapsed diversity, a relative-competence bar inherited
+exp042's vanishing gradient.)*
+
+**Result (12k ticks, 6 seeds):** the receding target does **large, real work but does not tilt the
+slope.** coevolve competence **0.820** is the **highest of any arm** — beating the frozen control by
+**+0.190**, plain closure selection (0.673) by **+0.147**, and drift (0.615) by +0.205 — with the highest
+closure (0.255), the most construction (5,505 classes), and the **healthiest, rising** network survival
+(0.56 → 0.73; no collapse, unlike exp047). **But competence does not compound:** coevolve's slope is
+**−0.021/win** (high-and-flat-to-declining). Same **level-not-rate** pattern as exp048 (replicators lifted
+the ceiling ~2× without changing the slope), now in its strongest form and on the *same* substrate as its
+controls.
+
+**Interpretation.** exp052 is the **first mechanism in the arc to raise competence above plain closure
+selection on the same substrate** (exp045/046 under-performed it, exp047 collapsed it, exp048 needed a
+different substrate), and the closure-aligned design keeps networks healthy where naive antagonism
+collapsed them. Yet it lands on the same wall: **competence is a stock, not a rate.** With a fixed
+substrate law the arms race reaches a mutual-escape equilibrium (everyone running to stay in place —
+competence high and steady, relative advantage flat); nothing turns achieved competence into *higher
+achievable* competence. The receding target **moves the plateau; it does not remove the ceiling.**
+**Open-ended novelty ≠ open-ended competence** (Ω-0.39/0.40 vs Ω-0.38) holds against the strongest lever
+yet. The one untried class of move remains the substrate-law change exp049 named — a **Catalytic Law**
+(promote competent closure loops to shared *reactions*, not opaque atoms). Natural next rung (exp053, the
+user's staged plan): Red Queen + Catalytic Law — the receding pressure plus a substrate-level feedback
+that could turn that pressure into a rising ceiling.
+
+### Is / is not
+- **Is:** the arc's strongest competence-*level* result — a grounded, receding coevolutionary target
+  raises competence above every fixed-target baseline (coevolve − frozen = +0.19; coevolve − closure =
+  +0.15) with healthy, rising network survival, cleanly isolated by the frozen control.
+- **Is not:** compounding — coevolve's slope is flat-to-negative (−0.021), no rate. Within the both-corner
+  typed_path substrate; the mechanism was iterated to its principled (closure-aligned) form before
+  measuring.
+
+---
+
 ## Milestone Ω-0.40 — The horizon stress: the genuine-novelty floor HOLDS to 3M ticks — the Ω-0.39 caveat closed (exp051)
 
 **Date:** 2026-07-19 · **Status:** complete · **Verdict:** the last open edge of the novelty axis
