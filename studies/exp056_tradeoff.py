@@ -41,7 +41,8 @@ def _run(args) -> dict:
     r = run_stack(max_tiers=max_tiers, seed=seed, ticks=ticks, builder="exp053",
                   law_from_competence=True, competence_pressure=press)
     return {"pressure": press, "seed": seed, "depth": r.tower_depth,
-            "competence": [t.competence for t in r.tiers]}
+            "competence": [t.competence for t in r.tiers],
+            "collectives": [t.n_collectives for t in r.tiers]}
 
 
 def main() -> None:
@@ -59,19 +60,23 @@ def main() -> None:
         collapse = 1.0 - len(full) / len(rs)
         pt = [mean(r["competence"][t] for r in full) for t in range(max_tiers)] if full else [0.0] * max_tiers
         slope = mean(_slope(r["competence"]) for r in full) if full else 0.0
+        # diversity fuel: mean stable collectives produced by tier 0 (what seeds tier 1), over ALL seeds —
+        # the quantity the transition needs >= 2 of. A more sensitive diversity signal than binary collapse.
+        div0 = mean(r["collectives"][0] if r["collectives"] else 0 for r in rs)
         summary[p] = {"collapse_rate": collapse, "across_tier_slope": slope,
                       "top_tier_competence": pt[-1], "per_tier_competence": pt,
+                      "tier0_diversity": div0,
                       "mean_depth": mean(r["depth"] for r in rs), "n_full": len(full)}
     json.dump({"max_tiers": max_tiers, "ticks_per_tier": ticks, "n_seeds": n,
                "pressures": PRESSURES, "summary": {str(k): v for k, v in summary.items()}},
               open("studies/exp056_results.json", "w"), indent=2)
 
     print(f"exp056 — is the competence–diversity trade-off navigable? ({max_tiers} tiers, {ticks} ticks/tier, {n} seeds)\n")
-    print(f"  {'pressure':>9} {'slope':>8} {'collapse':>9} {'top-tier':>9} {'depth':>7} {'full':>6}")
+    print(f"  {'pressure':>9} {'slope':>8} {'collapse':>9} {'tier0_div':>10} {'top-tier':>9} {'depth':>7} {'full':>6}")
     for p in PRESSURES:
         s = summary[p]
         print(f"  {p:>9.2f} {s['across_tier_slope']:>+8.4f} {s['collapse_rate']:>9.2f} "
-              f"{s['top_tier_competence']:>9.3f} {s['mean_depth']:>7.2f} {s['n_full']:>4}/{n}")
+              f"{s['tier0_diversity']:>10.1f} {s['top_tier_competence']:>9.3f} {s['mean_depth']:>7.2f} {s['n_full']:>4}/{n}")
     print()
 
     # a sweet spot: some pressure compounds competence across levels (slope > 0.02) with LOW collapse (<0.15).
