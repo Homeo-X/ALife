@@ -6,6 +6,48 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.43 — The Earned Law: expanding *construction depth* does not break exp053's saturation — the real limit is optimal richness, not a fixed law (exp054)
+
+**Date:** 2026-07-19 · **Status:** complete · **Verdict:** an **honest negative that locates why competence
+saturates** — the constructible space has an optimal richness with finite competent structure; expanding
+the law along the *depth* axis degrades competence. Detail: `studies/EXP054_FINDINGS.md`. Gated;
+exp001–053 byte-identical (deterministic across `PYTHONHASHSEED`).
+
+exp053 compounds competence but **saturates** (~1.45 by ~8k ticks). Diagnostic: it is **not** the catalyst
+cap (cap 16/80/400 byte-identical; only ~10 distinct closure-core edges ever qualify) — at fixed resolution
+the constructible space is finite, so competent structure exhausts. `type_resolution` is the binding lever
+(res → path length); res5 beats res3 cold, but res8 (isolated) collapses and raising resolution mid-life
+orphans the network. exp054's `earned_law` therefore climbs resolution **gradually, at birth, per lineage**
+(non-destructive, closure-gated), to test whether earning reaches deep regimes a cold start can't.
+
+**Result (20k ticks, 6 seeds):** the Earned Law **fails**. Earned competence (mean **0.577**, late slope
+−0.003, survival 0.46) is the **lowest of all arms** — below fixed-law res3 (0.800), fixed-high cold-res8
+(0.742), and far below catalytic/exp053 (**1.224**). Climbing resolution **hurts**: deeper type-paths make
+cross-production sparser, so closure (hence competence) falls, and the greedy climb overshoots the optimum
+(reach ~3.67 ≈ res ~6.7 within the first window) into a worse regime. The single-seed smoke (reach 5, +0.009
+slope) was seed-noise. Cold res8 did *not* collapse on the Red Queen base (0.60), correcting the isolated
+diagnostic — deeper resolution is merely worse, not catastrophic. **exp053's reaction expansion (fixed
+richness) remains the best.**
+
+**Interpretation.** Competence does not saturate because the law is *fixed* — it saturates because the
+constructible space has an **optimal richness** and the competent (closure-forming) structure at that
+richness is **finite**. Expanding the law along *depth* moves *out* of the optimum into sparser regimes
+where cross-production is rarer, so competence drops. The right expansion adds competent-structure capacity
+*at* the optimal richness (exp053's reactions), not *depth* — a bias–variance-like ceiling (too shallow
+exhausts; too deep starves cross-production). Competence is a rate up to the optimal-richness ceiling, then
+a stock, and depth-expansion does not break it.
+
+### Is / is not
+- **Is:** a clean negative that locates exp053's saturation in the substrate's *optimal richness* (finite
+  competent structure), shows the construction-*depth* axis degrades competence, and re-confirms
+  fixed-richness reaction expansion (exp053) as the better mechanism.
+- **Is not:** a proof that *no* expanding law helps — it rules out the depth axis. Warns rung 2 (exp055,
+  transition-as-rule-change) that a naive "richer/deeper law" hurts; the tower transition is a *different*
+  rule-change (composing lower-tier collectives, a new level) and must keep cross-production viable, not
+  just bigger. Both-corner typed_path; 6 seeds × 20k.
+
+---
+
 ## Milestone Ω-0.42 — The Catalytic Law breaks the competence-flat wall: competence COMPOUNDS, and it is a genuine ratchet (exp053)
 
 **Date:** 2026-07-19 · **Status:** complete · **Verdict:** the self-improvement arc's **first

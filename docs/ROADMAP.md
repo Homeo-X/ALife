@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.42).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.43).
 
 ## Where we are
 
@@ -41,8 +41,12 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   and a random-injection control (3× shallower) shows the ratchet is genuinely *competence-dependent*, not
   mechanical. The refined lesson: **open-ended novelty ≠ open-ended competence was true only for a *fixed*
   substrate law** — once the law grows with achieved competence (network-visibly), competence is a *rate*
-  too, the exp053 analogue of the Ω-0.20 reification-of-novelty result. Open edge: **saturation** (does it
-  rise without bound or fill the catalyst repertoire?).
+  too, the exp053 analogue of the Ω-0.20 reification-of-novelty result. exp054 (Ω-0.43) then characterized
+  the **saturation**: it is *not* the catalyst cap but the substrate's **optimal construction richness** —
+  the competent-structure space at that richness is finite, and expanding the law along construction *depth*
+  (an Earned Law) *lowers* competence (deeper paths starve cross-production). Competence is a rate up to that
+  optimal-richness ceiling, then a stock; the open question is whether a *level transition* (exp055) can add
+  a new *kind* of richness (composing lower-tier collectives) rather than deeper paths.
 
 ## The next frontier (highest priority)
 
@@ -60,18 +64,21 @@ open piece of "truly unbounded."
 
 ## Secondary threads
 
-- **Does compounding competence rise without bound, or saturate? (the exp053 follow-on, now highest-
-  value on the competence axis).** exp053 (Ω-0.42) **broke the competence-flat wall**: a **Catalytic Law**
-  (promote the highest-competence deme's closure loop to a shared, network-visible *reaction*) makes
-  competence **compound** — catalytic×Red-Queen rises monotonically to the arc's highest level (slope
-  +0.019 vs flat fixed-law cells), and a random-injection control (3× shallower) confirms the ratchet is
-  competence-dependent, not mechanical. The open question is now the **shape of the rise**: competence
-  climbs over 12k ticks / ~600 generations, but the catalyst repertoire (`catalyst_max=16`) reached ~11–14
-  near the cap, so a longer-horizon / larger-cap run must show whether competence keeps rising (a genuine
-  unbounded ratchet — the strongest possible result) or saturates as the repertoire fills. *Predicted
-  falsification:* the slope decays to zero once the repertoire is full → competence is a *larger stock*,
-  not truly unbounded. Secondary: separate the mechanical injection floor (random ≈ +0.006) more tightly;
-  test whether the Red Queen is necessary or merely maximal (catalytic×closure also compounds, +0.017).
+- **Compounding competence saturates at the substrate's OPTIMAL RICHNESS — expanding along DEPTH is the
+  wrong axis (exp054, Ω-0.43).** exp053 (Ω-0.42) broke the wall (Catalytic Law → network-visible reactions
+  → competence compounds), but it **saturates** (~1.45 by ~8k ticks). exp054 pinned why: it is **not** the
+  catalyst cap (cap 16/80/400 byte-identical — only ~10 distinct closure-core edges ever qualify); at fixed
+  resolution the *competent-structure space is finite*. And an **Earned Law** that expands the composition
+  law along **construction depth** (lineages climbing `type_resolution` with achieved closure) **fails** —
+  earned competence 0.577 is the *lowest* of all arms (< fixed-law 0.800 < catalytic 1.224), because deeper
+  type-paths make cross-production sparser, so closure/competence *drop*. Competence has a **bias–variance
+  ceiling**: too shallow exhausts competent structure (exp053 saturation), too deep starves cross-production
+  (exp054). The remaining open question: is there a law expansion that adds competent-structure *capacity at
+  the optimal richness* (like more reactions) **without** exhausting the closure-core edge supply — e.g.
+  a **level transition** that composes lower-tier collectives into a genuinely NEW level (exp055,
+  transition-as-rule-change), where the "new richness" is a new *kind* of entity, not deeper paths.
+  *Predicted falsification of exp055:* deriving the higher tier's law from lower-tier competence still
+  plateaus / caps the tower depth → the ceiling is intrinsic to the substrate family, not the fixed law.
 - **A strong non-type law.** exp035's tree law reached the "both corner" only weakly (~10× lower
   heredity than linear paths). Is there a genuinely different law with *strong* both-corner heredity?
 - **Fully heterogeneous per-level physics.** The tower is still largely the self-similar engine;

@@ -1,0 +1,36 @@
+exp054 — does an EARNED (expanding) law sustain the competence rise past exp053's saturation? (20000 ticks, 6 seeds, 10 windows, mem=4000)
+
+  [earned]
+         window      0      1      2      3      4      5      6      7      8      9
+     competence  0.620  0.733  0.540  0.719  0.570  0.550  0.579  0.560  0.552  0.548
+       survival   0.47   0.53   0.41   0.45   0.44   0.44   0.44   0.46   0.46   0.46
+          reach   3.15   3.47   3.42   3.67   3.67   3.67   3.67   3.67   3.67   3.67
+    late-half slope -0.0032/win, mean(post-transient) 0.577, end-survival 0.46
+
+  [fixed-high]
+         window      0      1      2      3      4      5      6      7      8      9
+     competence  0.834  0.770  0.721  0.779  0.740  0.726  0.674  0.772  0.827  0.700
+       survival   0.55   0.59   0.58   0.59   0.60   0.60   0.58   0.60   0.60   0.60
+          reach   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00
+    late-half slope +0.0102/win, mean(post-transient) 0.742, end-survival 0.60
+
+  [catalytic]
+         window      0      1      2      3      4      5      6      7      8      9
+     competence  0.943  1.153  1.174  1.176  1.187  1.235  1.258  1.254  1.251  1.256
+       survival   0.61   0.76   0.77   0.77   0.78   0.78   0.79   0.78   0.79   0.79
+          reach   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00
+    late-half slope +0.0036/win, mean(post-transient) 1.224, end-survival 0.79
+
+  [fixed-law]
+         window      0      1      2      3      4      5      6      7      8      9
+     competence  0.866  0.913  0.837  0.833  0.829  0.752  0.782  0.770  0.790  0.809
+       survival   0.60   0.69   0.70   0.70   0.73   0.72   0.72   0.73   0.72   0.73
+          reach   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00
+    late-half slope +0.0123/win, mean(post-transient) 0.800, end-survival 0.73
+
+  late-half competence slope: earned -0.0032 | catalytic +0.0036 | fixed-high +0.0102 | fixed-law +0.0123
+  earned end-survival 0.46 vs fixed-high (cold res8) 0.60; earned max reach 3.67
+
+  => THE EARNED LAW DOES NOT BREAK SATURATION (honest negative): an expanding construction
+     law does not sustain the rise past exp053's plateau. Competence is bounded by the
+     substrate's optimal construction richness, not by the law being fixed.
