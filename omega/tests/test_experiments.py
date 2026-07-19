@@ -970,6 +970,43 @@ class TestScientificClaims(unittest.TestCase):
         self.assertTrue(pf._frozen_prod)                       # a frozen reference was captured
         self.assertEqual(len(pf._frozen_prod), pf.n_patches)   # full coverage — a fixed bar for every rival
 
+    def test_exp053_catalytic_law_promotes_closure_loops_to_network_visible_reactions(self):
+        # Ω-0.42 (the Catalytic Law): exp053 changes the substrate law mid-run — every catalyst_period it
+        # promotes the most closure-central production of the highest-competence deme to a persistent
+        # shared catalyst (anchor_cls -> product_state) injected every tick, so competent structure becomes
+        # a reusable NETWORK-VISIBLE reaction (the exp049 fix vs an opaque atom). Pin the mechanism:
+        # catalytic_law is the exp053 default on the Red Queen base; catalysts are harvested and the
+        # promoted product classes appear as real classes in the universe (not new atoms); and it is gated
+        # (catalytic_law=False ⇒ no catalysts, exp001–052 unaffected). Whether it makes competence COMPOUND
+        # is the study's science (EXP053_FINDINGS.md).
+        from statistics import mean
+        from omega.kernel.universe import Universe
+        from omega.kernel.scheduler import Scheduler
+        from omega.substrate.noise import Noise
+
+        def run(**ov):
+            p, c = get_experiment("exp053")(seed=0, ticks=4000, **ov)
+            rng = Noise(c.seed); u = Universe(total_quanta=c.total_quanta); p.seed(u, rng)
+            Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                      max_reactions_per_tick=c.max_reactions_per_tick).run(4000)
+            return p, u
+
+        p, u = run()
+        self.assertTrue(p.catalytic_law)                     # the substrate-law feedback is on by default
+        self.assertEqual(p.deme_fitness, "redqueen")         # runs on the exp052 Red Queen base
+        n_atoms0 = len(get_experiment("exp053")(seed=0, ticks=1)[0].atoms)
+        self.assertTrue(p._catalysts)                        # at least one closure loop was promoted
+        anchor_cls, product_state = p._catalysts[0]
+        from omega.kernel.organization import canonical_cls
+        self.assertIn(canonical_cls(product_state), u.class_registry)  # promoted product is a REAL class...
+        self.assertEqual(len(p.atoms), n_atoms0)             # ...NOT a new opaque atom (the exp049 fix)
+        act = [pi for pi in range(p.n_patches) if p._deme_edges.get(pi)]
+        self.assertGreater(mean(p._deme_competence(pi) for pi in act) if act else 0.0, 0.0)  # competence built
+
+        # gating: catalytic_law=False ⇒ NO catalysts harvested (the fixed-law control cells).
+        p0, _u0 = run(catalytic_law=False)
+        self.assertFalse(p0._catalysts)                      # no substrate-law feedback ⇒ repertoire empty
+
     def test_global_novelty_sketch_is_conservative_and_eviction_robust(self):
         # Ω-0.31 (consolidation): the eviction-robust GLOBAL novelty estimator (a scalable Bloom
         # 'ever-seen' set) is the instrument that settles "stays open forever". Its two load-bearing

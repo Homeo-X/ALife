@@ -397,6 +397,22 @@ class CombinatorPhysics:
         self.coevolve_frozen = False
         self.freeze_gen = 5
         self._frozen_prod: dict[int, frozenset] = {}   # patch -> producer-set snapshot at freeze_gen (control)
+        # exp053 CATALYTIC LAW (a substrate law that changes with achieved competence): every lever the arc
+        # tried moves the competence LEVEL but never the SLOPE. exp049 named the one untried move and
+        # diagnosed why its own attempt failed — reifying a competent module to a NEW ATOM hides its
+        # structure in an opaque primitive, out of the measured network. catalytic_law does it as a
+        # REACTION instead: every catalyst_period ticks it promotes the most closure-central production of
+        # the highest-competence deme (a class in its producers∩products autocatalytic core) to a persistent
+        # shared catalyst — a reaction "given a member of anchor_cls, emit product_state" injected every
+        # tick. The promoted motif is thus reliably re-produced everywhere as a NETWORK-VISIBLE class, so
+        # later collectives can build closures ON TOP of earlier ones and the competence ceiling can climb.
+        # The reaction repertoire grows with achieved competence — the competence analogue of reification,
+        # kept in the network (the exp049 fix). catalytic_law=False (default) ⇒ byte-identical.
+        self.catalytic_law = False
+        self.catalyst_period = 400
+        self.catalyst_max = 16
+        self._catalysts: list = []     # list of (anchor_cls, product_state) learned catalytic reactions
+        self._catalyst_cls: set = set()  # (anchor_cls, product_cls) pairs already promoted (dedup)
         # exp018 collective fitness: how a surviving deme's chance of founding a
         # propagule is set. "size" (the exp017 default) weights by deme headcount —
         # but the global reservoir cap pins every deme to ~the same size, so
@@ -1114,6 +1130,40 @@ class CombinatorPhysics:
         self._reified[sym] = best[1]
         self._reified_cls.add(best[0])
 
+    def _harvest_catalyst(self) -> None:
+        """exp053: promote the most closure-central production of the highest-competence deme to a shared
+        catalytic reaction (anchor_cls -> product_state). Reads the previous generation's networks (called
+        before deme reproduction clears them). Deterministic: every set is sorted before use, and the pick
+        consumes no RNG. Stays in the network (a reaction, not an opaque atom — the exp049 fix)."""
+        alive = sorted(pi for pi, e in self._deme_edges.items() if e)
+        if not alive:
+            return
+        best_pi = max(alive, key=lambda pi: self._deme_competence(pi))  # ties: lowest patch index (alive sorted)
+        edges = self._deme_edges.get(best_pi, {})
+        producers = {f for (f, _q) in edges}
+        products = {q for (_f, q) in edges}
+        core = producers & products                       # the autocatalytic closure core
+        core_edges = [(e, n) for e, n in edges.items() if e[0] in core and e[1] in core]
+        if not core_edges:
+            return
+        (anchor_cls, prod_cls), _ = max(sorted(core_edges), key=lambda kv: kv[1])  # busiest core edge
+        key = (anchor_cls, prod_cls)
+        if key in self._catalyst_cls:
+            return
+        buf = self._niche.get(best_pi, [])                # recent product states of this deme
+        prod_state = None
+        for st in reversed(buf):                          # most-recent representative state of prod_cls
+            if canonical_cls(st) == prod_cls:
+                prod_state = st
+                break
+        if prod_state is None:
+            return
+        self._catalysts.append((anchor_cls, prod_state))
+        self._catalyst_cls.add(key)
+        if len(self._catalysts) > self.catalyst_max:      # evict oldest (bounded repertoire)
+            old = self._catalysts.pop(0)
+            self._catalyst_cls.discard((old[0], canonical_cls(old[1])))
+
     def propose(self, universe: Universe, rng: Noise):
         reactions: list[Reaction] = []
 
@@ -1171,11 +1221,33 @@ class CombinatorPhysics:
                 reactions.append(Reaction(inputs=(), consume=(),
                                           outputs=((nf, "expr"),), via="feed"))
 
+        # exp053 CATALYTIC LAW inject: fire each learned catalyst — reliably re-produce a promoted competent
+        # motif everywhere as a NETWORK-VISIBLE class (a reaction anchored on a present member, the exp049
+        # fix vs an opaque atom), so later collectives can build closures on top of earlier ones. Consumes
+        # RNG only when catalytic_law is on ⇒ off is byte-identical.
+        if self.catalytic_law and self._catalysts:
+            present: dict = {}
+            for o in universe.organizations.values():
+                present.setdefault(o.cls, []).append(o.uid)
+            for anchor_cls, product_state in self._catalysts:
+                uids = present.get(anchor_cls)
+                if uids:
+                    anchor_uid = rng.choice(sorted(uids))     # sorted before rng — Ω-0.33 determinism
+                    reactions.append(Reaction(inputs=(anchor_uid,), consume=(),
+                                              outputs=((product_state, "expr"),), via="catalyst"))
+
         # exp034 in-level reification: on its own cadence, promote a persistent motif to a
         # new primitive (grows self.atoms). No RNG consumed => reify_period=0 byte-identical.
         if (self.reify_period and universe.tick > 0
                 and universe.tick % self.reify_period == 0):
             self._reify_promote()
+
+        # exp053 CATALYTIC LAW harvest: every catalyst_period, promote the most closure-central production
+        # of the highest-competence deme to a shared catalyst. Runs BEFORE deme reproduction (which clears
+        # the networks). No RNG ⇒ catalytic_law=False is byte-identical.
+        if (self.catalytic_law and self.catalyst_period and universe.tick > 0
+                and universe.tick % self.catalyst_period == 0):
+            self._harvest_catalyst()
 
         # deme-level reproduction round (multi-level selection)
         if (self.deme_gen and self.n_patches > 0 and universe.tick > 0
@@ -1457,6 +1529,9 @@ def _make(seed, experiment, **overrides):
     physics.reify_by = str(overrides.get("reify_by", "frequency"))            # exp049 competence reify
     physics.coevolve_frozen = bool(overrides.get("coevolve_frozen", False))   # exp052 Red Queen control
     physics.freeze_gen = int(overrides.get("freeze_gen", 5))                  # exp052 snapshot generation
+    physics.catalytic_law = bool(overrides.get("catalytic_law", False))       # exp053 substrate-law feedback
+    physics.catalyst_period = int(overrides.get("catalyst_period", 400))      # exp053 harvest cadence
+    physics.catalyst_max = int(overrides.get("catalyst_max", 16))             # exp053 repertoire cap
     if physics.substrate in ("typed", "typed_path", "tree"):  # atoms over n_types base types
         physics.atoms = tuple(f"y{i}" for i in range(physics.n_types))
     # exp031 level stack: an explicit promoted alphabet (a tier's atoms ARE the lower
@@ -2335,3 +2410,36 @@ def build_redqueen(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("type_resolution", 3)
     overrides.setdefault("network_template", 0.5)       # exp040 heredity channel — ON (competence CAN breed)
     return _make(seed, "exp052", **overrides)
+
+
+@register("exp053")
+def build_catalytic(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp053 — THE CATALYTIC LAW × THE RED QUEEN: does a substrate law that changes with achieved
+    competence finally make competence a RATE? Seven experiments (exp044–052) moved the competence LEVEL
+    but never the SLOPE. exp049 named the one untried move and diagnosed why its attempt failed — reifying
+    a competent module to a NEW ATOM hides its structure in an opaque primitive, out of the measured
+    network. `catalytic_law` does it as a REACTION: every catalyst_period ticks it promotes the most
+    closure-central production of the highest-competence deme to a persistent shared catalyst (anchor_cls →
+    product_state), injected every tick, so competent structure becomes a reusable, NETWORK-VISIBLE
+    construction operation later collectives build closures on top of. Runs on the exp052 Red Queen base
+    (the strongest competence-*level* platform, with non-collapsing networks). This is the headline
+    combination cell of a 2×2 factorial (catalytic_law × {closure, redqueen}); the study runs all four.
+    Question: does competence COMPOUND (slope > 0) under a receding target PLUS a network-visible law
+    feedback, where every fixed-law route left it flat? `catalytic_law=False` ⇒ exp001–052 byte-identical."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "redqueen")    # the receding target (exp052) — best platform
+    overrides.setdefault("propagule_bias", "network")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("network_template", 0.5)       # exp040 heredity channel — ON
+    overrides.setdefault("catalytic_law", True)         # exp053 — the substrate-law feedback, ON
+    overrides.setdefault("catalyst_period", 400)
+    return _make(seed, "exp053", **overrides)
