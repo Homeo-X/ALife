@@ -382,6 +382,21 @@ class CombinatorPhysics:
         # differentially transmitted (parts competing inside the collective, not only whole demes
         # against each other). Off => the exp046 random/network propagule.
         self.within_select = False
+        # exp052 RED QUEEN (coevolutionary target): the self-improvement arc (exp044–049) showed
+        # competence never compounds because selection is against a FIXED target — the substrate law
+        # bounds achievable competence and selection only finds that bound. exp042 tried a self-expanding
+        # scalar bar, but a single GLOBAL number chasing the frontier with lag flattened its own gradient.
+        # deme_fitness="redqueen" grounds the receding target in a real, LOCAL rival: a deme is rewarded
+        # for how much its own competence EXCEEDS a spatial neighbour's (max(0, comp(s) - comp(rival))).
+        # As neighbours co-adapt the bar rises with the field — a frequency/spatially-dependent arms race
+        # (the biological driver of open-ended competence), and — unlike an offense/coverage rule —
+        # winning REQUIRES building competence, not idiosyncratic dead-ends. coevolve_frozen=True is the
+        # decisive control: it scores against each rival's FROZEN competence captured at freeze_gen (the
+        # bar never moves — no arms race), isolating the *receding* target from the fitness form.
+        # Off => byte-identical.
+        self.coevolve_frozen = False
+        self.freeze_gen = 5
+        self._frozen_prod: dict[int, frozenset] = {}   # patch -> producer-set snapshot at freeze_gen (control)
         # exp018 collective fitness: how a surviving deme's chance of founding a
         # propagule is set. "size" (the exp017 default) weights by deme headcount —
         # but the global reservoir cap pins every deme to ~the same size, so
@@ -754,6 +769,17 @@ class CombinatorPhysics:
             self._pending_edges.clear()
             self._pending_src.clear()
 
+        # exp052 RED QUEEN control: capture each deme's COMPETENCE once, at freeze_gen, as a FROZEN bar.
+        # The frozen arm then always scores rivals against this fixed reference (no arms race) — the
+        # control that isolates the *receding* target. Identity-only, no RNG; only when
+        # redqueen+coevolve_frozen ⇒ byte-identical otherwise.
+        if (self.deme_fitness == "redqueen" and self.coevolve_frozen and not self._frozen_prod
+                and self.deme_gen and universe.tick // self.deme_gen >= self.freeze_gen):
+            # full coverage: every patch gets a frozen producer-set (empty if no network) so the control
+            # is a consistently FIXED reference for every rival — no fall-through to a live comparison.
+            for p in range(self.n_patches):
+                self._frozen_prod[p] = frozenset(f for (f, _q) in self._deme_edges.get(p, {}))
+
         alive = [p for p, m in by_patch.items() if m]
         if len(alive) < 2:
             return
@@ -829,6 +855,38 @@ class CombinatorPhysics:
                         present = {o.cls for o in by_patch.get(s, ())}
                         return 0.05 + sum(v for cls, v in cr.items() if cls in present)
                     weights = [_creditw(s) for s in survivors]
+                elif self.deme_fitness == "redqueen":
+                    # exp052 RED QUEEN: reward a deme for (a) its own autocatalytic CLOSURE — the
+                    # competence the arc measures — AND (b) the fraction of its closure CORE (the
+                    # producers∩products self-maintaining loop) that a spatial RIVAL cannot yet produce.
+                    # (b) is a ZERO-SUM, receding antagonism: as the rival co-acquires those classes as
+                    # producers, the deme's advantage vanishes and it must innovate NEW closed structure —
+                    # an arms race whose gradient does not vanish (the flaw a relative-competence bar and
+                    # exp042's scalar share). Crucially (b) is closure-ALIGNED (novelty *within* the
+                    # self-maintaining core), so out-racing the rival BUILDS competence rather than
+                    # idiosyncratic dead-ends. With a LIVE rival the target co-adapts; with coevolve_frozen
+                    # the rival's producers are a frozen snapshot (fixed target — isolates the receding
+                    # target from the fitness form).
+                    def _rqw(s):
+                        es = self._deme_edges.get(s, {})
+                        producers_s = {f for (f, _q) in es}
+                        core_s = producers_s & {q for (_f, q) in es}
+                        cl = self._deme_closure(s)
+                        nbrs = [n for n in sorted(self._neighbors(s)) if by_patch.get(n)]
+                        if nbrs:
+                            r = rng.choice(nbrs)
+                        else:
+                            others = [p for p in sorted(survivors) if p != s]
+                            if not others:
+                                return 0.05 + cl
+                            r = rng.choice(others)
+                        if self.coevolve_frozen and r in self._frozen_prod:
+                            prod_r = self._frozen_prod[r]       # fixed target (control)
+                        else:
+                            prod_r = {f for (f, _q) in self._deme_edges.get(r, {})}  # live, co-adapting
+                        novel = len(core_s - prod_r) / max(1, len(core_s)) if core_s else 0.0
+                        return 0.05 + cl + novel
+                    weights = [_rqw(s) for s in survivors]
                 else:
                     weights = [len(by_patch[s]) for s in survivors]
                 if self.coop:
@@ -1397,6 +1455,8 @@ def _make(seed, experiment, **overrides):
     physics.reify_period = int(overrides.get("reify_period", 0))
     physics.reify_max_atoms = int(overrides.get("reify_max_atoms", 0))
     physics.reify_by = str(overrides.get("reify_by", "frequency"))            # exp049 competence reify
+    physics.coevolve_frozen = bool(overrides.get("coevolve_frozen", False))   # exp052 Red Queen control
+    physics.freeze_gen = int(overrides.get("freeze_gen", 5))                  # exp052 snapshot generation
     if physics.substrate in ("typed", "typed_path", "tree"):  # atoms over n_types base types
         physics.atoms = tuple(f"y{i}" for i in range(physics.n_types))
     # exp031 level stack: an explicit promoted alphabet (a tier's atoms ARE the lower
@@ -2242,3 +2302,36 @@ def build_competence_reify(seed: int = 0, **overrides) -> tuple[Physics, Config]
     overrides.setdefault("reify_period", 400)           # reify a module every 400 ticks
     overrides.setdefault("reify_by", "closure")         # exp049 — reify COMPETENT (closure) structure
     return _make(seed, "exp049", **overrides)
+
+
+@register("exp052")
+def build_redqueen(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp052 — THE RED QUEEN: does a COEVOLUTIONARY (receding) target break the competence-flat wall?
+    The self-improvement arc (exp044–049) showed collective competence never compounds, and diagnosed a
+    common cause: selection is always against a FIXED target — the substrate law bounds achievable
+    competence and selection only finds that bound (exp042's self-expanding scalar bar was ungrounded and
+    flattened its own gradient). This tries the biological driver of open-ended competence never yet
+    tested here — an ARMS RACE. `deme_fitness="redqueen"` rewards a deme for beating a spatial RIVAL on
+    its own cross-production network: offense = products it builds that the rival cannot rebuild, defense
+    = rival products it can itself rebuild. As demes improve, the rival co-adapts, so the winning bar
+    RECEDES with the field — a target with no fixed ceiling, grounded in real rivals. Runs the exp030
+    both-corner base. Question: does competence finally COMPOUND (slope > 0 over generations) under a
+    receding coevolutionary target, where every fixed-target route left it flat? The decisive control is
+    `coevolve_frozen=True` — identical fitness form, but rivals are scored against a FROZEN snapshot
+    (fixed target, no arms race), isolating the receding target from the fitness form. `deme_fitness`
+    default ⇒ exp001–051 byte-identical."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)               # a 4×6 torus so demes have spatial rivals
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "redqueen")    # antagonistic, coevolving target
+    overrides.setdefault("propagule_bias", "network")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("network_template", 0.5)       # exp040 heredity channel — ON (competence CAN breed)
+    return _make(seed, "exp052", **overrides)

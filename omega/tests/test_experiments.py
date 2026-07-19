@@ -937,6 +937,39 @@ class TestScientificClaims(unittest.TestCase):
                   max_reactions_per_tick=c0.max_reactions_per_tick).run(4000)
         self.assertEqual(len(p0.atoms), m0)                  # no reification ⇒ constructed alphabet frozen
 
+    def test_exp052_redqueen_scores_against_a_coevolving_or_frozen_rival(self):
+        # Ω-0.41 (the Red Queen): exp052 grounds a RECEDING target in local rivals — deme_fitness=
+        # "redqueen" rewards a deme's own closure plus the fraction of its closure core a spatial rival
+        # cannot yet produce (a zero-sum, closure-aligned antagonism). Pin the mechanism: redqueen is the
+        # exp052 default on the both-corner base; a cross-production network + competence are built; the
+        # coevolve arm keeps NO frozen snapshot while the frozen control captures one at freeze_gen; and
+        # it is gated (deme_fitness default ⇒ exp001–051 unaffected). Whether the receding target makes
+        # competence COMPOUND is the study's science (EXP052_FINDINGS.md).
+        from statistics import mean
+        from omega.kernel.universe import Universe
+        from omega.kernel.scheduler import Scheduler
+        from omega.substrate.noise import Noise
+
+        def run(**ov):
+            p, c = get_experiment("exp052")(seed=0, ticks=3000, **ov)
+            rng = Noise(c.seed); u = Universe(total_quanta=c.total_quanta); p.seed(u, rng)
+            Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                      max_reactions_per_tick=c.max_reactions_per_tick).run(3000)
+            return p
+
+        p = run()
+        self.assertEqual(p.deme_fitness, "redqueen")          # coevolutionary target is the exp052 default
+        self.assertTrue(p.network_template)                    # heredity channel on ⇒ competence can breed
+        self.assertTrue(p._deme_edges)                         # a cross-production network forms
+        act = [pi for pi in range(p.n_patches) if p._deme_edges.get(pi)]
+        self.assertGreater(mean(p._deme_competence(pi) for pi in act) if act else 0.0, 0.0)  # competence built
+        self.assertFalse(p._frozen_prod)                       # the LIVE arm freezes no rival (target co-moves)
+
+        # the frozen control captures a fixed rival snapshot (full patch coverage) ⇒ target does NOT move.
+        pf = run(coevolve_frozen=True)
+        self.assertTrue(pf._frozen_prod)                       # a frozen reference was captured
+        self.assertEqual(len(pf._frozen_prod), pf.n_patches)   # full coverage — a fixed bar for every rival
+
     def test_global_novelty_sketch_is_conservative_and_eviction_robust(self):
         # Ω-0.31 (consolidation): the eviction-robust GLOBAL novelty estimator (a scalable Bloom
         # 'ever-seen' set) is the instrument that settles "stays open forever". Its two load-bearing
