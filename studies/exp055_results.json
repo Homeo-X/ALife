@@ -1,0 +1,40 @@
+{
+  "max_tiers": 3,
+  "ticks_per_tier": 6000,
+  "n_seeds": 6,
+  "summary": {
+    "self-similar": {
+      "per_tier_competence_fulldepth": [
+        1.2430790741800741,
+        1.2264167007551554,
+        1.26278245559374
+      ],
+      "within_seed_across_tier_slope": 0.009851690706832866,
+      "collapse_rate": 0.0,
+      "mean_depth": 3,
+      "n_full": 6
+    },
+    "compounding": {
+      "per_tier_competence_fulldepth": [
+        1.7758176079498935,
+        1.786045104515246,
+        1.7871247375635884
+      ],
+      "within_seed_across_tier_slope": 0.005653564806847533,
+      "collapse_rate": 0.33333333333333337,
+      "mean_depth": 2.1666666666666665,
+      "n_full": 4
+    },
+    "derived-law": {
+      "per_tier_competence_fulldepth": [
+        1.7758176079498935,
+        1.891046352502768,
+        1.9387055534311772
+      ],
+      "within_seed_across_tier_slope": 0.08144397274064188,
+      "collapse_rate": 0.33333333333333337,
+      "mean_depth": 2.1666666666666665,
+      "n_full": 4
+    }
+  }
+}

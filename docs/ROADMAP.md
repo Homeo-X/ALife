@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.43).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.44).
 
 ## Where we are
 
@@ -12,10 +12,11 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   *continuing* construction (a rate, not a stock).
 - **Scale** — bounded-memory long-run mode + a 3× faster kernel, validated (Ω-0.21).
 - **A living world** — persistent, checkpointing, watchable, spatial, steerable (Ω-0.22–0.23).
-- **Toward minds — the self-improvement arc found the answer (Ω-0.24–0.42).** A precise, honest,
+- **Toward minds — the self-improvement arc found the answer (Ω-0.24–0.44).** A precise, honest,
   falsifiable sequence that ruled out every *selection/representation* route to compounding collective
-  competence, located the reason in the *substrate law*, and then **broke the wall** with a
-  substrate-law feedback (exp053). Collectives carry evolvable state (exp037) and
+  competence, located the reason in the *substrate law*, **broke the wall** with a substrate-law feedback
+  (exp053, competence compounds *within* a level), and then lifted it to the tower (exp055, a
+  competence-derived transition compounds competence *across* levels too — modestly, at a diversity cost). Collectives carry evolvable state (exp037) and
   selectable coherence (exp038); developmental inheritance broke the exp028 heredity ceiling (exp040);
   a higher heredity level (exp041) and a self-expanding scalar objective (exp042) don't compound →
   **goal representation** missing; exp044 supplied it (heritable composable goals → first
@@ -45,8 +46,11 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   the **saturation**: it is *not* the catalyst cap but the substrate's **optimal construction richness** —
   the competent-structure space at that richness is finite, and expanding the law along construction *depth*
   (an Earned Law) *lowers* competence (deeper paths starve cross-production). Competence is a rate up to that
-  optimal-richness ceiling, then a stock; the open question is whether a *level transition* (exp055) can add
-  a new *kind* of richness (composing lower-tier collectives) rather than deeper paths.
+  optimal-richness ceiling, then a stock. exp055 (Ω-0.44) then lifted the question to the *tower* — a
+  transition that DERIVES each level's law from the level below's competence makes competence rise *across*
+  levels (derived-law +0.081/tier vs flat fixed-law), a first meta-ratchet — but ~⅓ of compounding towers
+  collapse (competence selection thins the collective diversity recursion needs, the exp047 tension at the
+  tower scale), so the across-level ratchet is real but bounded by a competence-vs-diversity trade-off.
 
 ## The next frontier (highest priority)
 
@@ -75,10 +79,15 @@ open piece of "truly unbounded."
   ceiling**: too shallow exhausts competent structure (exp053 saturation), too deep starves cross-production
   (exp054). The remaining open question: is there a law expansion that adds competent-structure *capacity at
   the optimal richness* (like more reactions) **without** exhausting the closure-core edge supply — e.g.
-  a **level transition** that composes lower-tier collectives into a genuinely NEW level (exp055,
-  transition-as-rule-change), where the "new richness" is a new *kind* of entity, not deeper paths.
-  *Predicted falsification of exp055:* deriving the higher tier's law from lower-tier competence still
-  plateaus / caps the tower depth → the ceiling is intrinsic to the substrate family, not the fixed law.
+  a **level transition** that composes lower-tier collectives into a genuinely NEW level. exp055 (Ω-0.44)
+  tested this: deriving each tier's law from the lower tier's competence **does** make competence rise
+  across levels (derived-law +0.081/tier vs flat fixed-compounding), the first across-level meta-ratchet —
+  but ~⅓ of compounding towers **collapse** (competence selection thins the collective diversity the
+  transition needs). So the across-level ratchet is real but **bounded by a competence-vs-diversity
+  trade-off**. The open follow-on: a **gentler competence pressure** that preserves collective diversity
+  (keeping towers deep) while still compounding competence — can both be had at once, or is the trade-off
+  fundamental? *Predicted falsification:* every competence pressure strong enough to compound also collapses
+  tower depth → competence and open-ended recursion are irreducibly in tension.
 - **A strong non-type law.** exp035's tree law reached the "both corner" only weakly (~10× lower
   heredity than linear paths). Is there a genuinely different law with *strong* both-corner heredity?
 - **Fully heterogeneous per-level physics.** The tower is still largely the self-similar engine;

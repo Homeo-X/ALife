@@ -6,6 +6,53 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.44 — Transition-as-rule-change: deriving each level's law from the level below makes competence rise *across* levels (a modest meta-ratchet) — shadowed by a competence-vs-diversity tension (exp055)
+
+**Date:** 2026-07-19 · **Status:** complete · **Verdict:** a **qualified positive** — the user's #1 idea
+(major transitions as rule-changes) makes competence compound *across* levels, modestly, on towers that
+survive; bounded by the arc's competence-vs-diversity tension. Detail: `studies/EXP055_FINDINGS.md`. Gated;
+`law_from_competence` off + `builder='exp030'` ⇒ pre-exp055 tower byte-identical.
+
+exp053 made competence a rate *within* a level; exp054 showed expanding the law along construction *depth*
+fails (the richness must be a new *kind*). The level tower is that new kind — each tier composes the
+tier-below's *collectives* as atoms. exp055 runs the compounding law (exp053: Catalytic Law + Red Queen)
+at every tier, and `law_from_competence` makes the **transition change the law**: the next tier's
+Catalytic-Law strength (`catalyst_period = base/(1+competence)`) is **derived from the lower tier's
+achieved competence**. Arms: `self-similar` (exp030 tower), `compounding` (exp053 per tier, fixed law),
+`derived-law` (exp053 + law-from-competence).
+
+**Result (3 tiers × 6000 ticks/tier, 6 seeds; survivorship-robust metrics — the naive per-tier average is
+a spurious +0.23 slope because collapsed towers bias the top-tier mean).** Three findings: (1) **per-tier
+level lift** — the compounding law puts every tier at competence **~1.8** vs the self-similar tower's
+**~1.25** (within-level compounding transfers up the tower); (2) **the rule-change compounds across
+levels** — on full-depth towers the **derived-law** arm rises monotonically **1.78 → 1.89 → 1.94**
+(within-seed slope **+0.081/tier**), ~8× the *fixed*-compounding arm's flat **+0.006** and self-similar's
++0.010, so *deriving* each level's law from the level below is the active ingredient (running the
+compounding law per tier is not enough); (3) **a robustness cost** — both compounding arms **collapse ~⅓
+of towers** (33% fail full depth; some produce 0 stable collectives at tier 0 and die) where the
+self-similar tower **never** collapses.
+
+**Interpretation.** The user's #1 gets a qualified yes: a transition that changes the law
+competence-dependently makes competence a *rate across levels*, the first such result — but it is
+**shadowed by the exp047 tension at the tower scale**: competence selection yields highly competent but
+*less diverse* collectives, so fewer distinct signatures seed the next tier and the tower stalls or dies.
+The meta-ratchet is real but fragile — competence rises up the towers that survive, while the same
+pressure that drives the rise thins the diversity the tower needs to keep recursing. The two-rung
+competence-dependent-physics sequence closes graded: exp053 compounds competence *within* a level (clean
+positive); exp054 (depth expansion) failed; exp055 (rule-change) compounds it *across* levels modestly,
+bounded by competence-vs-diversity.
+
+### Is / is not
+- **Is:** the first *across-level* competence rise (derived-law +0.081/tier, monotonic on 4 surviving
+  seeds, ≫ fixed-law +0.006), showing the competence-derived *rule-change* — not the richer law alone — is
+  the active ingredient; plus a large per-tier level lift (~1.8 vs ~1.25).
+- **Is not:** an unbounded or robust meta-ratchet — 33% of compounding towers collapse (vs 0%
+  self-similar), the survivor-n is modest (4/6), and the magnitude deserves more seeds. Competence and
+  open-ended tower depth are in tension; a gentler competence pressure that preserves diversity is the
+  open follow-on.
+
+---
+
 ## Milestone Ω-0.43 — The Earned Law: expanding *construction depth* does not break exp053's saturation — the real limit is optimal richness, not a fixed law (exp054)
 
 **Date:** 2026-07-19 · **Status:** complete · **Verdict:** an **honest negative that locates why competence

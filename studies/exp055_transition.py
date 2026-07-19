@@ -57,54 +57,59 @@ def main() -> None:
     with ProcessPoolExecutor(max_workers=4) as ex:
         rows = list(ex.map(_run, jobs))
 
-    def per_tier(arm):
-        rs = [r for r in rows if r["arm"] == arm]
-        # average competence per tier across seeds that reached that tier
-        out = []
-        for tier in range(max_tiers):
-            vals = [r["competence"][tier] for r in rs if len(r["competence"]) > tier]
-            out.append(mean(vals) if vals else 0.0)
-        return out
-
+    # Survivorship-robust metrics: (a) COLLAPSE RATE — fraction of seeds whose tower does not reach full
+    # depth (competence selection can collapse the collective diversity the transition needs, killing the
+    # tower); (b) per-tier competence and within-seed across-tier slope on FULL-DEPTH towers ONLY (so a
+    # rise is not an artifact of averaging the top tier over only the seeds that survived to it).
     summary = {}
     for arm, _kw in ARMS:
         rs = [r for r in rows if r["arm"] == arm]
-        pt = per_tier(arm)
-        summary[arm] = {"per_tier_competence": pt,
+        full = [r for r in rs if len(r["competence"]) == max_tiers and r["depth"] == max_tiers]
+        collapse_rate = 1.0 - len(full) / len(rs)
+        pt_full = [mean(r["competence"][t] for r in full) for t in range(max_tiers)] if full else [0.0] * max_tiers
+        within_slope = mean(_slope(r["competence"]) for r in full) if full else 0.0
+        summary[arm] = {"per_tier_competence_fulldepth": pt_full,
+                        "within_seed_across_tier_slope": within_slope,
+                        "collapse_rate": collapse_rate,
                         "mean_depth": mean(r["depth"] for r in rs),
-                        "across_tier_slope": _slope(pt)}
+                        "n_full": len(full)}
     json.dump({"max_tiers": max_tiers, "ticks_per_tier": ticks, "n_seeds": n, "summary": summary},
               open("studies/exp055_results.json", "w"), indent=2)
 
     print(f"exp055 — does competence compound ACROSS levels? ({max_tiers} tiers, {ticks} ticks/tier, {n} seeds)\n")
     for arm, _kw in ARMS:
         s = summary[arm]
-        print(f"  [{arm}]  per-tier competence " + " ".join(f"{v:.3f}" for v in s["per_tier_competence"]))
-        print(f"    across-tier slope {s['across_tier_slope']:+.4f}, mean tower depth {s['mean_depth']:.2f}\n")
+        print(f"  [{arm}]  full-depth per-tier competence " +
+              " ".join(f"{v:.3f}" for v in s["per_tier_competence_fulldepth"]) +
+              f"  ({s['n_full']}/{n} full-depth)")
+        print(f"    within-seed across-tier slope {s['within_seed_across_tier_slope']:+.4f}, "
+              f"collapse rate {s['collapse_rate']:.2f}, mean depth {s['mean_depth']:.2f}\n")
 
-    ss, co, dv = (summary[a]["across_tier_slope"] for a in ("self-similar", "compounding", "derived-law"))
-    ssm = summary["self-similar"]["per_tier_competence"]
-    com = summary["compounding"]["per_tier_competence"]
-    dvm = summary["derived-law"]["per_tier_competence"]
-    print(f"  across-tier competence slope: self-similar {ss:+.4f} | compounding {co:+.4f} | derived-law {dv:+.4f}")
-    print(f"  top-tier competence: self-similar {ssm[-1]:.3f} | compounding {com[-1]:.3f} | derived-law {dvm[-1]:.3f}\n")
+    co = summary["compounding"]; dv = summary["derived-law"]; ss = summary["self-similar"]
+    print(f"  per-tier competence LEVEL (full-depth mean): self-similar "
+          f"{mean(ss['per_tier_competence_fulldepth']):.3f} | compounding "
+          f"{mean(co['per_tier_competence_fulldepth']):.3f} | derived-law {mean(dv['per_tier_competence_fulldepth']):.3f}")
+    print(f"  within-seed across-tier slope: self-similar {ss['within_seed_across_tier_slope']:+.4f} | "
+          f"compounding {co['within_seed_across_tier_slope']:+.4f} | derived-law {dv['within_seed_across_tier_slope']:+.4f}")
+    print(f"  collapse rate (tower fails full depth): self-similar {ss['collapse_rate']:.2f} | "
+          f"compounding {co['collapse_rate']:.2f} | derived-law {dv['collapse_rate']:.2f}\n")
 
-    compounds_up = co > 0.01 and mean(com) > mean(ssm)
-    derived_adds = dv > co + 0.005 or dvm[-1] > com[-1] + 0.05
-    if compounds_up and derived_adds:
-        print("  => COMPETENCE COMPOUNDS ACROSS LEVELS, AND THE RULE-CHANGE ADDS: running the compounding")
-        print("     law at each tier makes competence RISE up the tower (a meta-ratchet), and DERIVING the")
-        print("     higher law from the lower level's competence beats the fixed compounding law — major")
-        print("     transitions as rule-changes compound competence across levels (the user's #1).")
-    elif compounds_up:
-        print("  => COMPETENCE COMPOUNDS ACROSS LEVELS (the compounding law lifts competence up the tower,")
-        print("     well above the self-similar tower), but DERIVING the law from competence does not clearly")
-        print("     beat the fixed compounding law — the level transition (a new KIND of richness) is what")
-        print("     matters, not the specific competence-derivation. A meta-ratchet either way.")
+    level_lift = mean(co["per_tier_competence_fulldepth"]) > mean(ss["per_tier_competence_fulldepth"]) + 0.2
+    compounds_across = dv["within_seed_across_tier_slope"] > 0.03 and dv["collapse_rate"] <= ss["collapse_rate"]
+    if compounds_across:
+        print("  => COMPETENCE COMPOUNDS ACROSS LEVELS: on full-depth towers competence rises tier-over-tier")
+        print("     under the derived law, without a robustness cost — major transitions as rule-changes")
+        print("     make competence a rate up the tower.")
+    elif level_lift:
+        print("  => A PER-TIER LEVEL LIFT, NOT AN ACROSS-LEVEL RATE (honest, nuanced): the compounding law")
+        print("     raises competence at EVERY tier well above the self-similar tower (it transfers up the")
+        print("     tower), but on full-depth towers competence is ~flat across levels (no meta-ratchet), and")
+        print("     the compounding law COLLAPSES some towers (higher collapse rate) — competence selection")
+        print("     collapses the collective diversity the transition needs (the exp047 tension at the tower")
+        print("     scale). Competence and open-ended level-recursion are in tension.")
     else:
-        print("  => NO ACROSS-LEVEL COMPOUNDING (honest negative): competence does not rise up the tower even")
-        print("     with the compounding law per tier — the transition adds a new kind of richness but")
-        print("     competence stays level-bounded. The ratchet is within-level only.")
+        print("  => NO EFFECT / NEGATIVE: the compounding law does not lift per-tier competence above the")
+        print("     self-similar tower on full-depth towers.")
 
 
 if __name__ == "__main__":

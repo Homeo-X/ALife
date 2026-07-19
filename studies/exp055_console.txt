@@ -1,0 +1,21 @@
+exp055 — does competence compound ACROSS levels? (3 tiers, 6000 ticks/tier, 6 seeds)
+
+  [self-similar]  full-depth per-tier competence 1.243 1.226 1.263  (6/6 full-depth)
+    within-seed across-tier slope +0.0099, collapse rate 0.00, mean depth 3.00
+
+  [compounding]  full-depth per-tier competence 1.776 1.786 1.787  (4/6 full-depth)
+    within-seed across-tier slope +0.0057, collapse rate 0.33, mean depth 2.17
+
+  [derived-law]  full-depth per-tier competence 1.776 1.891 1.939  (4/6 full-depth)
+    within-seed across-tier slope +0.0814, collapse rate 0.33, mean depth 2.17
+
+  per-tier competence LEVEL (full-depth mean): self-similar 1.244 | compounding 1.783 | derived-law 1.869
+  within-seed across-tier slope: self-similar +0.0099 | compounding +0.0057 | derived-law +0.0814
+  collapse rate (tower fails full depth): self-similar 0.00 | compounding 0.33 | derived-law 0.33
+
+  => A PER-TIER LEVEL LIFT, NOT AN ACROSS-LEVEL RATE (honest, nuanced): the compounding law
+     raises competence at EVERY tier well above the self-similar tower (it transfers up the
+     tower), but on full-depth towers competence is ~flat across levels (no meta-ratchet), and
+     the compounding law COLLAPSES some towers (higher collapse rate) — competence selection
+     collapses the collective diversity the transition needs (the exp047 tension at the tower
+     scale). Competence and open-ended level-recursion are in tension.
