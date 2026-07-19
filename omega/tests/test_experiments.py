@@ -1040,6 +1040,29 @@ class TestScientificClaims(unittest.TestCase):
         p0 = run(earned_law=False)
         self.assertFalse(p0._deme_reach)                     # no earned law ⇒ construction reach unchanged
 
+    def test_exp055_transition_derives_the_next_tier_law_from_achieved_competence(self):
+        # Ω-0.44 (transition-as-rule-change): exp055 makes the level transition CHANGE THE LAW — each tier
+        # runs the exp053 compounding physics, and law_from_competence derives the next tier's Catalytic-Law
+        # strength (catalyst_period = base/(1+competence)) from THIS tier's achieved competence. Pin the
+        # mechanism: per-tier competence is measured; with the derived law a competent tier grants its
+        # successor a STRONGER (shorter-period) law than the base; and it is gated (law_from_competence off
+        # + builder='exp030' ⇒ the pre-exp055 tower, byte-identical). Whether competence compounds ACROSS
+        # levels is the study's science (EXP055_FINDINGS.md).
+        from omega.levels.stack import run_stack
+
+        r = run_stack(max_tiers=3, seed=0, ticks=2500, builder="exp053", law_from_competence=True,
+                      catalyst_period=400)
+        self.assertGreaterEqual(len(r.tiers), 2)                 # the tower recurses
+        self.assertGreater(r.tiers[0].competence, 0.0)           # per-tier competence is measured
+        # a competent tier-0 grants tier-1 a STRONGER (shorter-period) law than the base 400.
+        self.assertEqual(r.tiers[0].catalyst_period, 400)        # tier 0 gets the base law
+        self.assertLess(r.tiers[1].catalyst_period, 400)         # tier 1's law is DERIVED (stronger) from tier-0 competence
+
+        # gating: the default tower (law_from_competence off, builder exp030) is unchanged — a fixed law
+        # every tier (period stays the base), i.e. no competence-derived rule change.
+        r0 = run_stack(max_tiers=2, seed=0, ticks=1500)
+        self.assertTrue(all(t.catalyst_period == 400 for t in r0.tiers))  # no derivation ⇒ fixed law
+
     def test_global_novelty_sketch_is_conservative_and_eviction_robust(self):
         # Ω-0.31 (consolidation): the eviction-robust GLOBAL novelty estimator (a scalable Bloom
         # 'ever-seen' set) is the instrument that settles "stays open forever". Its two load-bearing

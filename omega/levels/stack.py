@@ -44,6 +44,8 @@ class TierResult:
     classes_ever: int
     heritable: bool            # self > null: the tier supports heritable collectives
     physics: str = "exp030"    # which registered engine ran this tier (exp033: may vary)
+    competence: float = 0.0    # exp055: mean achieved competence of this tier's live demes
+    catalyst_period: int = 0   # exp055: the (competence-derived) law strength granted to this tier
 
 
 @dataclass
@@ -69,9 +71,20 @@ def _stable_collectives(physics) -> list:
     return sigs
 
 
+def _tier_competence(physics) -> float:
+    """exp055: mean achieved competence (closure + breed-true + network breadth, exp042) of this tier's
+    live demes — the quantity a rule-changing transition reads to grant the NEXT tier its law."""
+    live = [pi for pi in list(physics._deme_edges) if physics._deme_edges.get(pi)]
+    if not live:
+        return 0.0
+    return mean(physics._deme_competence(pi) for pi in live)
+
+
 def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
               base_n_types: int = 32, resolution: int = 3,
-              min_collectives: int = 2, levels: tuple | None = None) -> StackResult:
+              min_collectives: int = 2, levels: tuple | None = None,
+              builder: str = "exp030", law_from_competence: bool = False,
+              catalyst_period: int = 400) -> StackResult:
     """Run the recursive tower; return per-tier results and the unfold map.
 
     ``levels`` makes the per-tier physics **first-class** (exp033): a sequence of
@@ -81,25 +94,42 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
     ``exp030`` engine climbing itself. All three share the type-atom interface (each
     ingests the promoted alphabet via ``explicit_atoms`` and exposes deme signatures),
     so the promotion bridge is physics-agnostic. ``levels=None`` (default) runs
-    ``exp030`` at every tier — byte-identical to the pre-exp033 tower."""
+    ``exp030`` at every tier — byte-identical to the pre-exp033 tower.
+
+    exp055 TRANSITION-AS-RULE-CHANGE: ``builder`` sets a single per-tier engine for all
+    tiers (default ``exp030``; ``exp053`` runs the competence-compounding Catalytic-Law +
+    Red-Queen physics at every level). ``law_from_competence`` makes the transition itself
+    change the law: the NEXT tier's Catalytic-Law strength (``catalyst_period``) is DERIVED
+    from THIS tier's achieved competence — a more competent level grants its successor a
+    faster-harvesting (stronger) law, ``period = base / (1 + competence)``. Unlike exp054's
+    (failed) *deeper* law, the richness added here is a **new kind** — the higher tier
+    composes lower-tier *collectives* — so cross-production stays viable. Off ⇒ the exact
+    pre-exp055 tower (``law_from_competence`` False and ``builder='exp030'`` ⇒ byte-identical)."""
     alphabet = [f"y{i}" for i in range(base_n_types)]          # tier-0 base types
     tiers: list = []
     unfold: dict = {}
+    period = catalyst_period                                    # law strength granted to the current tier
     for tier in range(max_tiers):
-        builder = 'exp030' if not levels else levels[tier % len(levels)]
-        physics, cfg = get_experiment(builder)(
+        b = builder if not levels else levels[tier % len(levels)]
+        physics, cfg = get_experiment(b)(
             seed=seed, ticks=ticks, n_patches=24, propagule_mode='source',
             explicit_atoms=tuple(alphabet), n_types=len(alphabet),
-            type_resolution=resolution)
+            type_resolution=resolution, catalyst_period=period)
         res = _harness_run(physics, cfg)
         collectives = _stable_collectives(physics)
+        comp = _tier_competence(physics)
         hs = mean(physics._hered_edge_self) if physics._hered_edge_self else 0.0
         hn = mean(physics._hered_edge_null) if physics._hered_edge_null else 0.0
         tiers.append(TierResult(
             tier=tier, level=LEVEL_NAMES[min(tier, len(LEVEL_NAMES) - 1)],
             alphabet_size=len(alphabet), n_collectives=len(collectives),
             hered_self=hs, hered_null=hn, novelty=res.open_endedness["novelty_rate"],
-            classes_ever=res.final_classes_total, heritable=hs > hn, physics=builder))
+            classes_ever=res.final_classes_total, heritable=hs > hn, physics=b,
+            competence=comp, catalyst_period=period))
+        # exp055: the transition GRANTS the next tier a law derived from this tier's competence —
+        # a competent level earns its successor a stronger (faster-harvesting) Catalytic Law.
+        if law_from_competence:
+            period = max(50, int(catalyst_period / (1.0 + comp)))
         # promote this tier's collectives to the next tier's alphabet (reification)
         if len(collectives) < min_collectives or hs <= hn:
             break
