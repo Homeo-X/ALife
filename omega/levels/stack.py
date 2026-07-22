@@ -84,7 +84,8 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
               base_n_types: int = 32, resolution: int = 3,
               min_collectives: int = 2, levels: tuple | None = None,
               builder: str = "exp030", law_from_competence: bool = False,
-              catalyst_period: int = 400, competence_pressure: float = 1.0) -> StackResult:
+              catalyst_period: int = 400, competence_pressure: float = 1.0,
+              tier0_warmup: float = 1.0) -> StackResult:
     """Run the recursive tower; return per-tier results and the unfold map.
 
     ``levels`` makes the per-tier physics **first-class** (exp033): a sequence of
@@ -104,15 +105,23 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
     faster-harvesting (stronger) law, ``period = base / (1 + competence)``. Unlike exp054's
     (failed) *deeper* law, the richness added here is a **new kind** — the higher tier
     composes lower-tier *collectives* — so cross-production stays viable. Off ⇒ the exact
-    pre-exp055 tower (``law_from_competence`` False and ``builder='exp030'`` ⇒ byte-identical)."""
+    pre-exp055 tower (``law_from_competence`` False and ``builder='exp030'`` ⇒ byte-identical).
+
+    exp057 BOOTSTRAP WARMUP: exp056 showed tower robustness is bootstrapping-limited — ~20% of
+    seeds never establish a *tier-0* network, and the tower dies at depth 0. ``tier0_warmup`` runs
+    the founding tier (tier 0) for ``int(ticks * tier0_warmup)`` ticks (higher tiers unchanged), a
+    direct test of whether that floor is *timing*-limited (a slow-to-establish tier 0 that more
+    warmup cures) or *structural* (seeds that simply cannot network). ``tier0_warmup=1.0`` (default)
+    ⇒ byte-identical."""
     alphabet = [f"y{i}" for i in range(base_n_types)]          # tier-0 base types
     tiers: list = []
     unfold: dict = {}
     period = catalyst_period                                    # law strength granted to the current tier
     for tier in range(max_tiers):
         b = builder if not levels else levels[tier % len(levels)]
+        tticks = int(ticks * tier0_warmup) if tier == 0 else ticks   # exp057: front-load tier-0 establishment
         physics, cfg = get_experiment(b)(
-            seed=seed, ticks=ticks, n_patches=24, propagule_mode='source',
+            seed=seed, ticks=tticks, n_patches=24, propagule_mode='source',
             explicit_atoms=tuple(alphabet), n_types=len(alphabet),
             type_resolution=resolution, catalyst_period=period,
             competence_pressure=competence_pressure)

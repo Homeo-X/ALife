@@ -1,0 +1,33 @@
+{
+  "max_tiers": 5,
+  "ticks_per_tier": 3500,
+  "n_seeds": 8,
+  "warmups": [
+    1.0,
+    2.0,
+    4.0
+  ],
+  "summary": {
+    "1.0": {
+      "tier0_fail_rate": 0.25,
+      "mean_depth": 3.25,
+      "across_tier_slope": 0.03334586195186984,
+      "n_survivors": 5,
+      "n": 8
+    },
+    "2.0": {
+      "tier0_fail_rate": 0.125,
+      "mean_depth": 3.625,
+      "across_tier_slope": -0.0749530842368597,
+      "n_survivors": 6,
+      "n": 8
+    },
+    "4.0": {
+      "tier0_fail_rate": 0.125,
+      "mean_depth": 3.625,
+      "across_tier_slope": -0.08677703573036043,
+      "n_survivors": 6,
+      "n": 8
+    }
+  }
+}

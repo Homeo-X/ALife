@@ -1091,6 +1091,31 @@ class TestScientificClaims(unittest.TestCase):
                       competence_pressure=0.5)
         self.assertGreaterEqual(len(r.tiers), 1)
 
+    def test_exp057_tier0_warmup_extends_founding_tier_and_is_byte_identical_at_one(self):
+        # Ω-0.46 (the bootstrapping floor): exp056 relocated the limit on tower robustness to tier-0
+        # establishment (~20% of seeds never form a founding network). exp057 adds a gated tier0_warmup
+        # that runs ONLY the founding tier for int(ticks*warmup) ticks (higher tiers unchanged), a direct
+        # test of whether that floor is timing- or structurally-limited (the study's science,
+        # EXP057_FINDINGS.md). Pin the mechanism: warmup=1.0 (default) ⇒ the tower is byte-identical; a
+        # larger warmup genuinely changes the founding tier (more ticks ⇒ different tier-0 class history),
+        # and it threads the tower without error.
+        from omega.levels.stack import run_stack
+
+        def tier0_classes(**ov):
+            return run_stack(max_tiers=2, seed=1, ticks=1500, builder="exp053",
+                             law_from_competence=True, **ov).tiers[0].classes_ever
+
+        base = tier0_classes()                                  # default warmup 1.0
+        self.assertEqual(tier0_classes(tier0_warmup=1.0), base)      # 1.0 ⇒ byte-identical founding tier
+        self.assertNotEqual(tier0_classes(tier0_warmup=3.0), base)   # more warmup ⇒ different tier-0 history
+
+        # full off-path byte-identity across the whole tower (every tier's class count), and it runs.
+        a = run_stack(max_tiers=3, seed=2, ticks=1200, builder="exp053", law_from_competence=True)
+        b = run_stack(max_tiers=3, seed=2, ticks=1200, builder="exp053", law_from_competence=True,
+                      tier0_warmup=1.0)
+        self.assertEqual([t.classes_ever for t in a.tiers], [t.classes_ever for t in b.tiers])
+        self.assertGreaterEqual(len(a.tiers), 1)
+
     def test_global_novelty_sketch_is_conservative_and_eviction_robust(self):
         # Ω-0.31 (consolidation): the eviction-robust GLOBAL novelty estimator (a scalable Bloom
         # 'ever-seen' set) is the instrument that settles "stays open forever". Its two load-bearing
