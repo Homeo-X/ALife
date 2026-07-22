@@ -6,6 +6,43 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.46 — The tower's bootstrapping floor is STRUCTURAL, not timing-limited — and tier-0 warmup actively harms the meta-ratchet (exp057)
+
+**Date:** 2026-07-22 · **Status:** complete · **Verdict:** a **double negative** — the exp056 bootstrapping
+floor is not curable with more founding time (it is structural), and front-loading tier-0 *lowers* the
+across-level compounding. Detail: `studies/EXP057_FINDINGS.md`. Gated; `tier0_warmup=1.0` (default) ⇒ the
+tower is byte-identical.
+
+exp056 (Ω-0.45) relocated the limit on tower robustness to tier-0 establishment (~20% of seeds never form a
+founding network → the tower dies at depth 0) and left open *why*: timing or structure? exp057 adds a gated
+`tier0_warmup` that runs the founding tier (tier 0) alone for `int(ticks · tier0_warmup)` ticks — higher
+tiers unchanged — and sweeps it in the derived-law tower (`builder="exp053"`, `law_from_competence`).
+
+**Result (5 tiers × 3500 ticks/tier, 16 seeds).** The floor is **structural**: warmup drops the tier-0
+failure rate by ~1 seed (0.125 → 0.0625) and **plateaus at 2×** — 4× (14,000 tier-0 ticks) buys nothing more
+— and mean depth stays **flat** (~3.7–3.9), so curing bootstrapping does *not* unlock deeper towers. The
+failing seeds cannot network at any horizon. And warmup **actively harms** the exp055 meta-ratchet: the
+across-tier competence slope goes **monotonically more negative** (−0.039 → −0.102 → −0.162) because
+over-warming tier 0 drives it to the exp053/054 optimal-richness ceiling, leaving the higher tiers no
+headroom to compound above the promoted alphabet.
+
+**Interpretation.** Two honest negatives cleanly rule out a lever. Tower robustness will not yield to *more
+time* — the structurally-starved seeds need a **starting-diversity** intervention (a diversity-seeded /
+founder-networked tier-0 start), not a longer horizon. And "give the foundation longer to set" is worse than
+neutral for the tower: because competence saturates at optimal richness, a front-loaded tier 0 spends the
+ceiling early and the meta-ratchet has nothing to climb. The exp055/056 compounding is best served by tiers
+of **equal, moderate** length.
+
+### Is / is not
+- **Is:** a clean double negative that answers the exp056 open question — the bootstrapping floor is
+  structural (warmup plateaus at 2×), and warmup monotonically degrades the across-tier slope (three arms).
+- **Is not:** a measurement of *how much* warmup helps robustness (the 0.125 → 0.0625 move is a single seed,
+  at the noise floor) — the claim is that it does **not** decisively help, not that it helps by one seed. The
+  1× slope baseline (−0.039) is configuration-dependent (5 short tiers vs exp056's 3 long ones); the robust
+  finding is the *direction* under warmup, not the absolute level.
+
+---
+
 ## Milestone Ω-0.45 — There is NO competence–diversity trade-off: full competence pressure dominates on every axis — the exp055 tension is retracted (exp056)
 
 **Date:** 2026-07-19 · **Status:** complete · **Verdict:** a **corrective negative** — the Ω-0.44

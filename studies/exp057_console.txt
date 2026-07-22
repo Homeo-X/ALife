@@ -1,0 +1,12 @@
+exp057 — is the bootstrapping floor timing-limited or structural? (5 tiers, 3500 ticks/tier, 16 seeds)
+
+   warmup  tier0_fail  mean_depth     slope  survivors
+     1.0x        0.12        3.69   -0.0388      12/16
+     2.0x        0.06        3.88   -0.1023      13/16
+     4.0x        0.06        3.75   -0.1617      13/16
+
+  warmup 1.0x -> 4x:  tier0-fail 0.12 -> 0.06 (drop +0.06),  mean-depth 3.69 -> 3.75 (gain +0.06)
+
+  => STRUCTURAL — the tier-0 failure rate is FLAT across warmup: the failing seeds cannot
+     network at any horizon. Tower robustness has an intrinsic floor that warmup does not
+     move; reducing it needs a different lever (diversity-seeded start, not more time).

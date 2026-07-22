@@ -1,7 +1,7 @@
 {
   "max_tiers": 5,
   "ticks_per_tier": 3500,
-  "n_seeds": 8,
+  "n_seeds": 16,
   "warmups": [
     1.0,
     2.0,
@@ -9,25 +9,25 @@
   ],
   "summary": {
     "1.0": {
-      "tier0_fail_rate": 0.25,
-      "mean_depth": 3.25,
-      "across_tier_slope": 0.03334586195186984,
-      "n_survivors": 5,
-      "n": 8
+      "tier0_fail_rate": 0.125,
+      "mean_depth": 3.6875,
+      "across_tier_slope": -0.03879491954721836,
+      "n_survivors": 12,
+      "n": 16
     },
     "2.0": {
-      "tier0_fail_rate": 0.125,
-      "mean_depth": 3.625,
-      "across_tier_slope": -0.0749530842368597,
-      "n_survivors": 6,
-      "n": 8
+      "tier0_fail_rate": 0.0625,
+      "mean_depth": 3.875,
+      "across_tier_slope": -0.10229704079544902,
+      "n_survivors": 13,
+      "n": 16
     },
     "4.0": {
-      "tier0_fail_rate": 0.125,
-      "mean_depth": 3.625,
-      "across_tier_slope": -0.08677703573036043,
-      "n_survivors": 6,
-      "n": 8
+      "tier0_fail_rate": 0.0625,
+      "mean_depth": 3.75,
+      "across_tier_slope": -0.1617267241720799,
+      "n_survivors": 13,
+      "n": 16
     }
   }
 }

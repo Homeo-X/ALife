@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.45).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.46).
 
 ## Where we are
 
@@ -12,11 +12,13 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   *continuing* construction (a rate, not a stock).
 - **Scale** — bounded-memory long-run mode + a 3× faster kernel, validated (Ω-0.21).
 - **A living world** — persistent, checkpointing, watchable, spatial, steerable (Ω-0.22–0.23).
-- **Toward minds — the self-improvement arc found the answer (Ω-0.24–0.44).** A precise, honest,
+- **Toward minds — the self-improvement arc found the answer (Ω-0.24–0.46).** A precise, honest,
   falsifiable sequence that ruled out every *selection/representation* route to compounding collective
   competence, located the reason in the *substrate law*, **broke the wall** with a substrate-law feedback
-  (exp053, competence compounds *within* a level), and then lifted it to the tower (exp055, a
-  competence-derived transition compounds competence *across* levels too — modestly, at a diversity cost). Collectives carry evolvable state (exp037) and
+  (exp053, competence compounds *within* a level), lifted it to the tower (exp055, a competence-derived
+  transition compounds competence *across* levels too), showed there is **no competence–diversity trade-off**
+  paid for it (exp056, at full pressure the tower is *most* robust), and pinned that tower robustness is
+  limited by a **structural** bootstrapping floor — not curable with more founding time (exp057). Collectives carry evolvable state (exp037) and
   selectable coherence (exp038); developmental inheritance broke the exp028 heredity ceiling (exp040);
   a higher heredity level (exp041) and a self-expanding scalar objective (exp042) don't compound →
   **goal representation** missing; exp044 supplied it (heritable composable goals → first
@@ -98,8 +100,16 @@ open piece of "truly unbounded."
   exp055 ~⅓ collapse (n=4) was **bootstrapping variance** (seeds never establishing a tier-0 network), not
   a competence-diversity mechanism → 20% at proper n. So competence-compounding and open-ended tower depth
   are **not** in tension here; the residual limit on tower robustness is bootstrapping variance (the ~20%
-  of seeds that never establish a tier-0 network), not competence selection. *Open follow-on:* what reduces
-  that ~20% bootstrapping floor — longer tier-0 warmup, or a diversity-seeded start?
+  of seeds that never establish a tier-0 network), not competence selection. **exp057 (Ω-0.46)** probed that
+  floor directly and ruled out the *timing* lever: a gated tier-0 warmup drops the failure rate by only ~1
+  seed and **plateaus at 2×** (4× / 14k tier-0 ticks buys nothing), leaving mean depth flat — so the floor is
+  **structural**, not a matter of time. And *over*-warming tier 0 drives it to the exp053/054 optimal-richness
+  ceiling and flips the across-tier slope **monotonically negative** (−0.039 → −0.102 → −0.162), so
+  front-loading the foundation actively starves the meta-ratchet. *Open follow-on (sharpened):* the structural
+  floor needs a **starting-diversity** intervention — seed tier 0 with a richer / founder-networked start
+  (more founding patches, explicit founder signatures), not a longer horizon. *Predicted falsification:* even
+  a diversity-seeded tier-0 start leaves the failure floor fixed → some seeds are intrinsically non-networking
+  and tower robustness has a hard floor independent of both time and starting diversity.
 - **A strong non-type law.** exp035's tree law reached the "both corner" only weakly (~10× lower
   heredity than linear paths). Is there a genuinely different law with *strong* both-corner heredity?
 - **Fully heterogeneous per-level physics.** The tower is still largely the self-similar engine;
