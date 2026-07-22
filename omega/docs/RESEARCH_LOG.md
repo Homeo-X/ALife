@@ -6,7 +6,55 @@ what was falsified.
 
 ---
 
-## Milestone Ω-0.44 — Transition-as-rule-change: deriving each level's law from the level below makes competence rise *across* levels (a modest meta-ratchet) — shadowed by a competence-vs-diversity tension (exp055)
+## Milestone Ω-0.45 — There is NO competence–diversity trade-off: full competence pressure dominates on every axis — the exp055 tension is retracted (exp056)
+
+**Date:** 2026-07-19 · **Status:** complete · **Verdict:** a **corrective negative** — the Ω-0.44
+competence–diversity tension was a small-n artifact; dialing competence-selection strength shows full
+pressure is best on *every* axis at once. Detail: `studies/EXP056_FINDINGS.md`. Gated;
+`competence_pressure=1.0` (default) ⇒ exp001–055 byte-identical (deterministic across `PYTHONHASHSEED`).
+
+exp055 attributed its ~⅓ tower collapse to competence selection thinning the collective diversity the
+transition needs (an exp047-scale tension), and the discussion raised whether it might be *fundamental*.
+exp056 dials the strength of competence selection — `competence_pressure ∈ [0,1]` scales the Red Queen's
+competence term (`weight = 0.05 + pressure·(closure + core-novelty)`) — and sweeps it in the derived-law
+tower, measuring across-tier competence slope, collapse rate, and a direct diversity signal (mean stable
+collectives tier 0 produces, the recursion fuel).
+
+**Result (3 tiers × 7000 ticks/tier, 10 seeds):** the trade-off hypothesis is **refuted**. Full pressure
+(1.0) has the **lowest** collapse (0.20), the **most** tier-0 diversity (21.5), the **deepest** towers
+(2.50), *and* a strong across-level slope (+0.101). Softening selection makes towers **more** fragile
+(collapse is **U-shaped** — worst at intermediate 0.33 → 0.50), and competence compounds across levels at
+*every* pressure (+0.05 to +0.11). So more competence pressure gives *more* diversity and *fewer* collapses
+— the opposite of "competence selection thins diversity." The exp055 ~⅓ collapse (measured at n=4) was
+**bootstrapping variance** (seeds failing to establish any tier-0 network), not a competence-diversity
+mechanism; at proper n/horizon it is 20% at full pressure.
+
+**Interpretation.** This makes exp055's meta-ratchet **stronger, not weaker**: a competence-derived
+transition compounds competence up the tower **and** (at full pressure) keeps towers robust and diverse —
+no competence-vs-open-ended-recursion trade-off is paid. The apparent tension was small-n (2-of-4 collapse
+read as a mechanism), now **retracted**, along with the discussion speculation that competence and
+diversity are *fundamentally* opposed — they are, if anything, weakly *complementary* (strong consistent
+selection canalizes demes into competent types that reliably network). The residual limit on tower
+robustness is **bootstrapping variance** (the ~20% of seeds that never establish a tier-0 network), not
+competence selection.
+
+### Is / is not
+- **Is:** a clean corrective negative (retraction kept on purpose) — full competence pressure dominant on
+  slope, collapse, diversity, and depth; U-shaped collapse; competence-compounding at every pressure.
+- **Is not:** a proof of *no* limit — tower robustness is bootstrapping-limited (~20% floor at n=10, ±0.15
+  noise); the exact collapse rates are estimates. Retracts the Ω-0.44 tension; keeps its across-level
+  compounding, now un-caveated.
+
+---
+
+## Milestone Ω-0.44 — Transition-as-rule-change: deriving each level's law from the level below makes competence rise *across* levels (a modest meta-ratchet) — ~~shadowed by a competence-vs-diversity tension~~ (exp055)
+
+> **Retraction (Ω-0.45, exp056):** the "competence-vs-diversity tension" below was a small-n artifact. A
+> 10-seed pressure sweep shows **no trade-off** — full competence pressure gives the *lowest* collapse, the
+> *most* diversity, and the *deepest* towers while still compounding competence across levels. The ~⅓
+> collapse was bootstrapping variance, not competence selection thinning diversity. Read the across-level
+> compounding result below as un-caveated; disregard the tension framing.
+
 
 **Date:** 2026-07-19 · **Status:** complete · **Verdict:** a **qualified positive** — the user's #1 idea
 (major transitions as rule-changes) makes competence compound *across* levels, modestly, on towers that

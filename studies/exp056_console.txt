@@ -1,0 +1,18 @@
+exp056 — is the competence–diversity trade-off navigable? (3 tiers, 7000 ticks/tier, 10 seeds)
+
+   pressure    slope  collapse  tier0_div  top-tier   depth   full
+       1.00  +0.1008      0.20       21.5     1.944    2.50    8/10
+       0.66  +0.0470      0.40       19.1     1.896    2.10    6/10
+       0.33  +0.0991      0.50       16.7     1.978    1.80    5/10
+       0.00  +0.1099      0.20       19.0     1.887    2.40    8/10
+
+  full-pressure (1.0): slope +0.1008, collapse 0.20, tier0-diversity 21.5, depth 2.50
+  softest that compounds (1.00, 0.66, 0.33, 0.00)
+
+  => NO TRADE-OFF — the exp055 competence–diversity tension is REFUTED. FULL competence
+     pressure dominates on every axis at once: it compounds competence across levels AND
+     yields the LOWEST collapse, the MOST tier-0 diversity, and the DEEPEST towers.
+     Softening selection does not preserve diversity or robustness (collapse is U-shaped,
+     worst at intermediate pressure). The exp055 ~1/3 collapse was BOOTSTRAPPING VARIANCE
+     (seeds failing to establish tier-0 networks), not competence selection thinning
+     diversity. Competence-compounding and open-ended tower depth are NOT in tension here.

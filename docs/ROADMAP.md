@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.44).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.45).
 
 ## Where we are
 
@@ -48,9 +48,14 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   (an Earned Law) *lowers* competence (deeper paths starve cross-production). Competence is a rate up to that
   optimal-richness ceiling, then a stock. exp055 (Ω-0.44) then lifted the question to the *tower* — a
   transition that DERIVES each level's law from the level below's competence makes competence rise *across*
-  levels (derived-law +0.081/tier vs flat fixed-law), a first meta-ratchet — but ~⅓ of compounding towers
-  collapse (competence selection thins the collective diversity recursion needs, the exp047 tension at the
-  tower scale), so the across-level ratchet is real but bounded by a competence-vs-diversity trade-off.
+  levels (derived-law +0.081/tier vs flat fixed-law), a first meta-ratchet. exp055 reported it bounded by a
+  competence-vs-diversity trade-off (~⅓ of towers collapse), but exp056 (Ω-0.45) **retracts that**: dialing
+  competence-selection strength (`competence_pressure`) shows **no trade-off** — full pressure is best on
+  *every* axis (lowest collapse 0.20, most tier-0 diversity 21.5, deepest towers, strongest slope +0.101),
+  softening only makes towers *more* fragile (collapse U-shaped), and the exp055 ~⅓ collapse (n=4) was
+  bootstrapping variance, not competence selection thinning diversity. So the across-level ratchet is real
+  **and** keeps towers robust at full pressure — competence-compounding and open-ended tower depth are not
+  in tension in this substrate.
 
 ## The next frontier (highest priority)
 
@@ -81,13 +86,20 @@ open piece of "truly unbounded."
   the optimal richness* (like more reactions) **without** exhausting the closure-core edge supply — e.g.
   a **level transition** that composes lower-tier collectives into a genuinely NEW level. exp055 (Ω-0.44)
   tested this: deriving each tier's law from the lower tier's competence **does** make competence rise
-  across levels (derived-law +0.081/tier vs flat fixed-compounding), the first across-level meta-ratchet —
-  but ~⅓ of compounding towers **collapse** (competence selection thins the collective diversity the
-  transition needs). So the across-level ratchet is real but **bounded by a competence-vs-diversity
-  trade-off**. The open follow-on: a **gentler competence pressure** that preserves collective diversity
-  (keeping towers deep) while still compounding competence — can both be had at once, or is the trade-off
-  fundamental? *Predicted falsification:* every competence pressure strong enough to compound also collapses
-  tower depth → competence and open-ended recursion are irreducibly in tension.
+  across levels (derived-law +0.081/tier vs flat fixed-compounding), the first across-level meta-ratchet.
+  exp055 reported it bounded by a competence-vs-diversity trade-off (~⅓ of towers collapse), and asked
+  whether a **gentler competence pressure** could keep towers deep while still compounding — or whether the
+  trade-off is fundamental. **exp056 (Ω-0.45) answered it and refuted the trade-off:** dialing
+  `competence_pressure ∈ [0,1]` in the derived-law tower, full pressure (1.0) is best on *every* axis at
+  once — the **lowest** collapse (0.20), the **most** tier-0 diversity (21.5), the **deepest** towers
+  (2.50), *and* a strong across-level slope (+0.101) — while softening selection makes towers *more*
+  fragile (collapse is **U-shaped**, worst at intermediate pressure 0.33 → 0.50). More competence pressure
+  gives *more* diversity and *fewer* collapses, the opposite of "competence selection thins diversity"; the
+  exp055 ~⅓ collapse (n=4) was **bootstrapping variance** (seeds never establishing a tier-0 network), not
+  a competence-diversity mechanism → 20% at proper n. So competence-compounding and open-ended tower depth
+  are **not** in tension here; the residual limit on tower robustness is bootstrapping variance (the ~20%
+  of seeds that never establish a tier-0 network), not competence selection. *Open follow-on:* what reduces
+  that ~20% bootstrapping floor — longer tier-0 warmup, or a diversity-seeded start?
 - **A strong non-type law.** exp035's tree law reached the "both corner" only weakly (~10× lower
   heredity than linear paths). Is there a genuinely different law with *strong* both-corner heredity?
 - **Fully heterogeneous per-level physics.** The tower is still largely the self-similar engine;

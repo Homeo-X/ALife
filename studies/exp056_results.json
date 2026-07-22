@@ -1,0 +1,65 @@
+{
+  "max_tiers": 3,
+  "ticks_per_tier": 7000,
+  "n_seeds": 10,
+  "pressures": [
+    1.0,
+    0.66,
+    0.33,
+    0.0
+  ],
+  "summary": {
+    "1.0": {
+      "collapse_rate": 0.19999999999999996,
+      "across_tier_slope": 0.10082457987933931,
+      "top_tier_competence": 1.9440817868849443,
+      "per_tier_competence": [
+        1.7424326271262656,
+        1.9729914660562775,
+        1.9440817868849443
+      ],
+      "tier0_diversity": 21.5,
+      "mean_depth": 2.5,
+      "n_full": 8
+    },
+    "0.66": {
+      "collapse_rate": 0.4,
+      "across_tier_slope": 0.04696623402677578,
+      "top_tier_competence": 1.8955579175505881,
+      "per_tier_competence": [
+        1.8016254494970365,
+        1.9290873863493703,
+        1.8955579175505881
+      ],
+      "tier0_diversity": 19.1,
+      "mean_depth": 2.1,
+      "n_full": 6
+    },
+    "0.33": {
+      "collapse_rate": 0.5,
+      "across_tier_slope": 0.09906254061633446,
+      "top_tier_competence": 1.9775044916995408,
+      "per_tier_competence": [
+        1.7793794104668719,
+        1.9619492957272184,
+        1.9775044916995408
+      ],
+      "tier0_diversity": 16.7,
+      "mean_depth": 1.8,
+      "n_full": 5
+    },
+    "0.0": {
+      "collapse_rate": 0.19999999999999996,
+      "across_tier_slope": 0.10989253465503318,
+      "top_tier_competence": 1.8867372093305868,
+      "per_tier_competence": [
+        1.6669521400205205,
+        1.9089809936942057,
+        1.8867372093305868
+      ],
+      "tier0_diversity": 19,
+      "mean_depth": 2.4,
+      "n_full": 8
+    }
+  }
+}
