@@ -85,7 +85,7 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
               min_collectives: int = 2, levels: tuple | None = None,
               builder: str = "exp030", law_from_competence: bool = False,
               catalyst_period: int = 400, competence_pressure: float = 1.0,
-              tier0_warmup: float = 1.0) -> StackResult:
+              tier0_warmup: float = 1.0, tier0_patches: int = 24) -> StackResult:
     """Run the recursive tower; return per-tier results and the unfold map.
 
     ``levels`` makes the per-tier physics **first-class** (exp033): a sequence of
@@ -112,7 +112,13 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
     the founding tier (tier 0) for ``int(ticks * tier0_warmup)`` ticks (higher tiers unchanged), a
     direct test of whether that floor is *timing*-limited (a slow-to-establish tier 0 that more
     warmup cures) or *structural* (seeds that simply cannot network). ``tier0_warmup=1.0`` (default)
-    ⇒ byte-identical."""
+    ⇒ byte-identical.
+
+    exp058 DIVERSITY-SEEDED START: exp057 ruled out *time* as the lever for that structural floor and
+    sharpened the follow-on — the failing seeds need a richer *starting diversity*, not a longer
+    horizon. ``tier0_patches`` runs the founding tier (tier 0) with more independent founder demes
+    (default 24, the per-tier count; higher tiers unchanged), a direct test of whether more founders
+    move the floor that warmup could not. ``tier0_patches=24`` (default) ⇒ byte-identical."""
     alphabet = [f"y{i}" for i in range(base_n_types)]          # tier-0 base types
     tiers: list = []
     unfold: dict = {}
@@ -120,8 +126,9 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
     for tier in range(max_tiers):
         b = builder if not levels else levels[tier % len(levels)]
         tticks = int(ticks * tier0_warmup) if tier == 0 else ticks   # exp057: front-load tier-0 establishment
+        npatch = tier0_patches if tier == 0 else 24                  # exp058: more founder demes at tier 0
         physics, cfg = get_experiment(b)(
-            seed=seed, ticks=tticks, n_patches=24, propagule_mode='source',
+            seed=seed, ticks=tticks, n_patches=npatch, propagule_mode='source',
             explicit_atoms=tuple(alphabet), n_types=len(alphabet),
             type_resolution=resolution, catalyst_period=period,
             competence_pressure=competence_pressure)

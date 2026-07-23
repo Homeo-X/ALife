@@ -1116,6 +1116,30 @@ class TestScientificClaims(unittest.TestCase):
         self.assertEqual([t.classes_ever for t in a.tiers], [t.classes_ever for t in b.tiers])
         self.assertGreaterEqual(len(a.tiers), 1)
 
+    def test_exp058_tier0_patches_widens_founding_tier_and_is_byte_identical_at_default(self):
+        # Ω-0.47 (the diversity-seeded start): exp057 showed the bootstrapping floor is structural (warmup
+        # can't cure it) and pointed to a starting-DIVERSITY lever. exp058 adds a gated tier0_patches that
+        # runs the founding tier (tier 0) with more independent founder demes (higher tiers unchanged) —
+        # whether more founders move the floor is the study's science (EXP058_FINDINGS.md). Pin the
+        # mechanism: tier0_patches=24 (default) ⇒ whole-tower byte-identical; more founders ⇒ different
+        # tier-0 history; and it threads the tower.
+        from omega.levels.stack import run_stack
+
+        def tier0_classes(**ov):
+            return run_stack(max_tiers=2, seed=2, ticks=1200, builder="exp053",
+                             law_from_competence=True, **ov).tiers[0].classes_ever
+
+        base = tier0_classes()                                  # default 24 founders
+        self.assertEqual(tier0_classes(tier0_patches=24), base)      # 24 ⇒ byte-identical founding tier
+        self.assertNotEqual(tier0_classes(tier0_patches=48), base)   # more founders ⇒ different tier-0 history
+
+        # full off-path byte-identity across the whole tower (every tier's class count).
+        a = run_stack(max_tiers=3, seed=3, ticks=1000, builder="exp053", law_from_competence=True)
+        b = run_stack(max_tiers=3, seed=3, ticks=1000, builder="exp053", law_from_competence=True,
+                      tier0_patches=24)
+        self.assertEqual([t.classes_ever for t in a.tiers], [t.classes_ever for t in b.tiers])
+        self.assertGreaterEqual(len(a.tiers), 1)
+
     def test_global_novelty_sketch_is_conservative_and_eviction_robust(self):
         # Ω-0.31 (consolidation): the eviction-robust GLOBAL novelty estimator (a scalable Bloom
         # 'ever-seen' set) is the instrument that settles "stays open forever". Its two load-bearing
