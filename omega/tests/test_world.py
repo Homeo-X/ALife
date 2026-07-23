@@ -156,6 +156,59 @@ class TestLivingWorldVitals(unittest.TestCase):
         os.remove(path)
 
 
+class TestTowerWorld(unittest.TestCase):
+    def test_live_tower_reproduces_batch_run_stack_when_un_evicted(self):
+        # Ω-0.49: the live TowerWorld runs the recursive tower persistently (levels emerge over
+        # wall-clock time). Faithfulness: a World with no eviction is the same deterministic function
+        # of its seed as the equivalent batch run, and each tier is built exactly as run_stack builds
+        # it — so an un-evicted live tower reproduces run_stack tier-for-tier.
+        from omega.levels.stack import run_stack
+        from omega.world.tower import TowerWorld
+        seed, ticks, mt = 0, 1500, 3
+        batch = run_stack(max_tiers=mt, seed=seed, ticks=ticks, builder="exp053", law_from_competence=True)
+        tw = TowerWorld(builder="exp053", seed=seed, tier_ticks=ticks, max_tiers=mt,
+                        law_from_competence=True, memory_horizon=0, relation_cap=0)
+        for _ in range(mt * 6):
+            if tw.done:
+                break
+            tw.step(ticks // 3)                              # chunking must be transparent
+        self.assertEqual([round(t.competence, 6) for t in batch.tiers],
+                         [round(t.competence, 6) for t in tw.tiers])   # tier-for-tier identical
+        self.assertEqual(batch.tower_depth, tw.tower_depth)
+
+    def test_live_tower_emerges_levels_and_compounds_competence(self):
+        # The headline: a persistent bounded-memory tower grows levels live and competence rises
+        # across the emergent tiers (the exp055 meta-ratchet, now live and watchable).
+        from omega.world.tower import TowerWorld
+        tw = TowerWorld(builder="exp053", seed=0, tier_ticks=2500, max_tiers=4, memory_horizon=20000)
+        while not tw.done and tw.total_ticks < 16000:
+            tw.step(1000)
+        st = tw.status()
+        self.assertGreaterEqual(st["tower_depth"], 2)                  # levels emerged live
+        self.assertTrue(any(e["kind"] == "level" for e in st["events"]))  # a level was born
+        comps = [t["competence"] for t in st["per_tier"]]
+        self.assertGreater(comps[-1], comps[0])                        # competence rose across levels
+
+    def test_tower_checkpoint_resume_is_identical(self):
+        # A live tower survives restarts: resume-then-continue == run-through (un-evicted).
+        import pickle
+        from omega.world.tower import TowerWorld
+        ref = TowerWorld(builder="exp053", seed=0, tier_ticks=1500, max_tiers=3,
+                         memory_horizon=0, relation_cap=0)
+        while not ref.done and ref.total_ticks < 6000:
+            ref.step(750)
+        w = TowerWorld(builder="exp053", seed=0, tier_ticks=1500, max_tiers=3,
+                       memory_horizon=0, relation_cap=0)
+        for _ in range(3):
+            w.step(750)
+        w2 = TowerWorld.from_bundle(pickle.loads(pickle.dumps(w.bundle())))
+        while not w2.done and w2.total_ticks < 6000:
+            w2.step(750)
+        self.assertEqual([round(t.competence, 6) for t in ref.tiers],
+                         [round(t.competence, 6) for t in w2.tiers])
+        self.assertEqual(ref.tower_depth, w2.tower_depth)
+
+
 class TestWorldInteraction(unittest.TestCase):
     def test_perturbations_apply_and_are_logged(self):
         w = World.create("world", seed=0)

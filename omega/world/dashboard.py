@@ -53,6 +53,22 @@ def render_terminal(s: dict) -> str:
     return "\n".join(L)
 
 
+def render_tower_terminal(st: dict) -> str:
+    """A compact ANSI snapshot of the LIVE recursive tower (levels emerging over time)."""
+    L = []
+    L.append(f"\033[1mΩ TOWER\033[0m  tick {st['total_ticks']:,}   depth {st['tower_depth']}   "
+             f"active tier {st['active_tier']}" + ("   \033[2m(complete)\033[0m" if st["done"] else ""))
+    for t in st["per_tier"]:
+        bar = "█" * max(0, min(30, int(t["competence"] * 12)))
+        mark = "\033[32m✓\033[0m" if t["heritable"] and t["collectives"] >= 2 else "\033[2m·\033[0m"
+        L.append(f"  {mark} tier {t['tier']} {t['level']:<14} competence {t['competence']:6.3f} "
+                 f"{bar}  ({t['collectives']} collectives)")
+    if not st["per_tier"]:
+        L.append("  \033[2m(tier 0 developing…)\033[0m")
+    L.append("\033[2mlevel births:\033[0m " + " · ".join(e["text"] for e in st["events"][:3]))
+    return "\n".join(L)
+
+
 # --- the browser dashboard (self-contained HTML + JS; polls /state.json) ---------------
 _PAGE = """<!doctype html><meta charset=utf-8><title>Ω World</title>
 <style>

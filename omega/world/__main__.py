@@ -31,6 +31,26 @@ def _load_or_create(args) -> World:
                         memory_horizon=args.memory_horizon, genuine_novelty=True)
 
 
+def _cmd_tower(args) -> None:
+    """Watch the LIVE recursive tower: levels emerge over wall-clock time (Ω-0.49)."""
+    from omega.world.tower import TowerWorld
+    from omega.world.dashboard import render_tower_terminal
+    tw = TowerWorld(builder=args.builder, seed=args.seed, tier_ticks=args.tier_ticks,
+                    max_tiers=args.max_tiers, law_from_competence=True,
+                    memory_horizon=args.memory_horizon)
+    target = None if args.ticks <= 0 else args.ticks
+    try:
+        while not tw.done and (target is None or tw.total_ticks < target):
+            tw.step(args.chunk)
+            sys.stdout.write("\033[2J\033[H" + render_tower_terminal(tw.status()) + "\n")
+            sys.stdout.flush()
+            if args.delay:
+                time.sleep(args.delay)
+    except KeyboardInterrupt:
+        pass
+    sys.stdout.write("\033[2J\033[H" + render_tower_terminal(tw.status()) + "\n")
+
+
 def _cmd_run(args) -> None:
     world = _load_or_create(args)
     if args.dashboard:
@@ -95,6 +115,14 @@ def main(argv=None) -> None:
     s.add_argument("--out", default="world_snapshot.html")
     s.add_argument("--warmup", type=int, default=2000)
     s.set_defaults(func=_cmd_snapshot)
+
+    t = sub.add_parser("tower", help="watch the live recursive tower (levels emerge over time)")
+    t.add_argument("--builder", default="exp053", help="per-tier physics (default the compounding law)")
+    t.add_argument("--tier-ticks", type=int, default=3000, help="ticks a tier matures before promotion")
+    t.add_argument("--max-tiers", type=int, default=6)
+    t.add_argument("--ticks", type=int, default=0, help="stop after N total ticks (0 = until it stalls)")
+    t.add_argument("--delay", type=float, default=0.0)
+    t.set_defaults(func=_cmd_tower)
 
     args = ap.parse_args(argv)
     args.func(args)
