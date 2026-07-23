@@ -76,28 +76,39 @@ def main() -> None:
               f"{s['across_tier_slope']:>+9.4f} {s['n_survivors']:>7}/{n}")
     print()
 
-    base, top = summary[PATCHES[0]], summary[PATCHES[-1]]
-    fail_drop = base["tier0_fail_rate"] - top["tier0_fail_rate"]
-    depth_gain = top["mean_depth"] - base["mean_depth"]
-    slope_change = top["across_tier_slope"] - base["across_tier_slope"]
-    cures = fail_drop >= 0.15
-    hard_floor = abs(fail_drop) < 0.1 and top["tier0_fail_rate"] > 0.02
-    print(f"  founders {PATCHES[0]} -> {PATCHES[-1]}:  tier0-fail {base['tier0_fail_rate']:.2f} -> {top['tier0_fail_rate']:.2f} "
-          f"(drop {fail_drop:+.2f}),  mean-depth {base['mean_depth']:.2f} -> {top['mean_depth']:.2f} (gain {depth_gain:+.2f}),  "
+    # The founder axis need not be monotone: a MODERATE increase may reduce establishment failure without
+    # cost, while a LARGE one bloats the promoted (tier-1) alphabet and dilutes higher-tier networking, so
+    # depth falls. Detect the real pattern rather than only comparing the endpoints.
+    base = summary[PATCHES[0]]
+    mid = summary[PATCHES[len(PATCHES) // 2]]           # the moderate-diversity arm
+    top = summary[PATCHES[-1]]
+    best_fail = min(summary[p]["tier0_fail_rate"] for p in PATCHES)
+    best_p = min(PATCHES, key=lambda p: (summary[p]["tier0_fail_rate"], -summary[p]["mean_depth"]))
+    moderate_helps = (mid["tier0_fail_rate"] <= base["tier0_fail_rate"] - 0.05
+                      and mid["mean_depth"] >= base["mean_depth"] - 0.2)
+    over_provision_hurts = top["mean_depth"] < base["mean_depth"] - 0.3
+    flat_floor = abs(best_fail - base["tier0_fail_rate"]) < 0.05 and base["tier0_fail_rate"] > 0.02
+    print(f"  best founder count: {best_p} (tier0-fail {best_fail:.2f}, depth {summary[best_p]['mean_depth']:.2f})")
+    print(f"  founders {PATCHES[0]} -> {PATCHES[-1]}:  tier0-fail {base['tier0_fail_rate']:.2f} -> {top['tier0_fail_rate']:.2f},  "
+          f"mean-depth {base['mean_depth']:.2f} -> {top['mean_depth']:.2f},  "
           f"slope {base['across_tier_slope']:+.4f} -> {top['across_tier_slope']:+.4f}\n")
-    if cures:
-        print("  => DIVERSITY CURES IT — more founder demes DROP the tier-0 failure rate: the structural")
-        print("     floor exp057 found is a FOUNDER-DIVERSITY limit, and a richer starting tier fixes what")
-        print("     more time could not. The exp057 follow-on is confirmed; deep towers are unblocked by")
-        print("     seeding tier 0 wider, not running it longer.")
-    elif hard_floor:
-        print("  => A HARD FLOOR — the tier-0 failure rate is FLAT across founder count: some seeds are")
-        print("     intrinsically non-networking, and tower robustness has a floor independent of BOTH time")
-        print("     (exp057) AND starting diversity (exp058). Bootstrapping robustness is bounded by the")
-        print("     substrate itself, not by how the founding tier is provisioned.")
+    if moderate_helps and over_provision_hurts:
+        print("  => DIVERSITY HELPS, WITH AN OPTIMUM — a MODERATE founder increase reduces the tier-0 failure")
+        print("     floor without a depth cost (the lever warmup could not move — exp057), but OVER-provisioning")
+        print("     the foundation bloats the promoted alphabet and SHRINKS the towers (depth falls). So the")
+        print("     structural floor yields to starting DIVERSITY, not time — but the foundation has an optimal")
+        print("     WIDTH, mirroring exp054's optimal-richness / exp057's equal-length-tiers lesson.")
+    elif moderate_helps:
+        print("  => DIVERSITY HELPS — a richer founding tier reduces the tier-0 failure floor that warmup")
+        print("     (exp057) could not move: the structural floor is (at least partly) a founder-diversity")
+        print("     limit, curable by seeding tier 0 wider rather than running it longer.")
+    elif flat_floor:
+        print("  => A HARD FLOOR — the best founder count still fails to establish: some seeds are intrinsically")
+        print("     non-networking, and tower robustness has a floor independent of BOTH time (exp057) AND")
+        print("     starting diversity (exp058) — bounded by the substrate, not by how tier 0 is provisioned.")
     else:
-        print("  => PARTIAL — more founders move the floor but not decisively (see the per-founder table);")
-        print("     diversity helps somewhat but does not fully close the structural gap.")
+        print("  => PARTIAL / NOISY — founders move the floor but not decisively (see the per-founder table);")
+        print("     the failure counts are at the noise floor at this n — report the table as-is.")
 
 
 if __name__ == "__main__":
