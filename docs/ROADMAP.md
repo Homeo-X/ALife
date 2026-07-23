@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.48).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.49).
 
 ## Where we are
 
@@ -19,6 +19,14 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   competence and ~2× the life signals of the exp030-era world — but competence *plateaus* (across-time
   compounding needs the live tower, next) and the world is *deeper-not-wider* (competence selection
   canalizes). This is Phase A of a *living-world program* (fold the arc in → live tower → long-horizon census).
+- **The live recursive tower** (Ω-0.49): a gated `TowerWorld` runs the tower *live* in the persistent world —
+  it advances the top tier, then promotes its stable collectives to a new tier as they mature, so levels
+  (chemistry → biology → culture → …) are *born over wall-clock time* (`python -m omega.world tower`), each
+  playing by rules derived from the level below (exp055). It reaches mean depth ~3.5/5 with competence rising
+  +0.039/tier across the *emergent* levels, and is **eviction-invariant** (a horizon below a tier's lifetime
+  is byte-identical to the un-evicted ceiling — the tower reads live network state, not the evicted registry).
+  Phase B done; Phase C is the long-horizon census (deeper towers + the 10⁶–10⁷ horizon), which this
+  eviction-invariance makes feasible.
 - **Toward minds — the self-improvement arc found the answer (Ω-0.24–0.47).** A precise, honest,
   falsifiable sequence that ruled out every *selection/representation* route to compounding collective
   competence, located the reason in the *substrate law*, **broke the wall** with a substrate-law feedback

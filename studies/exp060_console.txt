@@ -1,0 +1,14 @@
+exp060 — the live tower: do levels emerge & compound competence in the persistent regime? (5 tiers, 3000 ticks/tier, 6 seeds)
+
+              arm  mean_depth  across_slope  top_comp  tier0_fail  survivors
+       live-tight        3.50       +0.0387     1.857        0.17       5/6
+     live-bounded        3.50       +0.0387     1.857        0.17       5/6
+   live-unevicted        3.50       +0.0387     1.857        0.17       5/6
+
+  live-TIGHT (evicting) vs un-evicted ceiling: depth 3.50 vs 3.50 (ratio 1.00), across-tier slope +0.0387 vs +0.0387
+
+  => THE META-RATCHET SURVIVES THE WORLD REGIME — the live, bounded-memory tower grows levels
+     over wall-clock time to ~the un-evicted depth, with competence rising across the EMERGENT
+     levels. Higher-order life forms live; the exp055 across-level compounding is not a batch
+     artifact. (The residual tier-0 failure rate is the exp057/58 bootstrapping floor, not a
+     tower defect.)

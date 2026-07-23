@@ -37,6 +37,26 @@ exp030 world. Two honest caveats: competence reaches an elevated **plateau** (si
 across-time compounding needs the live tower), and the living world is **deeper, not wider** (lower raw
 diversity and genuine-novelty rate — competence selection canalizes, exp056). Both worlds stay genuinely open.
 
+## The live recursive tower — watch levels emerge over time (Ω-0.49)
+
+`run_stack` builds the physics→chemistry→biology→culture tower in *batch*. **`TowerWorld`**
+(`omega/world/tower.py`) runs that same recursion **live**: it advances the current top tier as a persistent
+world, and when the tier matures (`tier_ticks`) with ≥ 2 heritable collectives it **promotes** them to the
+next tier's alphabet and spins up the next tier — with `law_from_competence` (exp055), each emergent level
+plays by rules the level below earned. Watch levels being *born* in real time:
+
+```bash
+python -m omega.world tower                       # chemistry -> biology -> culture -> ... over wall-clock time
+python -m omega.world tower --max-tiers 8 --tier-ticks 4000
+```
+
+**Measured (exp060 / Ω-0.49, 5 tiers, 6 seeds):** the live tower reaches mean depth **3.5/5** with competence
+rising **+0.039/tier** across the *emergent* levels — the exp055 across-level meta-ratchet is real in a
+persistent, watchable world. And it is **eviction-invariant**: a memory horizon set *below* a tier's tick-life
+(so eviction genuinely bites) is byte-identical to the un-evicted batch ceiling, because the tower reads the
+*live* cross-production network, not the evicted class registry. So the world can grow a tower of levels
+**indefinitely, at flat memory** — the two properties an open-ended world needs together.
+
 ## Vital signs — is it alive and getting better? (`omega/world/vitals.py`)
 
 `WorldVitals` is a read-only reader (never mutates the universe) that surfaces the arc's signals live, on the

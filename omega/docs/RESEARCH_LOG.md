@@ -6,6 +6,43 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.49 — The live recursive tower: levels emerge over wall-clock time and compound competence, and it is EVICTION-INVARIANT (exp060)
+
+**Date:** 2026-07-23 · **Status:** complete · **Verdict:** a **positive** — the exp055 across-level
+meta-ratchet runs live in a persistent, memory-bounded world, and the tower is *exactly* invariant to memory
+eviction. Phase B of the living-world program. Detail: `studies/EXP060_FINDINGS.md`. Gated; the plain
+single-tier `World` is unchanged.
+
+exp059 (Ω-0.48) gave the living world a high competence *plateau* within one tier and named the fix: genuine
+across-time compounding needs a *new level*. exp060 adds **`TowerWorld`** (`omega/world/tower.py`) — the
+recursive tower (`run_stack`'s promotion logic) run **live** in the chunk-advanced `World` runtime, bounded
+memory, checkpointable — so tiers emerge over wall-clock time (a `python -m omega.world tower` watch mode
+shows chemistry→biology→culture→… born in real time, with `law_from_competence` deriving each level's law
+from the one below).
+
+**Result (5 tiers × 3000 ticks/tier, 6 seeds, three memory regimes).** The live tower grows to mean depth
+**3.5/5** with competence rising **+0.039/tier** across the *emergent* levels — the meta-ratchet is not a
+batch artifact. And it is **eviction-invariant**: a `live-tight` arm with the memory horizon set *below* each
+tier's tick-life (so cold classes are genuinely evicted within every tier) is **byte-identical** to the
+un-evicted batch ceiling on every metric (depth, slope, competence, failure rate). The tower reads the *live*
+cross-production network and per-generation edge tallies, not the evicted class registry — so bounding memory
+(what makes an indefinite world feasible, Ω-0.21) costs the tower nothing. The residual 1/6 tier-0 failure is
+the exp057/58 bootstrapping floor, not a tower defect.
+
+**Interpretation.** The two properties a genuine open-ended world needs together are now shown together: it
+keeps building higher levels of organization (competence compounding across emergent tiers) *and* it can run
+forever (flat memory, eviction-invariant). The live tower is the concrete "watch higher-order life appear"
+artifact.
+
+### Is / is not
+- **Is:** the exp055 across-level meta-ratchet made live and watchable, at flat memory with zero dynamical
+  cost from eviction — a structural invariance (the tower reads live state), so the exact-equality is robust.
+- **Is not:** a settlement of *how deep* the tower goes (5 tiers → ~3.5; deeper towers + the 10⁶–10⁷ horizon
+  are the Phase C census, which the eviction-invariance proven here makes feasible), and the +0.039/tier slope
+  is modest (per-tier maturation time trades against tier count).
+
+---
+
 ## Milestone Ω-0.48 — The self-improvement arc TRANSFERS to the living world: a persistent `living_world` is far more competent and self-maintaining than the exp030-era world (exp059)
 
 **Date:** 2026-07-23 · **Status:** complete · **Verdict:** a **positive** (with two honest caveats) — the
