@@ -1,0 +1,33 @@
+{
+  "max_tiers": 5,
+  "ticks_per_tier": 3500,
+  "n_seeds": 32,
+  "patches": [
+    24,
+    48,
+    96
+  ],
+  "summary": {
+    "24": {
+      "tier0_fail_rate": 0.0625,
+      "mean_depth": 3.875,
+      "across_tier_slope": -0.06687949042102387,
+      "n_survivors": 26,
+      "n": 32
+    },
+    "48": {
+      "tier0_fail_rate": 0.03125,
+      "mean_depth": 3.5,
+      "across_tier_slope": -0.011088469842903485,
+      "n_survivors": 23,
+      "n": 32
+    },
+    "96": {
+      "tier0_fail_rate": 0.03125,
+      "mean_depth": 3.125,
+      "across_tier_slope": -0.017814007717908274,
+      "n_survivors": 21,
+      "n": 32
+    }
+  }
+}

@@ -1,0 +1,13 @@
+exp058 — does a diversity-seeded founding tier move the structural floor? (5 tiers, 3500 ticks/tier, 32 seeds)
+
+  founders  tier0_fail  mean_depth     slope  survivors
+        24        0.06        3.88   -0.0669      26/32
+        48        0.03        3.50   -0.0111      23/32
+        96        0.03        3.12   -0.0178      21/32
+
+  best founder count: 48 (tier0-fail 0.03, depth 3.50)
+  founders 24 -> 96:  tier0-fail 0.06 -> 0.03,  mean-depth 3.88 -> 3.12,  slope -0.0669 -> -0.0178
+
+  => A HARD FLOOR — the best founder count still fails to establish: some seeds are intrinsically
+     non-networking, and tower robustness has a floor independent of BOTH time (exp057) AND
+     starting diversity (exp058) — bounded by the substrate, not by how tier 0 is provisioned.

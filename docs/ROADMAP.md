@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.46).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.47).
 
 ## Where we are
 
@@ -12,13 +12,14 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   *continuing* construction (a rate, not a stock).
 - **Scale** — bounded-memory long-run mode + a 3× faster kernel, validated (Ω-0.21).
 - **A living world** — persistent, checkpointing, watchable, spatial, steerable (Ω-0.22–0.23).
-- **Toward minds — the self-improvement arc found the answer (Ω-0.24–0.46).** A precise, honest,
+- **Toward minds — the self-improvement arc found the answer (Ω-0.24–0.47).** A precise, honest,
   falsifiable sequence that ruled out every *selection/representation* route to compounding collective
   competence, located the reason in the *substrate law*, **broke the wall** with a substrate-law feedback
   (exp053, competence compounds *within* a level), lifted it to the tower (exp055, a competence-derived
   transition compounds competence *across* levels too), showed there is **no competence–diversity trade-off**
   paid for it (exp056, at full pressure the tower is *most* robust), and pinned that tower robustness is
-  limited by a **structural** bootstrapping floor — not curable with more founding time (exp057). Collectives carry evolvable state (exp037) and
+  limited by a **structural** bootstrapping floor — a hard floor curable by neither more founding time
+  (exp057) nor more starting diversity (exp058), a property of the substrate. Collectives carry evolvable state (exp037) and
   selectable coherence (exp038); developmental inheritance broke the exp028 heredity ceiling (exp040);
   a higher heredity level (exp041) and a self-expanding scalar objective (exp042) don't compound →
   **goal representation** missing; exp044 supplied it (heritable composable goals → first
@@ -105,11 +106,19 @@ open piece of "truly unbounded."
   seed and **plateaus at 2×** (4× / 14k tier-0 ticks buys nothing), leaving mean depth flat — so the floor is
   **structural**, not a matter of time. And *over*-warming tier 0 drives it to the exp053/054 optimal-richness
   ceiling and flips the across-tier slope **monotonically negative** (−0.039 → −0.102 → −0.162), so
-  front-loading the foundation actively starves the meta-ratchet. *Open follow-on (sharpened):* the structural
-  floor needs a **starting-diversity** intervention — seed tier 0 with a richer / founder-networked start
-  (more founding patches, explicit founder signatures), not a longer horizon. *Predicted falsification:* even
-  a diversity-seeded tier-0 start leaves the failure floor fixed → some seeds are intrinsically non-networking
-  and tower robustness has a hard floor independent of both time and starting diversity.
+  front-loading the foundation actively starves the meta-ratchet. **exp058 (Ω-0.47)** then tested the
+  starting-*diversity* lever (seed tier 0 with more independent founder demes) and the predicted falsification
+  **held**: diversity doesn't move the floor either — more founders drop the failure rate by only ~1 seed then
+  **plateau** (never to zero), and *over*-provisioning founders **monotonically shrinks** the towers (mean
+  depth 3.88 → 3.50 → 3.12; a bloated tier-1 alphabet dilutes higher-tier cross-production). So tower
+  robustness has a **hard floor** independent of *both* time (exp057) *and* starting diversity (exp058): the
+  residual ~3–6% of seeds are intrinsically non-networking, a property of the substrate, and the foundation
+  has a *moderate optimum* (24 founders → deepest towers). *Open follow-on (moved to physics):* the only lever
+  left is not *provisioning* the founding tier but changing the substrate's **establishment dynamics** — e.g.
+  an explicit founder-network seed that installs a cross-production loop directly instead of waiting for one
+  to arise. *Predicted falsification:* even a directly-installed founder network fails to establish in the
+  same seeds → the floor is intrinsic to those initial conditions, and bootstrapping robustness is
+  irreducible without changing the kernel itself.
 - **A strong non-type law.** exp035's tree law reached the "both corner" only weakly (~10× lower
   heredity than linear paths). Is there a genuinely different law with *strong* both-corner heredity?
 - **Fully heterogeneous per-level physics.** The tower is still largely the self-similar engine;

@@ -6,6 +6,44 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.47 — The bootstrapping floor is a HARD FLOOR: starting diversity doesn't move it either, and over-provisioning the foundation shrinks the tower (exp058)
+
+**Date:** 2026-07-23 · **Status:** complete · **Verdict:** a **confirming negative** — the exp046-predicted
+falsification holds: tower robustness has a floor independent of *both* time (exp057) *and* starting
+diversity (exp058). Detail: `studies/EXP058_FINDINGS.md`. Gated; `tier0_patches=24` (default) ⇒ the tower is
+byte-identical.
+
+exp057 (Ω-0.46) showed the bootstrapping floor is structural (warmup can't cure it) and pointed to a
+starting-*diversity* lever. exp058 adds a gated `tier0_patches` that runs the founding tier (tier 0) with
+more independent founder demes — higher tiers unchanged — and sweeps it in the derived-law tower
+(`builder="exp053"`, `law_from_competence`).
+
+**Result (5 tiers × 3500 ticks/tier, 32 seeds).** More founders move the tier-0 failure rate by only ~1 seed
+(0.0625 → 0.03125, i.e. 2 → 1 of 32) and then **plateau** — 4× founders is no better than 2×, and neither
+reaches zero — the same shape warmup showed. And more founders **monotonically shrink** the towers (mean
+depth 3.88 → 3.50 → 3.12): a wider tier 0 promotes more collectives → a bloated tier-1 alphabet → diluted
+higher-tier cross-production → shallower towers. So diversity has the same over-provisioning cost warmup had
+(exp057 flipped the slope negative; exp058 lowers depth). The n=16 pilot's apparent "2× founders → zero
+failures" was a single-seed fluctuation (0.03125 at n=32).
+
+**Interpretation.** exp057 + exp058 close the tower-robustness question: the ~3–6% bootstrapping floor is
+**irreducible by provisioning** — not slow establishment (time doesn't fix it), not a founder shortage
+(diversity doesn't fix it) — it is a substrate property: a small fraction of random initial configurations
+never seed a cross-production network. The foundation has a **moderate optimum** (24 founders → deepest
+towers; adding founders trades one seed of robustness for shallower towers) — the exp054 optimal-richness /
+exp057 equal-length-tiers lesson on the founder axis. Not a tower failure (94–97% establish, depth ~3–4 of
+5); a precise bound. The only remaining lever is not *provisioning* the founding tier but changing the
+substrate's **establishment dynamics** (e.g. an explicit founder-network seed) — a physics change.
+
+### Is / is not
+- **Is:** a clean confirming negative — the second ruled-out lever for the bootstrapping floor, with a robust
+  monotone depth-decline showing over-provisioning hurts, and the n=16 "cure" shown to be a single-seed fluke.
+- **Is not:** a claim that diversity helps by one seed (that move is at the noise floor) — the claim is that
+  it does **not** decisively move the floor. The slope column is flat-and-noisy at this config and is not
+  interpreted.
+
+---
+
 ## Milestone Ω-0.46 — The tower's bootstrapping floor is STRUCTURAL, not timing-limited — and tier-0 warmup actively harms the meta-ratchet (exp057)
 
 **Date:** 2026-07-22 · **Status:** complete · **Verdict:** a **double negative** — the exp056 bootstrapping
