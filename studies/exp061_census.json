@@ -1,0 +1,232 @@
+{
+  "horizon": 250000,
+  "stride": 12500,
+  "n_seeds": 4,
+  "living_world": {
+    "avg_series": [
+      {
+        "tick": 12500,
+        "competence": 1.8779,
+        "closure": 0.5725,
+        "lifeforms": 21,
+        "genuine_rate": 0.0,
+        "genuine_distinct": 4978.75,
+        "diversity": 2.1179
+      },
+      {
+        "tick": 25000,
+        "competence": 1.9542,
+        "closure": 0.6076,
+        "lifeforms": 23.25,
+        "genuine_rate": 0.2432,
+        "genuine_distinct": 8018.5,
+        "diversity": 2.1026
+      },
+      {
+        "tick": 37500,
+        "competence": 1.952,
+        "closure": 0.5953,
+        "lifeforms": 22.75,
+        "genuine_rate": 0.2392,
+        "genuine_distinct": 10958,
+        "diversity": 2.2544
+      },
+      {
+        "tick": 50000,
+        "competence": 1.9703,
+        "closure": 0.6032,
+        "lifeforms": 23.75,
+        "genuine_rate": 0.2339,
+        "genuine_distinct": 13745.75,
+        "diversity": 2.2485
+      },
+      {
+        "tick": 62500,
+        "competence": 1.9792,
+        "closure": 0.6163,
+        "lifeforms": 23.5,
+        "genuine_rate": 0.2296,
+        "genuine_distinct": 16465,
+        "diversity": 2.2287
+      },
+      {
+        "tick": 75000,
+        "competence": 1.9589,
+        "closure": 0.6087,
+        "lifeforms": 23.75,
+        "genuine_rate": 0.228,
+        "genuine_distinct": 19307.5,
+        "diversity": 2.3273
+      },
+      {
+        "tick": 87500,
+        "competence": 2.0055,
+        "closure": 0.634,
+        "lifeforms": 24,
+        "genuine_rate": 0.2272,
+        "genuine_distinct": 22121.5,
+        "diversity": 2.2271
+      },
+      {
+        "tick": 100000,
+        "competence": 1.9626,
+        "closure": 0.6077,
+        "lifeforms": 24,
+        "genuine_rate": 0.2274,
+        "genuine_distinct": 25059,
+        "diversity": 2.3601
+      },
+      {
+        "tick": 112500,
+        "competence": 1.9836,
+        "closure": 0.6399,
+        "lifeforms": 24,
+        "genuine_rate": 0.2282,
+        "genuine_distinct": 28020.75,
+        "diversity": 2.3321
+      },
+      {
+        "tick": 125000,
+        "competence": 1.9727,
+        "closure": 0.6416,
+        "lifeforms": 23.25,
+        "genuine_rate": 0.2304,
+        "genuine_distinct": 31277.5,
+        "diversity": 2.2777
+      },
+      {
+        "tick": 137500,
+        "competence": 1.9396,
+        "closure": 0.6281,
+        "lifeforms": 24,
+        "genuine_rate": 0.2334,
+        "genuine_distinct": 34662.25,
+        "diversity": 2.3066
+      },
+      {
+        "tick": 150000,
+        "competence": 1.9582,
+        "closure": 0.6505,
+        "lifeforms": 24,
+        "genuine_rate": 0.2365,
+        "genuine_distinct": 38025.5,
+        "diversity": 2.2853
+      },
+      {
+        "tick": 162500,
+        "competence": 1.9555,
+        "closure": 0.6288,
+        "lifeforms": 24,
+        "genuine_rate": 0.2393,
+        "genuine_distinct": 41315,
+        "diversity": 2.2971
+      },
+      {
+        "tick": 175000,
+        "competence": 1.9512,
+        "closure": 0.6208,
+        "lifeforms": 23.75,
+        "genuine_rate": 0.2411,
+        "genuine_distinct": 44366.75,
+        "diversity": 2.3732
+      },
+      {
+        "tick": 187500,
+        "competence": 1.9829,
+        "closure": 0.6576,
+        "lifeforms": 24,
+        "genuine_rate": 0.2421,
+        "genuine_distinct": 47271,
+        "diversity": 2.2668
+      },
+      {
+        "tick": 200000,
+        "competence": 1.9638,
+        "closure": 0.6358,
+        "lifeforms": 24,
+        "genuine_rate": 0.2424,
+        "genuine_distinct": 50090.75,
+        "diversity": 2.2883
+      },
+      {
+        "tick": 212500,
+        "competence": 1.9304,
+        "closure": 0.6317,
+        "lifeforms": 24,
+        "genuine_rate": 0.2429,
+        "genuine_distinct": 53260.75,
+        "diversity": 2.4094
+      },
+      {
+        "tick": 225000,
+        "competence": 1.9426,
+        "closure": 0.6075,
+        "lifeforms": 23.5,
+        "genuine_rate": 0.2434,
+        "genuine_distinct": 56487.25,
+        "diversity": 2.3638
+      },
+      {
+        "tick": 237500,
+        "competence": 1.9781,
+        "closure": 0.6382,
+        "lifeforms": 24,
+        "genuine_rate": 0.2438,
+        "genuine_distinct": 59501.25,
+        "diversity": 2.3066
+      },
+      {
+        "tick": 250000,
+        "competence": 1.9226,
+        "closure": 0.6041,
+        "lifeforms": 24,
+        "genuine_rate": 0.244,
+        "genuine_distinct": 62515.5,
+        "diversity": 2.4114
+      }
+    ],
+    "final": {
+      "tick": 250000,
+      "competence": 1.9226,
+      "closure": 0.6041,
+      "lifeforms": 24,
+      "genuine_rate": 0.244,
+      "genuine_distinct": 62515.5,
+      "diversity": 2.4114
+    },
+    "genuine_rate_first": 0.0,
+    "genuine_rate_last": 0.244,
+    "competence_slope": 7.073684210526622e-09
+  },
+  "tower": {
+    "max_tiers_attempted": 16,
+    "tier_ticks": 2500,
+    "depths": [
+      16,
+      0,
+      9,
+      1
+    ],
+    "mean_depth": 6.5,
+    "max_depth": 16,
+    "per_tier_competence": [
+      1.6692,
+      1.9306,
+      1.8993,
+      1.8569,
+      1.8664,
+      1.8132,
+      1.6984,
+      1.8087,
+      1.8922,
+      1.8024,
+      1.8383,
+      1.7376,
+      1.8537,
+      1.9243,
+      1.9052,
+      1.6899
+    ],
+    "across_tier_slope": -0.0002266176470588283
+  }
+}

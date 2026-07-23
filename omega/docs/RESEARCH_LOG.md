@@ -6,6 +6,47 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.50 — The world census: the living world SUSTAINS open-ended novelty and self-maintaining life at 250k ticks and grows a deep tower — but competence saturates to a stable plateau across levels (exp061)
+
+**Date:** 2026-07-23 · **Status:** complete · **Verdict:** a **qualified positive** — the built world
+sustains OEE and self-maintaining life at scale and at flat memory, and grows a deep tower with no intrinsic
+depth ceiling in range; the honest bound is on *competence* (a stable plateau, not unbounded
+self-improvement). Phase C of the living-world program. Detail: `studies/EXP061_FINDINGS.md`.
+
+exp061 is the census — the rich, long-horizon dataset the living-world program was built to produce. Two
+bounded-memory campaigns (`studies/exp061_census.py`), emitting `exp061_census.json` and a shareable
+self-contained HTML report `exp061_census.html`.
+
+**Part A — living_world vital-signs time series, 250,000 ticks × 4 seeds.** The living world **does not
+decay**: competence holds a stable **~1.9 plateau** (1.88–2.01 across the horizon, slope ~0), the *genuine*
+(eviction-robust) novelty rate holds a **positive floor ~0.24/tick** (62,515 distinct classes ever —
+genuinely-new organization, not recycling), autocatalytic closure holds (0.57 → 0.60), and self-maintaining
+lifeforms persist and grow (21 → 24). The Ω-0.39 "stays open" floor now holds for the *full arc-on living
+world*, alongside sustained high competence and a standing population of self-maintaining life.
+
+**Part B — the deep tower, 16 tiers × 4 seeds.** Per-seed depths **[16, 0, 9, 1]** (mean **6.5**, max
+**16/16**): one seed climbed **all sixteen tiers** → **no intrinsic depth ceiling** in range (that
+falsification is not triggered). Depth is highly variable because reaching deep needs many *consecutive*
+successful promotions, each carrying the exp057/58 bootstrapping-type failure probability. Per-tier
+competence is a **flat ~1.85 plateau** across all reached levels (slope −0.0002): the across-level
+meta-ratchet (exp055/060) is a **transient lift to a stable plateau**, not an unbounded climb — the
+tower-scale analogue of within-tier saturation at optimal richness (exp053/054).
+
+**Interpretation.** The most complete single picture of the built world: it is open-ended in **construction
+and individuality** indefinitely (novelty floor + self-maintaining life persist at 250k, flat memory), grows
+a **deep tower** (no depth ceiling in range), and is competent to a **high stable level** — but **not
+unboundedly self-improving** (competence saturates within and across levels). A precise, falsifiable
+statement of what this substrate does — open-ended world and life, bounded competence.
+
+### Is / is not
+- **Is:** a qualified positive settling the ROADMAP's top open piece (deep towers at length) — depth is not
+  ceilinged in range, and the living world sustains OEE + life at scale, at flat memory.
+- **Is not:** unbounded competence compounding (a stable plateau within and across levels, consistent with
+  the whole arc's saturation), nor a 10⁶–10⁷ living-world stress (Part A is 250k; the plain-engine floor held
+  to 3M, the arc-on world to 250k — the longer stress remains open). Depth mean (6.5) is a rough n=4 estimate.
+
+---
+
 ## Milestone Ω-0.49 — The live recursive tower: levels emerge over wall-clock time and compound competence, and it is EVICTION-INVARIANT (exp060)
 
 **Date:** 2026-07-23 · **Status:** complete · **Verdict:** a **positive** — the exp055 across-level

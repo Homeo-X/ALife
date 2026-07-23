@@ -1,0 +1,11 @@
+exp061 — the world census (250,000 ticks, 4 seeds; deep tower 16 tiers)
+
+  LIVING WORLD (long-horizon vital signs, averaged):
+    competence      1.878 -> 1.923  (slope +7.07e-09/tick)
+    genuine novelty 0.000 -> 0.244 /tick  (62,516 distinct classes ever)
+    closure         0.573 -> 0.604   lifeforms 21.0 -> 24.0   diversity -> 2.41
+
+  DEEP TOWER: max depth 16/16, mean 6.5, across-tier slope -0.0002
+    per-tier competence: [1.6692, 1.9306, 1.8993, 1.8569, 1.8664, 1.8132, 1.6984, 1.8087, 1.8922, 1.8024, 1.8383, 1.7376, 1.8537, 1.9243, 1.9052, 1.6899]
+
+  => living world STAYS ALIVE & OPEN at 250,000 ticks; tower climbs to depth 16. Census: studies/exp061_census.html
