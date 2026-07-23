@@ -33,6 +33,7 @@ class World:
     def __init__(self, physics, config: Config, *,
                  memory_horizon: int = DEFAULT_MEMORY_HORIZON,
                  relation_cap: int = DEFAULT_RELATION_CAP,
+                 genuine_novelty: bool = False,
                  _bundle: dict | None = None) -> None:
         self.config = config
         self.memory_horizon = memory_horizon
@@ -46,6 +47,13 @@ class World:
             self.construction = ConstructionTracker()
             self.universe.memory_horizon = memory_horizon
             self.universe.relation_cap = relation_cap
+            # genuine (eviction-robust) novelty: attaching a GlobalNoveltySketch only *reads* class
+            # registrations to populate universe.classes_ever_seen_global — it never touches the
+            # dynamics, so class history / RNG stay byte-identical (Ω-0.39 instrument). It lives on
+            # the universe, so checkpoint/resume round-trips it for free.
+            if genuine_novelty:
+                from omega.emergence.global_novelty import GlobalNoveltySketch
+                self.universe.novelty_sketch = GlobalNoveltySketch()
             self.physics.seed(self.universe, self.rng)
         else:                                    # a resumed world (checkpoint.load)
             self.rng = _bundle["rng"]
@@ -59,11 +67,16 @@ class World:
     @classmethod
     def create(cls, experiment: str = "world", seed: int = 0, *,
                memory_horizon: int = DEFAULT_MEMORY_HORIZON,
-               relation_cap: int = DEFAULT_RELATION_CAP, **overrides) -> "World":
-        """Build a fresh world from a registered physics (default the ``world`` builder)."""
+               relation_cap: int = DEFAULT_RELATION_CAP,
+               genuine_novelty: bool = False, **overrides) -> "World":
+        """Build a fresh world from a registered physics (default the ``world`` builder).
+
+        ``genuine_novelty=True`` attaches the eviction-robust global-novelty sketch (Ω-0.39) so
+        ``WorldVitals`` can report the *genuine* ever-new rate — dynamics-invariant (off ⇒ the
+        pre-vitals world, byte-identical)."""
         physics, config = get_experiment(experiment)(seed=seed, **overrides)
         return cls(physics, config, memory_horizon=memory_horizon,
-                   relation_cap=relation_cap)
+                   relation_cap=relation_cap, genuine_novelty=genuine_novelty)
 
     @classmethod
     def from_bundle(cls, bundle: dict) -> "World":

@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.47).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.48).
 
 ## Where we are
 
@@ -11,7 +11,14 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   collective individuals that stack into a recursive level tower; sustaining novelty needs
   *continuing* construction (a rate, not a stock).
 - **Scale** — bounded-memory long-run mode + a 3× faster kernel, validated (Ω-0.21).
-- **A living world** — persistent, checkpointing, watchable, spatial, steerable (Ω-0.22–0.23).
+- **A living world** — persistent, checkpointing, watchable, spatial, steerable (Ω-0.22–0.23), and now
+  **embodying the arc** (Ω-0.48): a gated `living_world` builder folds the Catalytic Law + Red Queen + full
+  competence pressure into the persistent world, and a read-only **vital-signs** instrument surfaces
+  competence, autocatalytic closure (the life signal), self-maintaining lifeform count, and the *genuine*
+  (eviction-robust) novelty rate. The arc **transfers**: over 30k-tick worlds `living_world` reaches ~1.6× the
+  competence and ~2× the life signals of the exp030-era world — but competence *plateaus* (across-time
+  compounding needs the live tower, next) and the world is *deeper-not-wider* (competence selection
+  canalizes). This is Phase A of a *living-world program* (fold the arc in → live tower → long-horizon census).
 - **Toward minds — the self-improvement arc found the answer (Ω-0.24–0.47).** A precise, honest,
   falsifiable sequence that ruled out every *selection/representation* route to compounding collective
   competence, located the reason in the *substrate law*, **broke the wall** with a substrate-law feedback

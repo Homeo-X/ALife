@@ -1,0 +1,31 @@
+{
+  "horizon": 30000,
+  "chunk": 1000,
+  "n_seeds": 4,
+  "arms": [
+    "living_world",
+    "world"
+  ],
+  "summary": {
+    "living_world": {
+      "competence": 1.9213208544606941,
+      "competence_slope": 4.347481057992049e-06,
+      "closure": 0.6044022817460317,
+      "lifeforms": 23.5,
+      "collectives": 24,
+      "breeding_true": 0.3659323686594491,
+      "genuine_rate": 0.2655376529477197,
+      "diversity": 2.2786899409821597
+    },
+    "world": {
+      "competence": 1.2030559137084533,
+      "competence_slope": 2.73459413935604e-06,
+      "closure": 0.27400462437327044,
+      "lifeforms": 9.75,
+      "collectives": 22.75,
+      "breeding_true": 0.031010855478728068,
+      "genuine_rate": 0.5954730255839822,
+      "diversity": 4.463589598741611
+    }
+  }
+}

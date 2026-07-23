@@ -25,7 +25,10 @@ def _load_or_create(args) -> World:
         w = _ckpt.load(args.checkpoint)
         print(f"resumed world from {args.checkpoint} at tick {w.tick:,}")
         return w
-    return World.create("world", seed=args.seed, memory_horizon=args.memory_horizon)
+    # genuine_novelty attaches the eviction-robust global sketch (Ω-0.39) so the vital-signs panel
+    # can show the *genuine* ever-new rate — dynamics-invariant, so it's always safe to enable.
+    return World.create(getattr(args, "physics", "world"), seed=args.seed,
+                        memory_horizon=args.memory_horizon, genuine_novelty=True)
 
 
 def _cmd_run(args) -> None:
@@ -72,6 +75,9 @@ def _cmd_snapshot(args) -> None:
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(prog="python -m omega.world", description=__doc__)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--physics", default="world",
+                    help="world builder: 'world' (exp030-era) or 'living_world' (carries the "
+                         "self-improvement arc — Catalytic Law + Red Queen + full competence pressure)")
     ap.add_argument("--chunk", type=int, default=40, help="ticks advanced per snapshot")
     ap.add_argument("--checkpoint", help="checkpoint file (resume if it exists)")
     ap.add_argument("--checkpoint-every", type=int, default=25, help="checkpoint every N chunks")

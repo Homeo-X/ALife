@@ -6,6 +6,46 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.48 — The self-improvement arc TRANSFERS to the living world: a persistent `living_world` is far more competent and self-maintaining than the exp030-era world (exp059)
+
+**Date:** 2026-07-23 · **Status:** complete · **Verdict:** a **positive** (with two honest caveats) — the
+Catalytic Law × Red Queen survives the persistent, spatial, reifying, eviction-bounded world regime; a
+`living_world` reaches ~1.6× the competence and ~2× the life signals of the exp030-era world. This begins
+Phase A of the *living-world* program (fold the arc into the watchable world; instrument its vital signs).
+Detail: `studies/EXP059_FINDINGS.md`. Gated; the old `world` builder + `WorldVitals` + `genuine_novelty`
+default off ⇒ exp001–058 byte-identical.
+
+The watchable world (`omega/world/`) was frozen at the exp030 era (`deme_fitness="network"`, no Catalytic
+Law / Red Queen / competence pressure, tower only in batch). exp059 adds a gated **`living_world`** builder
+(the `world` foundation + `catalytic_law` + `deme_fitness="redqueen"` + `competence_pressure=1.0` + the
+exp040 heredity channel) and a read-only **`WorldVitals`** reader (competence trajectory, autocatalytic
+closure = the life signal, self-maintaining lifeform count, breed-true heredity, and the eviction-robust
+*genuine* novelty rate — the Ω-0.39 sketch attached dynamics-invariantly). Both are surfaced on the terminal
++ browser dashboard ("vital signs" panel) and a `--physics living_world` CLI flag.
+
+**Result (persistent bounded-memory worlds, 30k ticks, 4 seeds).** `living_world` vs the exp030 world:
+competence **1.92 vs 1.20** (+0.72), closure **0.60 vs 0.27** (~2.2×), self-maintaining collectives **23.5
+vs 9.8** (~2.4×), breed-true heredity **0.37 vs 0.03** (~12×); both stay genuinely open (positive
+eviction-robust novelty). The arc is not a batch-only artifact — it transfers to the world.
+
+**Two honest caveats.** (i) Competence reaches an elevated **plateau**, slope ≈ 0 within the single
+persistent tier — the exp053/054 saturation-at-optimal-richness, so genuine *across-time* compounding needs
+a **new level** (the live tower, Ω-0.49). (ii) The living world is **deeper, not wider**: *lower* raw
+diversity (2.28 vs 4.46) and *lower* genuine-novelty rate (0.27 vs 0.60) — the exp056 canalization effect at
+world scale (strong competence selection focuses the world on competent, self-maintaining, breed-true
+structure rather than many novel-but-incompetent classes). A trade in *what kind* of open-endedness, not a
+loss of it.
+
+### Is / is not
+- **Is:** the first proof the arc's competence/life machinery works in the *persistent watchable world*, with
+  large effect sizes and legible vital signs (you can now *watch* competence and self-maintenance, not just a
+  novelty pulse).
+- **Is not:** a within-tier compounding *slope* (it plateaus — that's the tower's job), nor a claim the
+  living world is more open-ended in raw novelty (it is deeper-not-wider). n=4 × 30k ticks — directions
+  robust, exact numbers estimates.
+
+---
+
 ## Milestone Ω-0.47 — The bootstrapping floor is a HARD FLOOR: starting diversity doesn't move it either, and over-provisioning the foundation shrinks the tower (exp058)
 
 **Date:** 2026-07-23 · **Status:** complete · **Verdict:** a **confirming negative** — the exp046-predicted

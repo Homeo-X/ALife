@@ -111,6 +111,51 @@ class TestWorldSpace(unittest.TestCase):
         self.assertGreater(max(pops) - min(pops), 0)          # spatial heterogeneity
 
 
+class TestLivingWorldVitals(unittest.TestCase):
+    def test_living_world_carries_the_arc_and_is_more_competent(self):
+        # Ω-0.48: the `living_world` builder turns the arc's winners ON (Catalytic Law + Red Queen +
+        # full competence pressure), where the exp030-era `world` has none. So a living_world is more
+        # COMPETENT and more self-maintaining than the world control on the same substrate.
+        from omega.world.vitals import WorldVitals
+        lw = World.create("living_world", seed=0)
+        self.assertTrue(lw.physics.catalytic_law)                 # the compounding law is on
+        self.assertEqual(lw.physics.deme_fitness, "redqueen")     # the receding target is on
+        self.assertEqual(lw.physics.competence_pressure, 1.0)
+        # the old `world` builder is untouched (still the exp030-era config)
+        w = World.create("world", seed=0)
+        self.assertFalse(w.physics.catalytic_law)
+        self.assertEqual(w.physics.deme_fitness, "network")
+
+        vl, vw = WorldVitals(), WorldVitals()
+        for _ in range(6):
+            lw.step(400); sl = vl.sample(lw)
+            w.step(400); sw = vw.sample(w)
+        for key in ("tick", "competence", "competence_slope", "closure", "lifeforms",
+                    "breeding_true", "collectives", "genuine_distinct", "genuine_novelty_rate",
+                    "windowed_novelty_rate", "diversity", "competence_pulse", "closure_pulse"):
+            self.assertIn(key, sl)                                 # vitals schema
+        self.assertGreater(sl["competence"], sw["competence"])    # the arc lifts competence, live
+        self.assertGreater(sl["lifeforms"], 0)                    # self-maintaining collectives exist
+
+    def test_genuine_novelty_is_dynamics_invariant_and_checkpoints(self):
+        # Attaching the eviction-robust global sketch (Ω-0.39) is observational: it only populates
+        # universe.classes_ever_seen_global, never the dynamics — so class history stays byte-identical.
+        a = World.create("world", seed=1); a.step(1200)
+        b = World.create("world", seed=1, genuine_novelty=True); b.step(1200)
+        self.assertEqual(a.universe.classes_ever_seen, b.universe.classes_ever_seen)  # dynamics unchanged
+        self.assertGreater(b.universe.classes_ever_seen_global, 0)                     # genuine count populated
+        self.assertLessEqual(b.universe.classes_ever_seen_global, b.universe.classes_ever_seen)
+
+        # the sketch lives on the universe, so checkpoint/resume round-trips genuine novelty for free.
+        ref = World.create("world", seed=2, genuine_novelty=True); ref.step(1600)
+        w = World.create("world", seed=2, genuine_novelty=True); w.step(800)
+        path = os.path.join(tempfile.gettempdir(), "omega_world_vitals_test.ckpt")
+        checkpoint.save(w, path)
+        w2 = checkpoint.load(path); w2.step(800)
+        self.assertEqual(ref.universe.classes_ever_seen_global, w2.universe.classes_ever_seen_global)
+        os.remove(path)
+
+
 class TestWorldInteraction(unittest.TestCase):
     def test_perturbations_apply_and_are_logged(self):
         w = World.create("world", seed=0)

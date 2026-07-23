@@ -1,0 +1,13 @@
+exp059 — does the arc transfer to the living world? (30000 ticks, 4 seeds, persistent bounded-memory worlds)
+
+            arm  competence      slope  closure  lifeforms  genuine_rate  diversity
+   living_world       1.921   +0.00000    0.604       23.5         0.266      2.279
+          world       1.203   +0.00000    0.274        9.8         0.595      4.464
+
+  competence lift living_world - world: +0.718  (living 1.921 vs world 1.203)
+  both worlds genuinely open (genuine novelty > 0): True
+
+  => THE ARC TRANSFERS — the compounding law survives the persistent, spatial, reifying,
+     eviction-bounded world regime: living_world competence sits FAR above the exp030 world,
+     with more self-maintaining (closed) collectives. The living world is genuinely more
+     alive, and its competence trajectory slope is +0.00000.

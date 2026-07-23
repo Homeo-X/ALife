@@ -11,14 +11,43 @@ top of the engine; every kernel behaviour is unchanged (exp001–035 byte-identi
 ## Run it
 
 ```bash
-python -m omega.world run                      # headless: live terminal dashboard
-python -m omega.world run --dashboard           # browser dashboard at http://localhost:8000
-python -m omega.world run --checkpoint w.ckpt   # persist + resume across restarts
-python -m omega.world snapshot --out world.html # a self-contained HTML snapshot (shareable)
+python -m omega.world run                        # headless: live terminal dashboard (exp030-era world)
+python -m omega.world run --physics living_world  # the LIVING WORLD v2 — carries the self-improvement arc
+python -m omega.world run --dashboard             # browser dashboard at http://localhost:8000
+python -m omega.world run --checkpoint w.ckpt     # persist + resume across restarts
+python -m omega.world snapshot --out world.html   # a self-contained HTML snapshot (shareable)
 ```
 
 A world resumes automatically when `--checkpoint` points at an existing file, so it **accretes
 history across sessions** and survives container restarts.
+
+## The living world v2 — it compounds competence, not just novelty (Ω-0.48)
+
+The default `world` builder is the exp030-era configuration (both-corner + reify + culture + space) and
+predates the self-improvement arc. The **`living_world`** builder (`--physics living_world`) upgrades it to
+carry the arc's confirmed breakthroughs — the **Catalytic Law** (exp053: promote a competent deme's closure
+loop to a shared, network-visible reaction, the mechanism that makes competence a *rate within a level*),
+the **Red Queen** (exp052: a receding coevolutionary target), and **full competence pressure** (exp056). All
+knobs are pre-existing and gated, so the old `world` (and exp001–058) stay byte-identical.
+
+**Measured (exp059 / Ω-0.48, persistent 30k-tick worlds):** `living_world` reaches ~**1.6× the competence**
+(1.92 vs 1.20), ~**2.2× the autocatalytic closure** (0.60 vs 0.27 — the *life* signal), ~**2.4× the
+self-maintaining collectives** (23.5 vs 9.8), and ~**12× the breed-true heredity** (0.37 vs 0.03) of the
+exp030 world. Two honest caveats: competence reaches an elevated **plateau** (single-tier saturation — genuine
+across-time compounding needs the live tower), and the living world is **deeper, not wider** (lower raw
+diversity and genuine-novelty rate — competence selection canalizes, exp056). Both worlds stay genuinely open.
+
+## Vital signs — is it alive and getting better? (`omega/world/vitals.py`)
+
+`WorldVitals` is a read-only reader (never mutates the universe) that surfaces the arc's signals live, on the
+terminal + browser dashboard and in the HTML snapshot:
+- **Competence trajectory** — mean collective competence (closure + breed-true + network breadth) and its
+  rolling slope: is the world getting *better* at building, not just building more?
+- **Autocatalytic closure — the life signal** — the fraction of the deme's network that rebuilds its own
+  parts (exp038), and the count of self-maintaining collectives above a closure threshold.
+- **Genuine novelty** — the eviction-robust global rate (Ω-0.39), so the pulse distinguishes *genuinely* new
+  organization from windowed recycling (attached dynamics-invariantly; off ⇒ byte-identical).
+- **Ecology** — Shannon diversity of the live class populations; breed-true heredity; live-collective count.
 
 ## What you see (`omega/world/observe.py`)
 

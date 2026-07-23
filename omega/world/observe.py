@@ -15,6 +15,8 @@ from __future__ import annotations
 
 from collections import deque
 
+from omega.world.vitals import WorldVitals
+
 _CONS = "bdfgklmnprstvz"
 _VOWL = "aeiou"
 
@@ -40,6 +42,7 @@ class Observer:
         self._events: deque = deque(maxlen=event_len)
         self._reified_seen: int = 0
         self._known_lifeforms: set[str] = set()        # class-names ever notable
+        self._vitals = WorldVitals(window=pulse_len)   # competence/closure/genuine-novelty/life signals
 
     def _collectives(self, world) -> list[dict]:
         """Live **collectives** — demes carrying a non-trivial cross-production network
@@ -117,9 +120,23 @@ class Observer:
                                              f"(alphabet now {len(p.atoms)})"})
             self._reified_seen = reified
 
+        # vital signs — is the world alive and getting BETTER (not just bigger)? competence
+        # trajectory, autocatalytic closure (the life signal), self-maintaining lifeform count,
+        # and the genuine (eviction-robust) novelty rate. A "self-maintaining life" event fires
+        # when the closed-collective count reaches a new high.
+        vit = self._vitals.sample(world)
+        if vit["lifeforms"] > 0 and vit["lifeforms"] > getattr(self, "_peak_lifeforms", 0):
+            self._peak_lifeforms = vit["lifeforms"]
+            self._events.appendleft({"tick": u.tick, "kind": "life",
+                                     "text": f"{vit['lifeforms']} self-maintaining collectives "
+                                             f"(closure {vit['closure']:.2f}, competence {vit['competence']:.2f})"})
+
         meme_h = int(getattr(p, "_meme_horizontal", 0))
         meme_v = int(getattr(p, "_meme_vertical", 0))
         return {
+            "vitals": {k: vit[k] for k in (
+                "competence", "competence_slope", "closure", "lifeforms", "breeding_true",
+                "genuine_distinct", "genuine_novelty_rate", "diversity", "competence_pulse")},
             "tick": u.tick,
             "population": len(u.organizations),
             "reservoir": u.reservoir,

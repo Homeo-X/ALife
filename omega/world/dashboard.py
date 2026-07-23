@@ -35,6 +35,13 @@ def render_terminal(s: dict) -> str:
     L.append(f"\033[1mΩ WORLD\033[0m  tick {s['tick']:,}   pop {s['population']}   "
              f"novelty {s['novelty_rate']:.3f}  classes-ever {s['classes_ever']:,}")
     L.append(f"pulse {_sparkline(s['novelty_pulse'])}")
+    if "vitals" in s:
+        v = s["vitals"]
+        L.append(f"\033[1mvital signs\033[0m  competence {v['competence']:.3f} "
+                 f"(slope {v['competence_slope']:+.5f})   closure {v['closure']:.3f}   "
+                 f"self-maintaining lifeforms {v['lifeforms']}   "
+                 f"genuine-novelty {v['genuine_novelty_rate']:.3f}   diversity {v['diversity']:.2f}")
+        L.append(f"competence {_sparkline(v['competence_pulse'])}")
     L.append(f"construction: alphabet {s['alphabet']} ({s['reified']} reified)   "
              f"culture H/V {s['culture']['horizontal']}/{s['culture']['vertical']} "
              f"(×{s['culture']['ratio']})   collectives {s['n_collectives']}")
@@ -79,6 +86,13 @@ _PAGE = """<!doctype html><meta charset=utf-8><title>Ω World</title>
 <main>
  <div class=card style=grid-column:1/3><h2>novelty pulse — the world keeps discovering</h2>
    <div class=pulse id=pulse></div></div>
+ <div class=card style=grid-column:1/3><h2>vital signs — is it alive &amp; getting better?</h2>
+   <div class=row><span class=k>competence (rising = compounding)</span><span class=v id=vcomp>–</span></div>
+   <div class=pulse id=vpulse style=color:#ffd18a></div>
+   <div class=row><span class=k>autocatalytic closure — the life signal</span><span class=v id=vclos>–</span></div>
+   <div class=row><span class=k>self-maintaining lifeforms</span><span class=v id=vlife>–</span></div>
+   <div class=row><span class=k>genuine novelty (eviction-robust)</span><span class=v id=vgen>–</span></div>
+   <div class=row><span class=k>ecological diversity</span><span class=v id=vdiv>–</span></div></div>
  <div class=card><h2>world map — geography</h2><canvas id=map width=320 height=320
    style="width:100%;image-rendering:pixelated;background:#0b0e14;border-radius:4px"></canvas>
    <div class=tag style=margin-top:6px>cell = a patch; hue = dominant lifeform, brightness = population</div></div>
@@ -107,6 +121,14 @@ async function tick(){
  $('alpha').textContent=s.alphabet+' ('+s.reified+' reified)';
  const bl='▁▂▃▄▅▆▇█'; const hi=Math.max(...s.novelty_pulse,1e-9);
  $('pulse').textContent=s.novelty_pulse.map(v=>bl[Math.min(7,Math.floor(v/hi*7))]).join('');
+ if(s.vitals){ const v=s.vitals;
+   $('vcomp').textContent=v.competence.toFixed(3)+'  (slope '+(v.competence_slope>=0?'+':'')+v.competence_slope.toFixed(5)+')';
+   const vh=Math.max(...v.competence_pulse,1e-9);
+   $('vpulse').textContent=v.competence_pulse.map(x=>bl[Math.min(7,Math.floor(x/vh*7))]).join('');
+   $('vclos').textContent=v.closure.toFixed(3);
+   $('vlife').textContent=v.lifeforms;
+   $('vgen').textContent=v.genuine_novelty_rate.toFixed(3)+'  ('+v.genuine_distinct.toLocaleString()+' ever)';
+   $('vdiv').textContent=v.diversity.toFixed(2); }
  $('life').innerHTML=s.lifeforms.map(l=>`<div class=row><span class=v>${l.name}</span>`+
    `<span class=tag>age ${l.age.toLocaleString()} · depth ${l.depth} · peak ${l.peak}</span></div>`).join('');
  $('nc').textContent='('+s.n_collectives+')';

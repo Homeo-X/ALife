@@ -2085,6 +2085,50 @@ def build_world(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     return _make(seed, "world", **overrides)
 
 
+@register("living_world")
+def build_living_world(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """The **living world v2** — the `world` builder upgraded to carry the self-improvement arc's
+    confirmed breakthroughs, so a persistent, watchable world doesn't just stay open but *compounds
+    its collective competence as you watch it*. It composes the `world` foundation (both-corner
+    `typed_path` + reification + culture + spatial torus, Ω-0.15/0.20/0.16/geography) with the arc's
+    winners:
+      - the **Catalytic Law** (`catalytic_law`, exp053/Ω-0.42): every `catalyst_period` ticks the most
+        closure-central production of the highest-competence deme is promoted to a shared, *network-visible*
+        reaction later collectives build on — the mechanism that makes competence a **rate within a level**;
+      - the **Red Queen** (`deme_fitness="redqueen"`, exp052/Ω-0.41): a receding coevolutionary target
+        (beat a live spatial rival on your own cross-production network), the strongest competence platform;
+      - **full competence pressure** (`competence_pressure=1.0`, exp056/Ω-0.45): shown to be *most* robust
+        and *most* diverse, no competence–diversity trade-off paid;
+      - the exp040 heredity channel (`network_template`) and network-biased propagule, so competent
+        structure can breed true.
+    Every knob already exists and is gated; the *old* `world` builder (and exp001–058) stay byte-identical.
+    This is the default physics for a genuine OEE/emerging-life world (see `omega/world/`)."""
+    # the `world` foundation: persistent, spatial, reifying, cultural
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("reify_period", 500)           # continuing construction (novelty doesn't decay)
+    overrides.setdefault("reify_max_atoms", 0)          # keep constructing (persistent world)
+    overrides.setdefault("horizontal_transfer", 0.3)    # culture: horizontal motif spread
+    overrides.setdefault("space", True)                 # geography: a torus of patches
+    overrides.setdefault("mig_rate", 0.06)              # local diffusion (neighbours only)
+    # the self-improvement arc's winners
+    overrides.setdefault("deme_fitness", "redqueen")    # exp052 — the receding coevolutionary target
+    overrides.setdefault("propagule_bias", "network")   # transmit the network (heredity of the collective)
+    overrides.setdefault("network_template", 0.5)       # exp040 heredity channel — competence CAN breed
+    overrides.setdefault("catalytic_law", True)         # exp053 — the compounding, network-visible law
+    overrides.setdefault("catalyst_period", 400)
+    overrides.setdefault("competence_pressure", 1.0)    # exp056 — full pressure (most robust + diverse)
+    return _make(seed, "living_world", **overrides)
+
+
 @register("exp036")
 def build_anticipation(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     """exp036 — INTRINSIC FUNCTION: the engine piece exp011 said was missing (function must
