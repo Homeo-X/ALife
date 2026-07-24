@@ -575,6 +575,18 @@ class CombinatorPhysics:
         self.genome_mut = 0.3
         self.genome_res_range = (1, 5)   # initial per-deme resolution drawn uniformly here
         self._deme_res: dict[int, int] = {}   # per-patch resolution (the heritable genome)
+        # exp062 EMBODIED AGENCY: a deme is an *agent* with a heritable perception->action policy. It
+        # perceives the environment's season (the cyclic feed band, exp036) and FORAGES atoms from the
+        # band its policy targets — an offset `phi` from the *perceived* season. agent_policy="embodied"
+        # uses the TRUE percept (current season), so evolving phi=1 forages the NEXT band and the deme
+        # anticipates; agent_policy="blind" uses a FIXED percept (decoupled from the real season), same
+        # policy+action repertoire but no sensing — the control that isolates whether *perception* is
+        # what pays. Selection is deme_fitness="anticipation" (reward products matching the next band).
+        # agent_policy="" (default) => no foraging, no policy genome, no RNG draws => byte-identical.
+        self.agent_policy = ""                # "" | "embodied" | "blind"
+        self.forage_n = 2                     # atoms a deme forages per deme-generation
+        self.policy_mut = 0.15                # per-founding mutation rate of the heritable phase phi
+        self._deme_phase: dict[int, int] = {} # per-patch policy phase phi (the heritable agent genome)
         # exp020 replicase: strength/fidelity of the explicit template-copy channel.
         # copy_rate=0 (default) leaves every earlier experiment untouched.
         self.copy_rate = 0.0
@@ -956,6 +968,12 @@ class CombinatorPhysics:
                     if rng.random() < self.genome_mut:
                         r = max(lo, min(hi, r + rng.choice((-1, 1))))
                     self._deme_res[kp] = r
+                if self.agent_policy:   # exp062: the founded agent inherits src's policy phase phi (+ mut)
+                    k = max(1, self.feed_bands)
+                    phi = self._deme_phase.get(src, rng.randint(0, k - 1))
+                    if rng.random() < self.policy_mut:
+                        phi = (phi + rng.choice((-1, 1))) % k
+                    self._deme_phase[kp] = phi
                 if self.earned_law:
                     # exp054 EARNED LAW (at birth, non-destructive): the child inherits the source's
                     # construction REACH and climbs it by +1 iff the source achieved enough closure at its
@@ -1225,6 +1243,26 @@ class CombinatorPhysics:
             self._cur_band = list(self.atoms[cur * w: cur * w + w]) or list(self.atoms)
             nb = ((universe.tick // self.feed_period) + 1) % k
             self._next_band = set(self.atoms[nb * w: nb * w + w]) or set(self.atoms)
+
+            # exp062 EMBODIED AGENCY (perceive -> act): each live deme forages atoms from the band its
+            # heritable policy targets. Embodied agents read the TRUE current season `cur`; blind agents
+            # read a FIXED percept (0) — same policy+forage, but decoupled from the moving environment, so
+            # only an embodied policy can evolve a phase that tracks the season. Foraged material becomes
+            # patch members the deme builds with, shifting its products toward the targeted band.
+            if self.agent_policy and universe.tick > 0 and universe.tick % max(1, self.deme_gen) == 0:
+                live_patches = {self._patch.get(o.uid) for o in universe.organizations.values()}
+                for pi in live_patches:
+                    if pi is None:
+                        continue
+                    phi = self._deme_phase.setdefault(pi, rng.randint(0, k - 1))
+                    percept = cur if self.agent_policy == "embodied" else 0
+                    bi = (percept + phi) % k
+                    band = self.atoms[bi * w: bi * w + w] or self.atoms
+                    for _ in range(self.forage_n):
+                        org = universe.spawn(_path_build([rng.choice(band), rng.choice(band)]), "forage")
+                        if org is None:
+                            break
+                        self._patch[org.uid] = pi
 
         # knockout: continuously remove suppressed classes so they cannot act
         if self.suppress:
@@ -1573,6 +1611,9 @@ def _make(seed, experiment, **overrides):
     physics.feed_pattern = str(overrides.get("feed_pattern", "random"))  # exp036 environment
     physics.feed_period = int(overrides.get("feed_period", 0))
     physics.feed_bands = int(overrides.get("feed_bands", 4))
+    physics.agent_policy = str(overrides.get("agent_policy", ""))      # exp062 embodied agency
+    physics.forage_n = int(overrides.get("forage_n", 2))
+    physics.policy_mut = float(overrides.get("policy_mut", 0.15))
     physics.deme_genome = bool(overrides.get("deme_genome", False))   # exp037 evolvable rule
     physics.genome_mut = float(overrides.get("genome_mut", 0.3))
     physics.network_template = float(overrides.get("network_template", 0.0))  # exp040 strength
@@ -2155,6 +2196,39 @@ def build_anticipation(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("feed_period", 300)
     overrides.setdefault("feed_bands", 4)
     return _make(seed, "exp036", **overrides)
+
+
+@register("exp062")
+def build_agent(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp062 — EMBODIED AGENCY: is a heritable PERCEPTION->ACTION policy *selectable*? The first rung of
+    the embodiment thread. An **agent** is a collective with a heritable policy that PERCEIVES the
+    environment's season (the cyclic feed band, exp036) and ACTS on it — foraging atoms from the band an
+    offset `phi` away from the *perceived* season, which become material it builds with. Selection is
+    `deme_fitness="anticipation"` (reward products matching the NEXT band), so an embodied agent that
+    evolves phi=1 forages the next band and anticipates. The decisive matched control is
+    `agent_policy="blind"`: an identical policy+forage repertoire, but its percept is a FIXED constant
+    (decoupled from the real, moving season), so no fixed phi can track the environment — isolating whether
+    *perception that informs action* is what pays. Question: do embodied agents out-anticipate blind ones,
+    and do their policies concentrate at the anticipatory phase (perception is *used* and *selected*)? If
+    yes, agency is selectable in this world — a proto-mind; if embodied ≈ blind, sensing does not pay here
+    (a clean negative bounding embodiment). `agent_policy=""` (default) => exp001-061 byte-identical."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "anticipation")   # selection: reward anticipating the next season
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("feed_pattern", "cyclic")         # the structured environment (seasons)
+    overrides.setdefault("feed_period", 300)
+    overrides.setdefault("feed_bands", 4)
+    overrides.setdefault("agent_policy", "embodied")       # the perceive->act loop (control: "blind")
+    return _make(seed, "exp062", **overrides)
 
 
 @register("exp037")
