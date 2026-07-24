@@ -776,11 +776,12 @@ class TestScientificClaims(unittest.TestCase):
     def test_exp066_multi_cue_perception_pays_only_when_the_cue_is_relevant(self):
         # Ω-0.55 (embodiment rung 5, perceptual breadth): does INTEGRATING two observable cues pay? A second
         # observable cue (a regime) is always present; only when env_cues=2 does the reward (the next band)
-        # depend on it — a conjunction of season and regime — so a single-cue "embodied" agent cannot resolve
-        # it and a two-cue "multi" agent (a per-regime action table) can. Because the cue and the table exist
-        # in BOTH env conditions, a benefit only under env=2 isolates cue INTEGRATION, not extra parameters.
-        # Pin: off ⇒ exp036 byte-identical; the double dissociation direction. Magnitudes are the study's
-        # (EXP066_FINDINGS.md).
+        # depend on it — a conjunction of season and regime. The CLEAN test controls for genome: `multi`
+        # (reads the cue via a per-regime table) vs `cue_blind` (the IDENTICAL table genome, same parameter
+        # count and mutation load, but its regime percept is decoupled — cannot read the cue). Any advantage
+        # of multi over cue_blind is cue INTEGRATION, not extra parameters (a scalar `embodied` control is
+        # CONFOUNDED — the table genome alone helps in both env's). Pin: off ⇒ exp036 byte-identical; the
+        # genome-matched double dissociation. Magnitudes are the study's (EXP066_FINDINGS.md).
         from omega.kernel.universe import Universe
         from omega.kernel.scheduler import Scheduler
         from omega.substrate.noise import Noise
@@ -801,8 +802,9 @@ class TestScientificClaims(unittest.TestCase):
         self.assertNotEqual(classes(agent_policy="multi", env_cues=2, forage_n=6),
                             ub.classes_ever_seen)                                             # on ⇒ acts
 
-        def evolve(env, policy, ticks=6000, cycle=2400):     # anticipation over >= 2 regime periods
-            p, c = get_experiment("exp066")(seed=0, env_cues=env, agent_policy=policy, forage_n=6)
+        def evolve(env, cue_blind, ticks=6000, cycle=2400):  # multi vs matched cue_blind (identical genome)
+            p, c = get_experiment("exp066")(seed=0, env_cues=env, agent_policy="multi",
+                                            cue_blind=cue_blind, forage_n=6)
             u, rng = Universe(total_quanta=c.total_quanta), Noise(c.seed); p.seed(u, rng)
             sch = Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
                             max_reactions_per_tick=c.max_reactions_per_tick)
@@ -818,12 +820,12 @@ class TestScientificClaims(unittest.TestCase):
                     match.append(m / tot)
             return mean(match) if match else 0.0
 
-        con_emb, con_mlt = evolve(2, "embodied"), evolve(2, "multi")   # conjunction: 2nd cue RELEVANT
-        one_emb, one_mlt = evolve(1, "embodied"), evolve(1, "multi")   # season only: 2nd cue IRRELEVANT
-        self.assertGreater(con_mlt, con_emb)                 # env=2: integrating both cues out-anticipates
-        self.assertGreater(one_emb, one_mlt)                 # env=1: the useless extra cue costs, doesn't help
-        interaction = (con_mlt - con_emb) - (one_mlt - one_emb)
-        self.assertGreater(interaction, 0.05)                # a DOUBLE DISSOCIATION: it is cue INTEGRATION
+        con_mlt, con_blind = evolve(2, False), evolve(2, True)   # conjunction: 2nd cue RELEVANT
+        one_mlt, one_blind = evolve(1, False), evolve(1, True)   # season only: 2nd cue IRRELEVANT
+        self.assertGreater(con_mlt, con_blind)               # env=2: reading the cue out-anticipates blind
+        integ2, integ1 = con_mlt - con_blind, one_mlt - one_blind
+        self.assertGreater(integ2 - integ1, 0.05)            # a DOUBLE DISSOCIATION: it is cue INTEGRATION,
+        self.assertGreater(integ2, integ1)                   # not the genome (matched) — pays only when needed
 
     def test_exp037_per_collective_genome_is_evolvable_internal_state(self):
         # Ω-0.25: the engine piece exp036 lacked — a collective carries a heritable, mutable
