@@ -615,6 +615,12 @@ class CombinatorPhysics:
         self.n_regimes = 2                    # values the second (regime) cue takes
         self._cur_regime = 0                  # the current observable regime cue (recomputed each tick)
         self._deme_phase2: dict[int, list] = {}  # per-regime heritable action table (the multi-cue genome)
+        # The MATCHED control isolating cue INTEGRATION (vs merely having a richer policy). cue_blind gives a
+        # "multi" agent the IDENTICAL per-regime table genome (same parameter count, same mutation load), but
+        # DECOUPLES its regime percept (fixed at 0) — so it cannot read the second cue. multi vs cue_blind is
+        # then the exp062 embodied-vs-blind design applied to the second cue: any advantage is INTEGRATION,
+        # not extra parameters. cue_blind=False (default).
+        self.cue_blind = False
         # exp063 SPATIAL AGENCY (taxis): the second embodiment rung — action on SPACE. A deme PERCEIVES its
         # neighbour patches' richness in the NEXT season's band and MIGRATES toward the richest (taxis),
         # tracking the anticipated resource across space, vs the perception-ablated control that migrates to
@@ -1348,7 +1354,9 @@ class CombinatorPhysics:
                     if self.agent_policy == "multi":
                         # exp066: perceive TWO cues (the season `cur` AND the regime) and act via a
                         # per-regime table — integrate them to forage the conjunctively-determined band.
-                        reg = self._cur_regime
+                        # cue_blind (matched control): same table genome, but the regime percept is fixed
+                        # (decoupled), so the agent cannot read the second cue — isolates INTEGRATION.
+                        reg = 0 if self.cue_blind else self._cur_regime
                         tbl = self._deme_phase2.get(pi)
                         if tbl is None:
                             tbl = [rng.randint(0, k - 1) for _ in range(self.n_regimes)]
@@ -1742,6 +1750,7 @@ def _make(seed, experiment, **overrides):
     physics.season_pattern = str(overrides.get("season_pattern", "sawtooth"))  # exp065 partial observability
     physics.env_cues = int(overrides.get("env_cues", 1))              # exp066 multi-cue perception
     physics.n_regimes = int(overrides.get("n_regimes", 2))
+    physics.cue_blind = bool(overrides.get("cue_blind", False))       # exp066 matched cue-blind control
     physics.spatial_policy = str(overrides.get("spatial_policy", ""))  # exp063 spatial agency (taxis)
     physics.spatial_feed = bool(overrides.get("spatial_feed", False))  # exp064 exogenous patchy resource
     physics.spatial_feed_n = int(overrides.get("spatial_feed_n", 3))
