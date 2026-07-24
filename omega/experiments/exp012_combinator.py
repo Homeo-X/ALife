@@ -598,6 +598,23 @@ class CombinatorPhysics:
         self.forage_n = 2                     # atoms a deme forages per deme-generation
         self.policy_mut = 0.15                # per-founding mutation rate of the heritable phase phi
         self._deme_phase: dict[int, int] = {} # per-patch policy phase phi (the heritable agent genome)
+        # exp066 MULTI-CUE PERCEPTION (perceptual breadth -> integration): the embodiment thread's rung after
+        # memory. exp065 solved a partially-observable world with MEMORY (infer the hidden direction from
+        # history); exp066 asks the complementary question — can an agent solve it with a richer PERCEPTUAL
+        # channel, INTEGRATING two observable cues? A second cue, an observable "regime"
+        # (reg = (season_index // feed_bands) % n_regimes), is ALWAYS present; only when env_cues=2 does the
+        # reward (the next band) depend on it: env=1 the next band is the sawtooth neighbour cur+1 (reg is
+        # IRRELEVANT), env=2 it is cur+1 when reg=0 and cur-1 when reg=1 (reg is RELEVANT). A "multi" agent
+        # perceives BOTH cues via a per-regime action table phi[reg]; the single-cue "embodied" control
+        # perceives only the season. Because the reg cue is present (and the table has the same size) in
+        # BOTH env conditions, the multi agent pays the same cost either way — so a benefit only under env=2
+        # isolates cue INTEGRATION, not extra parameters. Prediction (a double dissociation): multi > embodied
+        # iff env=2; multi ~ embodied when env=1 (the extra cue is present but useless). env_cues=1
+        # (default) => the reward is the plain sawtooth => byte-identical.
+        self.env_cues = 1                     # 1 (default) | 2 (next band is a CONJUNCTION of season + regime)
+        self.n_regimes = 2                    # values the second (regime) cue takes
+        self._cur_regime = 0                  # the current observable regime cue (recomputed each tick)
+        self._deme_phase2: dict[int, list] = {}  # per-regime heritable action table (the multi-cue genome)
         # exp063 SPATIAL AGENCY (taxis): the second embodiment rung — action on SPACE. A deme PERCEIVES its
         # neighbour patches' richness in the NEXT season's band and MIGRATES toward the richest (taxis),
         # tracking the anticipated resource across space, vs the perception-ablated control that migrates to
@@ -1016,12 +1033,21 @@ class CombinatorPhysics:
                     if rng.random() < self.genome_mut:
                         r = max(lo, min(hi, r + rng.choice((-1, 1))))
                     self._deme_res[kp] = r
-                if self.agent_policy:   # exp062: the founded agent inherits src's policy phase phi (+ mut)
+                if self.agent_policy:   # exp062: the founded agent inherits src's policy (+ mut)
                     k = max(1, self.feed_bands)
-                    phi = self._deme_phase.get(src, rng.randint(0, k - 1))
-                    if rng.random() < self.policy_mut:
-                        phi = (phi + rng.choice((-1, 1))) % k
-                    self._deme_phase[kp] = phi
+                    if self.agent_policy == "multi":   # exp066: inherit the per-regime action TABLE (+mut)
+                        ptbl = self._deme_phase2.get(src)
+                        tbl = list(ptbl) if ptbl is not None else [rng.randint(0, k - 1)
+                                                                    for _ in range(self.n_regimes)]
+                        if rng.random() < self.policy_mut:
+                            j = rng.randint(0, self.n_regimes - 1)
+                            tbl[j] = (tbl[j] + rng.choice((-1, 1))) % k
+                        self._deme_phase2[kp] = tbl
+                    else:
+                        phi = self._deme_phase.get(src, rng.randint(0, k - 1))
+                        if rng.random() < self.policy_mut:
+                            phi = (phi + rng.choice((-1, 1))) % k
+                        self._deme_phase[kp] = phi
                 if self.earned_law:
                     # exp054 EARNED LAW (at birth, non-destructive): the child inherits the source's
                     # construction REACH and climbs it by +1 iff the source achieved enough closure at its
@@ -1300,6 +1326,15 @@ class CombinatorPhysics:
             self._cur_band = list(self.atoms[cur * w: cur * w + w]) or list(self.atoms)
             self._next_band = set(self.atoms[nb * w: nb * w + w]) or set(self.atoms)
 
+            # exp066 MULTI-CUE: a second OBSERVABLE cue (the regime) is always present; when env_cues=2 the
+            # reward (the next band) becomes a CONJUNCTION of season and regime (cur+1 if reg=0 else cur-1),
+            # so a single-cue agent cannot anticipate and a two-cue agent can. env_cues=1 => reg irrelevant,
+            # _next_band unchanged => byte-identical.
+            self._cur_regime = (tt // k) % self.n_regimes if (self.env_cues >= 2 and k > 1) else 0
+            if self.env_cues >= 2 and k > 1:
+                nb2 = (cur + 1) % k if self._cur_regime == 0 else (cur - 1) % k
+                self._next_band = set(self.atoms[nb2 * w: nb2 * w + w]) or set(self.atoms)
+
             # exp062 EMBODIED AGENCY (perceive -> act): each live deme forages atoms from the band its
             # heritable policy targets. Embodied agents read the TRUE current season `cur`; blind agents
             # read a FIXED percept (0) — same policy+forage, but decoupled from the moving environment, so
@@ -1310,7 +1345,16 @@ class CombinatorPhysics:
                 for pi in live_patches:
                     if pi is None:
                         continue
-                    if self.agent_policy == "memory":
+                    if self.agent_policy == "multi":
+                        # exp066: perceive TWO cues (the season `cur` AND the regime) and act via a
+                        # per-regime table — integrate them to forage the conjunctively-determined band.
+                        reg = self._cur_regime
+                        tbl = self._deme_phase2.get(pi)
+                        if tbl is None:
+                            tbl = [rng.randint(0, k - 1) for _ in range(self.n_regimes)]
+                            self._deme_phase2[pi] = tbl
+                        bi = (cur + tbl[reg]) % k
+                    elif self.agent_policy == "memory":
                         # act on HISTORY: track the season's last direction and extrapolate it. Requires
                         # internal state (the last-seen season); a reactive agent cannot do this.
                         prev = self._deme_prevseason.get(pi)
@@ -1696,6 +1740,8 @@ def _make(seed, experiment, **overrides):
     physics.forage_n = int(overrides.get("forage_n", 2))
     physics.policy_mut = float(overrides.get("policy_mut", 0.15))
     physics.season_pattern = str(overrides.get("season_pattern", "sawtooth"))  # exp065 partial observability
+    physics.env_cues = int(overrides.get("env_cues", 1))              # exp066 multi-cue perception
+    physics.n_regimes = int(overrides.get("n_regimes", 2))
     physics.spatial_policy = str(overrides.get("spatial_policy", ""))  # exp063 spatial agency (taxis)
     physics.spatial_feed = bool(overrides.get("spatial_feed", False))  # exp064 exogenous patchy resource
     physics.spatial_feed_n = int(overrides.get("spatial_feed_n", 3))
@@ -2348,6 +2394,43 @@ def build_memory(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("season_pattern", "triangle")     # the partially-observable world
     overrides.setdefault("agent_policy", "memory")         # act on history (control: "embodied" = reactive)
     return _make(seed, "exp065", **overrides)
+
+
+@register("exp066")
+def build_multicue(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp066 — MULTI-CUE PERCEPTION (perceptual breadth -> integration): the embodiment thread's rung after
+    memory. exp065 solved a partially-observable world with MEMORY (infer the hidden season direction from
+    history). exp066 asks the complementary question: can an agent solve it instead with a richer PERCEPTUAL
+    channel — INTEGRATING two observable cues? A second observable cue (a "regime",
+    `reg = (season_index // feed_bands) % n_regimes`) is ALWAYS present; only when `env_cues=2` does the
+    reward (the next band) depend on it — a CONJUNCTION of season and regime (cur+1 if reg=0 else cur-1) — so
+    the current season alone underdetermines the next band and only an agent that reads BOTH cues can
+    anticipate. A `agent_policy="multi"` agent carries a per-regime action table phi[reg]; the single-cue
+    control is `agent_policy="embodied"` (perceives the season only). Because the reg cue (and the table
+    size) is present in BOTH env conditions, the multi agent pays the same cost either way — so a benefit
+    only under env=2 isolates cue INTEGRATION, not extra parameters. Decisive design: a 2×2
+    (env_cues {1, 2} × agent_policy {embodied, multi}): multi should pay *iff* env=2, and be ~equal to
+    embodied when env=1 (the extra cue is present but useless) — a double dissociation. `agent_policy=""` /
+    `env_cues=1` (default) => exp001-065 byte-identical."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "anticipation")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("feed_pattern", "cyclic")
+    overrides.setdefault("feed_period", 300)
+    overrides.setdefault("feed_bands", 4)
+    overrides.setdefault("forage_n", 6)
+    overrides.setdefault("env_cues", 2)                    # the two-cue (conjunctive) world
+    overrides.setdefault("agent_policy", "multi")          # integrate both cues (control: "embodied")
+    return _make(seed, "exp066", **overrides)
 
 
 @register("exp063")
