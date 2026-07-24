@@ -1,0 +1,11 @@
+{
+  "n_seeds": 5,
+  "warmup": 7000,
+  "cycle": 2400,
+  "cells": {
+    "sawtooth:embodied": 0.39111592117074845,
+    "sawtooth:memory": 0.28997073416930924,
+    "triangle:embodied": 0.3196713219491842,
+    "triangle:memory": 0.3640069334528114
+  }
+}

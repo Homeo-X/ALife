@@ -6,6 +6,45 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.54 — Memory PAYS, and only when the world requires it: internal state is selectable in a partially-observable season — the step from reflex to cognition (exp065)
+
+**Date:** 2026-07-24 · **Status:** complete · **Verdict:** a **positive** result with a clean **double
+dissociation** — an agent that acts on the *history* of its percepts (internal state / memory) out-anticipates
+a reactive agent *iff* the world is partially observable, and *under-performs* it when the world is
+instant-observable. The interaction (not a main effect) shows it is **memory** that is selected. Detail:
+`studies/EXP065_FINDINGS.md`. Gated; `agent_policy=""` / `season_pattern="sawtooth"` ⇒ exp001–064 byte-identical.
+
+The embodiment thread's step toward **cognition**. exp062 (Ω-0.51) showed a *reactive* agent (act on the
+instant percept) is selectable in a fully-observable sawtooth season. exp065 makes the season **partially
+observable** with a gated `season_pattern="triangle"` (0,1,2,3,2,1,0,… — the current band no longer implies
+the next; the season may be ascending or descending), so anticipating it requires **remembering the previous
+season**. A gated `agent_policy="memory"` agent carries internal state (the last observed season *direction*)
+and extrapolates it (`next ≈ clamp(cur + dir)`), acting on history rather than the instant. The decisive design
+is a 2×2 (season_pattern {sawtooth, triangle} × agent_policy {embodied=reactive, memory}).
+
+**Result (5 seeds; anticipation over a season cycle; chance 0.25).** A double dissociation. Memory − reactive
+= **+0.044** in the partially-observable triangle season (memory 0.364 > reactive 0.320) but **−0.101** in the
+instant-observable sawtooth (memory 0.290 < reactive 0.391) — an **interaction of +0.145.** In the sawtooth
+the current band fully determines the next, so a fixed heritable phase already anticipates and the
+direction-extrapolator is *confused by the wrap* (why memory loses there); in the triangle no fixed phase works
+and only carrying the direction forward anticipates (why memory wins).
+
+**Interpretation.** Because the benefit appears as an **interaction** (memory × partial-observability), not as
+a main effect of the policy, it is **memory itself** — acting on integrated history — that is being selected,
+not merely a different reflex. This is the falsifiable form of "internal state is selectable": the world's
+collectives can be selected to carry and use memory, exactly when the instant percept underdetermines the
+right action. The embodiment thread now reads: **construction agency pays (exp062); locomotion does not
+(exp063–64); memory pays when the world demands it (exp065)** — reflex → cognition.
+
+### Is / is not
+- **Is:** a clean positive with a diagnosed mechanism (interaction, not main effect; the wrap-confusion
+  explains the sawtooth loss; reproduces at single-seed scale — triangle +0.111, sawtooth −0.208 at seed 0).
+- **Is not:** a claim this is the *best* memory (a single last-direction extrapolator vs a single reactive
+  control); richer internal state may do more. Only that the *simplest* history-integrating state is selected
+  *iff* partial observability makes it necessary. 5 seeds; off ⇒ byte-identical.
+
+---
+
 ## Milestone Ω-0.53 — An exogenous resource does NOT rescue locomotive agency: it deepens the negative — directed movement herds, random dispersal is the ideal-free optimum (exp064)
 
 **Date:** 2026-07-24 · **Status:** complete · **Verdict:** an **honest negative** that refutes exp063's

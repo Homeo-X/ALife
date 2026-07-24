@@ -5,3 +5,7 @@ __pycache__/
 *.egg-info/
 .venv/
 venv/
+
+# transient run logs (kept copies are *_console.txt)
+studies/*_run.log
+studies/suite_run.log

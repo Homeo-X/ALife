@@ -1,0 +1,14 @@
+exp065 — does memory (acting on history) pay? 2x2 season x policy (5 seeds; chance=0.25)
+
+     season  embodied (reactive)     memory  memory-reactive
+   sawtooth                0.391      0.290           -0.101
+   triangle                0.320      0.364           +0.044
+
+  memory-minus-reactive: triangle +0.044, sawtooth -0.101  (interaction +0.145)
+
+  => MEMORY PAYS — AND ONLY WHEN THE WORLD REQUIRES IT (a double dissociation). In the
+     partially-observable triangle season a memory agent (acting on the history of percepts)
+     out-anticipates the reactive agent, while in the instant-observable sawtooth it does not
+     (indeed is confused by the wrap). The interaction — not a main effect — shows it is
+     MEMORY that pays, exactly when the instant percept underdetermines the right action. The
+     first rung of genuine cognition: internal state that integrates the past is selectable.

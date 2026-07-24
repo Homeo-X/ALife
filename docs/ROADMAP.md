@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.53).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.54).
 
 ## Where we are
 
@@ -44,9 +44,17 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   already realizes the ideal-free distribution while directed movement *herds* — and even per-capita
   "ideal-free" taxis herds, since all agents best-respond to the same stale state at once. Locomotive agency
   fails because **shared-perception synchronous movement is anti-cooperative**, not because of where the
-  resource is. Open next rungs: **private / asynchronous perception** (which should break the herd and let
-  taxis pay — the sharpened predicted positive); richer/multi-cue perception; and a policy with **internal
-  state / memory** (act on history — the step toward genuine cognition).
+  resource is. **exp065 (Ω-0.54) then took the cognition rung — internal state / memory — and it PAYS, in a
+  clean double dissociation:** with the season made *partially observable* (a gated `triangle` wave,
+  0,1,2,3,2,1,0,… — the current band no longer implies the next), a **memory** agent that carries the last
+  season *direction* and extrapolates it **out-anticipates** the reactive agent (0.364 vs 0.320), while in the
+  instant-observable *sawtooth* it does *not* (0.290 vs 0.391 — the wrap confuses the extrapolator): memory −
+  reactive = **+0.044 (triangle) vs −0.101 (sawtooth)**, an interaction of **+0.145**. Because the benefit is
+  an *interaction*, not a main effect, it is **memory itself** that is selected — the step from *reflex* to
+  *cognition*: internal state that integrates the past is selectable exactly when the instant percept
+  underdetermines the action. Open next rungs: **private / asynchronous perception** (which should break the
+  herd and let taxis pay — the sharpened predicted positive); **richer / multi-cue perception**; and **richer
+  internal state** (multi-step history, learned models — deeper cognition than last-direction extrapolation).
 - **Toward minds — the self-improvement arc found the answer (Ω-0.24–0.47).** A precise, honest,
   falsifiable sequence that ruled out every *selection/representation* route to compounding collective
   competence, located the reason in the *substrate law*, **broke the wall** with a substrate-law feedback

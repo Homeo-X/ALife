@@ -720,6 +720,59 @@ class TestScientificClaims(unittest.TestCase):
         self.assertGreater(blind_a, taxis_a)                  # random dispersal out-anticipates taxis
         self.assertGreater(blind_occ, taxis_occ)              # taxis HERDS onto fewer patches
 
+    def test_exp065_memory_pays_only_when_the_world_is_partially_observable(self):
+        # Ω-0.54 (embodiment rung 4, the step toward cognition): does acting on HISTORY (internal state) pay?
+        # A memory agent tracks the season's last direction and extrapolates it; the reactive control (exp062
+        # "embodied") acts on the instant percept only. The decisive design is a 2×2 season×policy that
+        # isolates MEMORY: in a partially-observable TRIANGLE season (0,1,2,3,2,1,0,... — the current band does
+        # NOT imply the next) memory should out-anticipate reactive; in the instant-observable SAWTOOTH it
+        # should NOT (the wrap confuses the extrapolator). An interaction — not a main effect — is the clean
+        # signature that it is memory, not just a different policy. Pin: off ⇒ exp036 byte-identical; the
+        # double dissociation direction. Magnitudes are the study's (EXP065_FINDINGS.md).
+        from omega.kernel.universe import Universe
+        from omega.kernel.scheduler import Scheduler
+        from omega.substrate.noise import Noise
+        from statistics import mean
+
+        def classes(**ov):                                   # byte-identity probe
+            p, c = get_experiment("exp065")(seed=0, ticks=1500, **ov)
+            u, rng = Universe(total_quanta=c.total_quanta), Noise(c.seed); p.seed(u, rng)
+            Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                      max_reactions_per_tick=c.max_reactions_per_tick).run(1500)
+            return u.classes_ever_seen
+
+        base = get_experiment("exp036")(seed=0, ticks=1500)
+        ub, rb = Universe(total_quanta=base[1].total_quanta), Noise(base[1].seed); base[0].seed(ub, rb)
+        Scheduler(ub, base[0], rb, decay_hazard=base[1].decay_hazard,
+                  max_reactions_per_tick=base[1].max_reactions_per_tick).run(1500)
+        self.assertEqual(classes(agent_policy="", season_pattern="sawtooth"), ub.classes_ever_seen)  # off ⇒ exp036
+        self.assertNotEqual(classes(agent_policy="memory", season_pattern="triangle", forage_n=6),
+                            ub.classes_ever_seen)                                                     # on ⇒ acts
+
+        def evolve(season, policy, ticks=6000, cycle=1200):  # anticipation over a season cycle
+            p, c = get_experiment("exp065")(seed=0, season_pattern=season, agent_policy=policy, forage_n=6)
+            u, rng = Universe(total_quanta=c.total_quanta), Noise(c.seed); p.seed(u, rng)
+            sch = Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                            max_reactions_per_tick=c.max_reactions_per_tick)
+            sch.run(ticks)
+            match = []
+            for _ in range(8):
+                sch.run(cycle // 8)
+                nb = p._next_band; tot = m = 0
+                for d in p._deme_atoms.values():
+                    for a, nn in d.items():
+                        tot += nn; m += nn if a in nb else 0
+                if tot:
+                    match.append(m / tot)
+            return mean(match) if match else 0.0
+
+        tri_react, tri_mem = evolve("triangle", "embodied"), evolve("triangle", "memory")
+        saw_react, saw_mem = evolve("sawtooth", "embodied"), evolve("sawtooth", "memory")
+        self.assertGreater(tri_mem, tri_react)               # triangle (POMDP): memory out-anticipates reactive
+        self.assertGreater(saw_react, saw_mem)               # sawtooth (observable): memory hurts (wrap confuses)
+        interaction = (tri_mem - tri_react) - (saw_mem - saw_react)
+        self.assertGreater(interaction, 0.05)                # a DOUBLE DISSOCIATION: it is memory that pays
+
     def test_exp037_per_collective_genome_is_evolvable_internal_state(self):
         # Ω-0.25: the engine piece exp036 lacked — a collective carries a heritable, mutable
         # construction rule of its own (its type_resolution), used in its own compositions and
