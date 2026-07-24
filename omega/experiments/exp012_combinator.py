@@ -592,7 +592,15 @@ class CombinatorPhysics:
         # tracking the anticipated resource across space, vs the perception-ablated control that migrates to
         # a RANDOM neighbour (blind == the default). spatial_policy="" (default) => migration is exactly the
         # pre-exp063 random-neighbour hop => byte-identical.
-        self.spatial_policy = ""              # "" | "taxis" | "blind"
+        self.spatial_policy = ""              # "" | "taxis" | "blind" | "greedy"
+        # exp064 SPATIAL FEED (exogenous patchy resource): bounds the exp063 negative. The ENVIRONMENT (not
+        # the agent) injects the next-season band into a rotating set of "resource patches" (by location),
+        # so the anticipated resource genuinely lives ELSEWHERE — a patchy, dynamic resource map. With
+        # foraging off, the only way to reach it is to MOVE there, so this is where perception-directed
+        # movement (taxis) SHOULD pay, where in the self-generated-resource world (exp063) it did not.
+        # spatial_feed=False (default) => no injection => byte-identical.
+        self.spatial_feed = False
+        self.spatial_feed_n = 3               # atoms the environment injects per resource patch per deme-gen
         # exp020 replicase: strength/fidelity of the explicit template-copy channel.
         # copy_rate=0 (default) leaves every earlier experiment untouched.
         self.copy_rate = 0.0
@@ -1293,6 +1301,20 @@ class CombinatorPhysics:
                             break
                         self._patch[org.uid] = pi
 
+            # exp064 SPATIAL FEED: the ENVIRONMENT injects the next band into this season's resource patches
+            # (a rotating subset by location), so the anticipated resource lives ELSEWHERE (exogenous). A
+            # taxis agent must MOVE to it; blind cannot track it. Off => no injection => byte-identical.
+            if self.spatial_feed and universe.tick > 0 and universe.tick % max(1, self.deme_gen) == 0:
+                res_col = (universe.tick // max(1, self.feed_period)) % k
+                nb = list(self._next_band)
+                for pi in range(self.n_patches):
+                    if pi % k == res_col:                          # this season's resource patches
+                        for _ in range(self.spatial_feed_n):
+                            org = universe.spawn(_path_build([rng.choice(nb), rng.choice(nb)]), "resource")
+                            if org is None:
+                                break
+                            self._patch[org.uid] = pi
+
         # knockout: continuously remove suppressed classes so they cannot act
         if self.suppress:
             for uid in [u for u, o in universe.organizations.items()
@@ -1644,6 +1666,8 @@ def _make(seed, experiment, **overrides):
     physics.forage_n = int(overrides.get("forage_n", 2))
     physics.policy_mut = float(overrides.get("policy_mut", 0.15))
     physics.spatial_policy = str(overrides.get("spatial_policy", ""))  # exp063 spatial agency (taxis)
+    physics.spatial_feed = bool(overrides.get("spatial_feed", False))  # exp064 exogenous patchy resource
+    physics.spatial_feed_n = int(overrides.get("spatial_feed_n", 3))
     physics.deme_genome = bool(overrides.get("deme_genome", False))   # exp037 evolvable rule
     physics.genome_mut = float(overrides.get("genome_mut", 0.3))
     physics.network_template = float(overrides.get("network_template", 0.0))  # exp040 strength
@@ -2294,6 +2318,41 @@ def build_taxis(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("mig_rate", 0.1)                  # movement to act on
     overrides.setdefault("spatial_policy", "taxis")        # perceive neighbours -> move (control: "blind")
     return _make(seed, "exp063", **overrides)
+
+
+@register("exp064")
+def build_spatial_forage(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp064 — SPATIAL FORAGING: does perception-directed MOVEMENT pay when the resource lives ELSEWHERE?
+    exp063 (Ω-0.52) found taxis is *worse* than random movement — but only because the anticipated resource
+    was self-generated and local (each agent forages it into its own patch), so random spread was already
+    optimal. This is the predicted positive that bounds that negative: `spatial_feed` makes the ENVIRONMENT
+    inject the next-season band into a rotating set of *resource patches* (by location), so the resource
+    genuinely lives elsewhere — a patchy, dynamic map. Agent foraging is OFF, so the only way to reach the
+    resource is to MOVE to it. A **taxis** agent perceives which neighbour patch is richest in the next band
+    and migrates toward it; the matched **blind** control migrates randomly. Question: does taxis now
+    out-anticipate blind — is locomotive agency selectable when the resource is exogenous and spatial?
+    `spatial_feed=False` / `spatial_policy=""` (default) => byte-identical."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "anticipation")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("feed_pattern", "cyclic")
+    overrides.setdefault("feed_period", 300)
+    overrides.setdefault("feed_bands", 4)
+    overrides.setdefault("agent_policy", "")               # NO self-foraging: the resource is exogenous
+    overrides.setdefault("spatial_feed", True)             # environment injects the resource into patches
+    overrides.setdefault("spatial_feed_n", 4)
+    overrides.setdefault("space", True)                    # geography: a torus of patches
+    overrides.setdefault("mig_rate", 0.1)                  # movement to act on
+    overrides.setdefault("spatial_policy", "taxis")        # perceive neighbours -> move (control: "blind")
+    return _make(seed, "exp064", **overrides)
 
 
 @register("exp037")
