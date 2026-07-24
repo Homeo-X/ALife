@@ -676,6 +676,50 @@ class TestScientificClaims(unittest.TestCase):
         self.assertNotEqual(taxis_cls, blind_cls)            # taxis genuinely changes movement
         self.assertGreater(blind_occ, greedy_occ)            # greedy HERDS onto fewer patches than random
 
+    def test_exp064_exogenous_resource_does_not_rescue_locomotive_agency(self):
+        # Ω-0.53: exp063 predicted an EXOGENOUS spatial resource would make taxis pay. exp064 refutes it. Pin
+        # the mechanism (the fitness verdict is the study, EXP064_FINDINGS.md): spatial_feed off is
+        # byte-identical; on, it injects resource (dynamics change); and under a STRONG exogenous resource
+        # random dispersal (blind) out-anticipates directed taxis, which HERDS onto fewer patches.
+        from collections import Counter
+        from omega.kernel.universe import Universe
+        from omega.kernel.scheduler import Scheduler
+        from omega.substrate.noise import Noise
+
+        def classes(**ov):
+            p, c = get_experiment("exp064")(seed=0, ticks=1200, **ov)
+            u, rng = Universe(total_quanta=c.total_quanta), Noise(c.seed); p.seed(u, rng)
+            Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                      max_reactions_per_tick=c.max_reactions_per_tick).run(1200)
+            return u.classes_ever_seen
+
+        off = classes(spatial_feed=False, spatial_policy="")
+        self.assertEqual(classes(spatial_feed=False, spatial_policy=""), off)   # deterministic
+        self.assertNotEqual(classes(spatial_feed=True, spatial_policy="blind"), off)  # injection acts
+
+        def evolve(sp, ticks=6000, cycle=1200):               # strong exogenous resource
+            p, c = get_experiment("exp064")(seed=0, spatial_policy=sp, spatial_feed_n=24)
+            u, rng = Universe(total_quanta=c.total_quanta), Noise(c.seed); p.seed(u, rng)
+            sch = Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                            max_reactions_per_tick=c.max_reactions_per_tick)
+            sch.run(ticks)
+            match = []
+            for _ in range(8):
+                sch.run(cycle // 8)
+                nb = p._next_band; tot = m = 0
+                for d in p._deme_atoms.values():
+                    for a, nn in d.items():
+                        tot += nn; m += nn if a in nb else 0
+                if tot:
+                    match.append(m / tot)
+            pops = Counter(p._patch.get(o.uid) for o in u.organizations.values()); pops.pop(None, None)
+            return (sum(match) / len(match) if match else 0.0), len(pops)
+
+        blind_a, blind_occ = evolve("blind")
+        taxis_a, taxis_occ = evolve("taxis")
+        self.assertGreater(blind_a, taxis_a)                  # random dispersal out-anticipates taxis
+        self.assertGreater(blind_occ, taxis_occ)              # taxis HERDS onto fewer patches
+
     def test_exp037_per_collective_genome_is_evolvable_internal_state(self):
         # Ω-0.25: the engine piece exp036 lacked — a collective carries a heritable, mutable
         # construction rule of its own (its type_resolution), used in its own compositions and
