@@ -649,6 +649,33 @@ class TestScientificClaims(unittest.TestCase):
         self.assertGreater(emb_anticip, 0.4)                 # its behaviour tracks the environment (>> 0.25)
         self.assertGreater(emb_anticip, bl_anticip)          # and beats blind — perception pays
 
+    def test_exp063_spatial_taxis_gates_cleanly_and_greedy_herds(self):
+        # Ω-0.52 (embodiment rung 2): spatial agency. A taxis agent perceives neighbour patches' next-band
+        # richness and migrates toward the best; the blind control migrates randomly (== default). Pin the
+        # mechanism, not the (negative) fitness verdict (that's the study, EXP063_FINDINGS.md): spatial_policy
+        # "" is byte-identical to "blind" (both random-neighbour), taxis/greedy change dynamics, and the
+        # positive-feedback "greedy" policy HERDS agents onto fewer patches than blind (why naive taxis fails).
+        from collections import Counter
+        from omega.kernel.universe import Universe
+        from omega.kernel.scheduler import Scheduler
+        from omega.substrate.noise import Noise
+
+        def sim(sp, ticks=5000):
+            p, c = get_experiment("exp063")(seed=0, spatial_policy=sp)
+            u, rng = Universe(total_quanta=c.total_quanta), Noise(c.seed); p.seed(u, rng)
+            Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                      max_reactions_per_tick=c.max_reactions_per_tick).run(ticks)
+            pops = Counter(p._patch.get(o.uid) for o in u.organizations.values()); pops.pop(None, None)
+            return u.classes_ever_seen, len(pops)
+
+        blind_cls, blind_occ = sim("blind")
+        empty_cls, _ = sim("")
+        taxis_cls, _ = sim("taxis")
+        _, greedy_occ = sim("greedy")
+        self.assertEqual(empty_cls, blind_cls)               # "" == blind (default random-neighbour), gated
+        self.assertNotEqual(taxis_cls, blind_cls)            # taxis genuinely changes movement
+        self.assertGreater(blind_occ, greedy_occ)            # greedy HERDS onto fewer patches than random
+
     def test_exp037_per_collective_genome_is_evolvable_internal_state(self):
         # Ω-0.25: the engine piece exp036 lacked — a collective carries a heritable, mutable
         # construction rule of its own (its type_resolution), used in its own compositions and

@@ -6,6 +6,40 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.52 — Locomotive agency does NOT pay: perception-directed movement (taxis) is worse than random in a niche-constructing world (exp063)
+
+**Date:** 2026-07-24 · **Status:** complete · **Verdict:** an **honest negative** (kept on purpose) that
+bounds embodiment — agency that *builds* (exp062) is selectable; agency that *relocates* is not, when the
+resource is self-generated. Detail: `studies/EXP063_FINDINGS.md`. Gated; `spatial_policy=""` ⇒ exp001–062
+byte-identical.
+
+The embodiment thread's second rung, action on **space**. In the exp062 world (spatial, seasonal, embodied
+foraging on, so patches differ in the next-season band), a migrating deme chooses its neighbour by a gated
+`spatial_policy`: **blind** (random == default), **greedy** (richest *absolute* neighbour), or **taxis**
+(richest *per-capita* — ideal-free). Pre-registered prediction: taxis > blind ⇒ locomotive agency selectable.
+
+**Result (6 seeds; anticipation over a season cycle).** Falsified in the opposite direction: blind **0.425**
+beats both greedy **0.307** and taxis **0.291**. The mechanism shows in the spatial spread — random movement
+already gives the optimal even spread (blind 24/24 patches, max-patch pop 17), so any *directed* movement can
+only **concentrate** agents onto shared "best" patches (greedy herds: 18.5/24, max-pop 48). And the deeper
+reason it cannot help: the resource is **self-generated and local** — each embodied deme forages the next
+band into its *own* patch, so the "richest neighbour" is just another deme's self-built patch; moving there
+abandons the resource the agent itself created. There is no exogenous spatial structure for movement to
+exploit.
+
+**Interpretation.** A precise bound on embodiment, complementing exp062: **agency that BUILDS (acts on the
+agent's own patch) is selectable; agency that RELOCATES is not, in a niche-constructing world** — relocation
+abandons self-built structure. The value of embodiment in exp062 was *construction*, not *locomotion*.
+
+### Is / is not
+- **Is:** a robust negative (two taxis designs, greedy and ideal-free, both worse than random) with a clean,
+  diagnosed mechanism (herding + self-generated local resource).
+- **Is not:** a claim that locomotive agency *never* pays — it is specific to a self-generated resource. The
+  **predicted positive follow-on** is an **exogenous patchy resource** (a spatial feed), where taxis should
+  beat blind. 6 seeds; `spatial_policy=""` ⇒ byte-identical.
+
+---
+
 ## Milestone Ω-0.51 — Embodied agency is SELECTABLE: a heritable perception→action policy is selected and pays dose-dependently — the world's collectives are agents (exp062)
 
 **Date:** 2026-07-24 · **Status:** complete · **Verdict:** a **positive** — the first rung of the

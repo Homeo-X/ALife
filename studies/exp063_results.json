@@ -1,0 +1,27 @@
+{
+  "n_seeds": 6,
+  "warmup": 6000,
+  "cycle": 1200,
+  "arms": [
+    "blind",
+    "greedy",
+    "taxis"
+  ],
+  "summary": {
+    "blind": {
+      "anticip": 0.4247834790369784,
+      "occupied": 24,
+      "max_pop": 16.666666666666668
+    },
+    "greedy": {
+      "anticip": 0.30675202893188075,
+      "occupied": 18.5,
+      "max_pop": 47.5
+    },
+    "taxis": {
+      "anticip": 0.29109609057182745,
+      "occupied": 20.5,
+      "max_pop": 39.833333333333336
+    }
+  }
+}

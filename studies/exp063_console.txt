@@ -1,0 +1,16 @@
+exp063 — is perception-directed MOVEMENT (taxis) selectable? (6 seeds)
+
+   policy  anticipation  occupied/24  max-patch pop
+    blind         0.425         24.0             17
+   greedy         0.307         18.5             48
+    taxis         0.291         20.5             40
+
+  best taxis 0.307 vs blind 0.425; blind spread 24.0/24 vs greedy 18.5/24
+
+  => LOCOMOTIVE AGENCY DOES NOT PAY (an honest negative) — no taxis policy beats random
+     movement. The resource is SELF-GENERATED and LOCAL (each deme forages the next band into
+     its own patch), so random movement already gives the optimal even spatial spread and
+     directed movement can only CONCENTRATE agents onto shared 'best' patches (greedy herds:
+     18/24 vs blind 24/24), abandoning self-built resource. Constructive
+     agency (exp062) pays; locomotive agency does not, in a niche-constructing world. Predicted
+     positive follow-on: an EXOGENOUS patchy resource (a spatial feed) should make taxis pay.

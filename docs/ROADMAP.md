@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.51).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.52).
 
 ## Where we are
 
@@ -33,8 +33,14 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   control (same action, a percept decoupled from the real world), embodied policies **concentrate at the
   informative phase** (perception is *used and selected*) and their anticipation advantage over blind **grows
   dose-dependently** with action strength (+0.02 → +0.17). Sensing-and-acting is a selectable,
-  behaviourally-advantageous trait — the minimal proto-mind. Open next rungs: richer/multi-cue perception, a
-  policy with internal state / memory, and action on *space* (perceive neighbours → migrate).
+  behaviourally-advantageous trait — the minimal proto-mind. **Action on space (exp063, Ω-0.52) is an honest
+  negative that bounds this:** perception-directed *movement* (taxis toward the neighbour richest in the next
+  band) is *worse* than random movement (blind 0.43 vs taxis 0.29), because random already gives the optimal
+  even spread and directed movement only *herds* agents — and the resource is self-generated and local, so
+  relocating abandons self-built structure. Agency that BUILDS (exp062) pays; agency that RELOCATES does not,
+  in a niche-constructing world. Open next rungs: an **exogenous patchy resource** (a spatial feed) where
+  taxis *should* pay (the predicted positive that bounds exp063's negative); richer/multi-cue perception; and
+  a policy with **internal state / memory** (act on history — the step toward genuine cognition).
 - **Toward minds — the self-improvement arc found the answer (Ω-0.24–0.47).** A precise, honest,
   falsifiable sequence that ruled out every *selection/representation* route to compounding collective
   competence, located the reason in the *substrate law*, **broke the wall** with a substrate-law feedback
