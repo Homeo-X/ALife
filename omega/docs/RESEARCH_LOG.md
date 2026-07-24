@@ -6,6 +6,48 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.55 — Multi-cue perception PAYS, and only when the cue is relevant (an irrelevant cue COSTS): perceptual breadth is a second route to cognition — and a matched control defeats a parameter-count confound (exp066)
+
+**Date:** 2026-07-24 · **Status:** complete · **Verdict:** a **positive** result with a **genome-matched
+double dissociation** — integrating a second observable cue out-anticipates a matched control *iff* the
+reward depends on it, and *hurts* when the cue is present-but-irrelevant. A methodological catch: the naive
+control shows a **spurious main effect** (a richer policy genome, not integration). Detail:
+`studies/EXP066_FINDINGS.md`. Gated; `agent_policy=""` / `env_cues=1` ⇒ exp001–065 byte-identical.
+
+The embodiment thread's fifth rung — **perceptual breadth**, the complement to exp065's memory. A second
+observable cue, a gated "regime" (`reg = (season_index // feed_bands) % 2`), is **always present and
+varying**; only when `env_cues=2` does the reward (the next band) depend on it — a **conjunction** of season
+and regime (`cur+1` if `reg=0` else `cur-1`) that the season alone underdetermines. A gated
+`agent_policy="multi"` agent perceives both cues via a per-regime action table; the **matched** control
+(`cue_blind`) carries the *identical* table genome but with its regime percept decoupled, so the only
+difference is *reading the cue* — the exp062 embodied-vs-blind design applied to cue 2.
+
+**Result (5 seeds; anticipation over a cycle; chance 0.25).** A double dissociation. Integration (multi −
+matched cue_blind) = **+0.097** when the cue is relevant (env=2: multi 0.459 > cue_blind 0.362) and
+**−0.095** when it varies but is irrelevant (env=1: multi 0.376 < cue_blind 0.471) — **interaction +0.193.**
+
+**Interpretation.** Two lessons. (1) **It is INTEGRATION, not parameters.** Simply carrying the per-regime
+*table* (vs a scalar phase) raises anticipation by **+0.080** even when the cue is irrelevant (the
+`cue_blind − embodied` genome effect — a lower per-parameter mutation load), so a naive `multi vs embodied`
+contrast shows a spurious main effect; the matched cue_blind control removes the genome and isolates that
+reading the cue pays *only* under env=2. (2) **Perception is not free.** Conditioning behaviour on a
+varying-but-uninformative cue *costs* (−0.095): fragmenting the policy over a meaningless distinction splits
+the agent's experience and it learns worse — the analogue of spurious conditioning / over-wide attention. So
+multi-cue integration is a second, distinct route to cognition (breadth), selectable exactly when a single
+cue underdetermines the action and penalized when the extra cue is noise — complementing exp065's memory
+(depth in time). The triangle POMDP was solvable by *remembering* the hidden direction (exp065) or
+*observing* it as a second cue (exp066).
+
+### Is / is not
+- **Is:** a clean positive with a diagnosed mechanism and a defeated confound (matched genome; interaction
+  +0.193; reproduces at single-seed scale — pinned by the test), plus an honest cost side (irrelevant cue
+  hurts).
+- **Is not:** a claim this is the best perceptual architecture, nor that an irrelevant *constant* cue would
+  cost (only a varying one does). Only that the *simplest* two-cue integrator is selected iff the second cue
+  disambiguates the reward. 5 seeds; off ⇒ byte-identical.
+
+---
+
 ## Milestone Ω-0.54 — Memory PAYS, and only when the world requires it: internal state is selectable in a partially-observable season — the step from reflex to cognition (exp065)
 
 **Date:** 2026-07-24 · **Status:** complete · **Verdict:** a **positive** result with a clean **double

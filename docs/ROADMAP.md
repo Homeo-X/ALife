@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.54).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.55).
 
 ## Where we are
 
@@ -52,9 +52,18 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   reactive = **+0.044 (triangle) vs −0.101 (sawtooth)**, an interaction of **+0.145**. Because the benefit is
   an *interaction*, not a main effect, it is **memory itself** that is selected — the step from *reflex* to
   *cognition*: internal state that integrates the past is selectable exactly when the instant percept
-  underdetermines the action. Open next rungs: **private / asynchronous perception** (which should break the
-  herd and let taxis pay — the sharpened predicted positive); **richer / multi-cue perception**; and **richer
-  internal state** (multi-step history, learned models — deeper cognition than last-direction extrapolation).
+  underdetermines the action. **exp066 (Ω-0.55) then took the complementary rung — perceptual BREADTH — and
+  it PAYS, in a genome-matched double dissociation:** when the reward is a *conjunction* of the season and a
+  second observable "regime" cue, a **multi**-cue agent (a per-regime action table) out-anticipates a
+  **matched cue-blind** control (same table genome, percept of the cue decoupled) by **+0.097**; when the cue
+  varies but is irrelevant it is *worse* by **−0.095** (conditioning on noise fragments the policy), an
+  interaction of **+0.193**. Crucially the naive contrast vs a *scalar* agent shows a **spurious main effect**
+  (the richer table genome helps in both worlds, +0.080) — only the matched control isolates that it is cue
+  **integration**, not extra parameters, that pays. So the world has two distinct routes to cognition:
+  **memory (depth in time, exp065)** and **multi-cue integration (breadth, exp066)**, each selectable exactly
+  when the environment demands it. Open next rungs: **private / asynchronous perception** (which should break
+  the herd and let taxis pay — the sharpened predicted positive); and **richer internal state** (multi-step
+  history, learned models — deeper cognition than last-direction extrapolation).
 - **Toward minds — the self-improvement arc found the answer (Ω-0.24–0.47).** A precise, honest,
   falsifiable sequence that ruled out every *selection/representation* route to compounding collective
   competence, located the reason in the *substrate law*, **broke the wall** with a substrate-law feedback

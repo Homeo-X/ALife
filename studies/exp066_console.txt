@@ -1,0 +1,16 @@
+exp066 — does multi-cue perception (integrating two cues) pay? 2x3 env x arm (5 seeds; chance=0.25)
+
+         env_cues   embodied  cue_blind    multi  multi-blind  blind-embod
+  1 (season only)      0.391      0.471    0.376       -0.095       +0.080
+  2 (conjunction)      0.398      0.362    0.459       +0.097       -0.036
+
+  INTEGRATION (multi - matched cue_blind): env=2 +0.097, env=1 -0.095  (interaction +0.193)
+
+  => MULTI-CUE PERCEPTION PAYS — AND ONLY WHEN THE CUE IS RELEVANT (a double dissociation,
+     genome matched). Against the cue_blind control that carries the IDENTICAL table genome but
+     cannot read the second cue, INTEGRATING it out-anticipates only when the reward depends on
+     it (env=2), and gives nothing when it is present-but-useless (env=1). The naive contrast vs
+     the scalar `embodied` agent shows a spurious main effect (the richer table genome helps in
+     both env's — the `blind-embod` column); the matched control isolates that it is cue
+     INTEGRATION, not extra parameters, that pays. A second route to cognition (perceptual
+     breadth), complementing exp065's memory (depth in time).
