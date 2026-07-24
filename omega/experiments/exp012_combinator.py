@@ -1332,11 +1332,12 @@ class CombinatorPhysics:
             self._cur_band = list(self.atoms[cur * w: cur * w + w]) or list(self.atoms)
             self._next_band = set(self.atoms[nb * w: nb * w + w]) or set(self.atoms)
 
-            # exp066 MULTI-CUE: a second OBSERVABLE cue (the regime) is always present; when env_cues=2 the
-            # reward (the next band) becomes a CONJUNCTION of season and regime (cur+1 if reg=0 else cur-1),
-            # so a single-cue agent cannot anticipate and a two-cue agent can. env_cues=1 => reg irrelevant,
-            # _next_band unchanged => byte-identical.
-            self._cur_regime = (tt // k) % self.n_regimes if (self.env_cues >= 2 and k > 1) else 0
+            # exp066 MULTI-CUE: a second OBSERVABLE cue (the regime) is always present AND VARYING; when
+            # env_cues=2 the reward (the next band) becomes a CONJUNCTION of season and regime (cur+1 if
+            # reg=0 else cur-1), so a single-cue agent cannot anticipate and a two-cue agent can. env_cues=1
+            # => the cue still varies but is IRRELEVANT to the reward (a non-degenerate "present but useless"
+            # control), _next_band unchanged => byte-identical.
+            self._cur_regime = (tt // k) % self.n_regimes if k > 1 else 0
             if self.env_cues >= 2 and k > 1:
                 nb2 = (cur + 1) % k if self._cur_regime == 0 else (cur - 1) % k
                 self._next_band = set(self.atoms[nb2 * w: nb2 * w + w]) or set(self.atoms)
