@@ -773,6 +773,58 @@ class TestScientificClaims(unittest.TestCase):
         interaction = (tri_mem - tri_react) - (saw_mem - saw_react)
         self.assertGreater(interaction, 0.05)                # a DOUBLE DISSOCIATION: it is memory that pays
 
+    def test_exp066_multi_cue_perception_pays_only_when_the_cue_is_relevant(self):
+        # Ω-0.55 (embodiment rung 5, perceptual breadth): does INTEGRATING two observable cues pay? A second
+        # observable cue (a regime) is always present; only when env_cues=2 does the reward (the next band)
+        # depend on it — a conjunction of season and regime — so a single-cue "embodied" agent cannot resolve
+        # it and a two-cue "multi" agent (a per-regime action table) can. Because the cue and the table exist
+        # in BOTH env conditions, a benefit only under env=2 isolates cue INTEGRATION, not extra parameters.
+        # Pin: off ⇒ exp036 byte-identical; the double dissociation direction. Magnitudes are the study's
+        # (EXP066_FINDINGS.md).
+        from omega.kernel.universe import Universe
+        from omega.kernel.scheduler import Scheduler
+        from omega.substrate.noise import Noise
+        from statistics import mean
+
+        def classes(**ov):                                   # byte-identity probe
+            p, c = get_experiment("exp066")(seed=0, ticks=1500, **ov)
+            u, rng = Universe(total_quanta=c.total_quanta), Noise(c.seed); p.seed(u, rng)
+            Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                      max_reactions_per_tick=c.max_reactions_per_tick).run(1500)
+            return u.classes_ever_seen
+
+        base = get_experiment("exp036")(seed=0, ticks=1500)
+        ub, rb = Universe(total_quanta=base[1].total_quanta), Noise(base[1].seed); base[0].seed(ub, rb)
+        Scheduler(ub, base[0], rb, decay_hazard=base[1].decay_hazard,
+                  max_reactions_per_tick=base[1].max_reactions_per_tick).run(1500)
+        self.assertEqual(classes(agent_policy="", env_cues=1), ub.classes_ever_seen)         # off ⇒ exp036
+        self.assertNotEqual(classes(agent_policy="multi", env_cues=2, forage_n=6),
+                            ub.classes_ever_seen)                                             # on ⇒ acts
+
+        def evolve(env, policy, ticks=6000, cycle=2400):     # anticipation over >= 2 regime periods
+            p, c = get_experiment("exp066")(seed=0, env_cues=env, agent_policy=policy, forage_n=6)
+            u, rng = Universe(total_quanta=c.total_quanta), Noise(c.seed); p.seed(u, rng)
+            sch = Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                            max_reactions_per_tick=c.max_reactions_per_tick)
+            sch.run(ticks)
+            match = []
+            for _ in range(8):
+                sch.run(cycle // 8)
+                nb = p._next_band; tot = m = 0
+                for d in p._deme_atoms.values():
+                    for a, nn in d.items():
+                        tot += nn; m += nn if a in nb else 0
+                if tot:
+                    match.append(m / tot)
+            return mean(match) if match else 0.0
+
+        con_emb, con_mlt = evolve(2, "embodied"), evolve(2, "multi")   # conjunction: 2nd cue RELEVANT
+        one_emb, one_mlt = evolve(1, "embodied"), evolve(1, "multi")   # season only: 2nd cue IRRELEVANT
+        self.assertGreater(con_mlt, con_emb)                 # env=2: integrating both cues out-anticipates
+        self.assertGreater(one_emb, one_mlt)                 # env=1: the useless extra cue costs, doesn't help
+        interaction = (con_mlt - con_emb) - (one_mlt - one_emb)
+        self.assertGreater(interaction, 0.05)                # a DOUBLE DISSOCIATION: it is cue INTEGRATION
+
     def test_exp037_per_collective_genome_is_evolvable_internal_state(self):
         # Ω-0.25: the engine piece exp036 lacked — a collective carries a heritable, mutable
         # construction rule of its own (its type_resolution), used in its own compositions and
