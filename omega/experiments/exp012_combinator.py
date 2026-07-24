@@ -583,7 +583,18 @@ class CombinatorPhysics:
         # policy+action repertoire but no sensing — the control that isolates whether *perception* is
         # what pays. Selection is deme_fitness="anticipation" (reward products matching the next band).
         # agent_policy="" (default) => no foraging, no policy genome, no RNG draws => byte-identical.
-        self.agent_policy = ""                # "" | "embodied" | "blind"
+        self.agent_policy = ""                # "" | "embodied" | "blind" | "memory"
+        # exp065 MEMORY (internal state -> cognition): the embodiment thread's step toward cognition. In a
+        # PARTIALLY-OBSERVABLE season (season_pattern="triangle": 0,1,2,3,2,1,0,... — the current band no
+        # longer implies the next, since the season can be ascending or descending), a reactive policy
+        # (act on the instant percept, exp062) cannot anticipate. A "memory" agent carries internal state —
+        # the last observed direction of the season — and extrapolates it, so it acts on HISTORY, not just
+        # the instant. Prediction: memory pays iff the world requires it (triangle), not in the fully
+        # instant-observable sawtooth — a double dissociation isolating memory. season_pattern="sawtooth"
+        # (default) => byte-identical.
+        self.season_pattern = "sawtooth"      # "sawtooth" (default) | "triangle" (partially observable)
+        self._deme_prevseason: dict[int, int] = {}   # per-deme last-seen season (the memory register)
+        self._deme_dir: dict[int, int] = {}          # per-deme last observed season direction (internal state)
         self.forage_n = 2                     # atoms a deme forages per deme-generation
         self.policy_mut = 0.15                # per-founding mutation rate of the heritable phase phi
         self._deme_phase: dict[int, int] = {} # per-patch policy phase phi (the heritable agent genome)
@@ -1276,9 +1287,17 @@ class CombinatorPhysics:
         if self.feed_pattern == "cyclic" and self.feed_period > 0 and self.atoms:
             k = max(1, self.feed_bands)
             w = max(1, len(self.atoms) // k)
-            cur = (universe.tick // self.feed_period) % k
+            def _season(t):
+                # exp065: sawtooth (0,1,2,3,0,...) or a partially-observable triangle (0,1,2,3,2,1,0,...)
+                if self.season_pattern == "triangle" and k > 1:
+                    per = 2 * (k - 1)
+                    ph = t % per
+                    return ph if ph < k else per - ph
+                return t % k
+            tt = universe.tick // self.feed_period
+            cur = _season(tt)
+            nb = _season(tt + 1)
             self._cur_band = list(self.atoms[cur * w: cur * w + w]) or list(self.atoms)
-            nb = ((universe.tick // self.feed_period) + 1) % k
             self._next_band = set(self.atoms[nb * w: nb * w + w]) or set(self.atoms)
 
             # exp062 EMBODIED AGENCY (perceive -> act): each live deme forages atoms from the band its
@@ -1291,9 +1310,20 @@ class CombinatorPhysics:
                 for pi in live_patches:
                     if pi is None:
                         continue
-                    phi = self._deme_phase.setdefault(pi, rng.randint(0, k - 1))
-                    percept = cur if self.agent_policy == "embodied" else 0
-                    bi = (percept + phi) % k
+                    if self.agent_policy == "memory":
+                        # act on HISTORY: track the season's last direction and extrapolate it. Requires
+                        # internal state (the last-seen season); a reactive agent cannot do this.
+                        prev = self._deme_prevseason.get(pi)
+                        if prev is None:
+                            self._deme_prevseason[pi] = cur
+                        elif cur != prev:
+                            self._deme_dir[pi] = 1 if cur > prev else -1
+                            self._deme_prevseason[pi] = cur
+                        bi = max(0, min(k - 1, cur + self._deme_dir.get(pi, 1)))
+                    else:
+                        phi = self._deme_phase.setdefault(pi, rng.randint(0, k - 1))
+                        percept = cur if self.agent_policy == "embodied" else 0   # blind: fixed percept
+                        bi = (percept + phi) % k
                     band = self.atoms[bi * w: bi * w + w] or self.atoms
                     for _ in range(self.forage_n):
                         org = universe.spawn(_path_build([rng.choice(band), rng.choice(band)]), "forage")
@@ -1665,6 +1695,7 @@ def _make(seed, experiment, **overrides):
     physics.agent_policy = str(overrides.get("agent_policy", ""))      # exp062 embodied agency
     physics.forage_n = int(overrides.get("forage_n", 2))
     physics.policy_mut = float(overrides.get("policy_mut", 0.15))
+    physics.season_pattern = str(overrides.get("season_pattern", "sawtooth"))  # exp065 partial observability
     physics.spatial_policy = str(overrides.get("spatial_policy", ""))  # exp063 spatial agency (taxis)
     physics.spatial_feed = bool(overrides.get("spatial_feed", False))  # exp064 exogenous patchy resource
     physics.spatial_feed_n = int(overrides.get("spatial_feed_n", 3))
@@ -2283,6 +2314,40 @@ def build_agent(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("feed_bands", 4)
     overrides.setdefault("agent_policy", "embodied")       # the perceive->act loop (control: "blind")
     return _make(seed, "exp062", **overrides)
+
+
+@register("exp065")
+def build_memory(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp065 — MEMORY (internal state): the embodiment thread's step toward COGNITION. exp062 showed a
+    *reactive* agent (act on the instant percept) is selectable in a fully-observable sawtooth season. But a
+    reactive policy fails when the world is PARTIALLY OBSERVABLE — when the instant percept underdetermines
+    what to do. `season_pattern="triangle"` makes the season a triangle wave (0,1,2,3,2,1,0,...), so the
+    current band no longer implies the next (the season may be ascending or descending); anticipating it
+    requires remembering the *previous* season. A **memory** agent carries internal state — the last observed
+    season direction — and extrapolates it, acting on HISTORY, not just the instant. The decisive design is a
+    2×2 (season_pattern {sawtooth, triangle} × agent_policy {embodied=reactive, memory}): memory should pay
+    *iff* the world requires it (triangle), and should NOT help (indeed hurt) in the instant-observable
+    sawtooth — a double dissociation isolating memory itself. Runs the exp062 seasonal agent base.
+    `agent_policy=""` / `season_pattern="sawtooth"` (default) => exp001-064 byte-identical."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "anticipation")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("feed_pattern", "cyclic")
+    overrides.setdefault("feed_period", 300)
+    overrides.setdefault("feed_bands", 4)
+    overrides.setdefault("forage_n", 6)
+    overrides.setdefault("season_pattern", "triangle")     # the partially-observable world
+    overrides.setdefault("agent_policy", "memory")         # act on history (control: "embodied" = reactive)
+    return _make(seed, "exp065", **overrides)
 
 
 @register("exp063")
