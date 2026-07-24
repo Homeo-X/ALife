@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.50).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.51).
 
 ## Where we are
 
@@ -27,6 +27,14 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   is byte-identical to the un-evicted ceiling — the tower reads live network state, not the evicted registry).
   Phase B done; Phase C is the long-horizon census (deeper towers + the 10⁶–10⁷ horizon), which this
   eviction-invariance makes feasible.
+- **Agency / minds — the world's collectives are AGENTS (Ω-0.51).** The embodiment thread's first rung: an
+  agent is a collective with a heritable **perception→action policy** — it perceives the environment's
+  season (the cyclic feed) and forages the band its policy targets. Against a perception-ablated **blind**
+  control (same action, a percept decoupled from the real world), embodied policies **concentrate at the
+  informative phase** (perception is *used and selected*) and their anticipation advantage over blind **grows
+  dose-dependently** with action strength (+0.02 → +0.17). Sensing-and-acting is a selectable,
+  behaviourally-advantageous trait — the minimal proto-mind. Open next rungs: richer/multi-cue perception, a
+  policy with internal state / memory, and action on *space* (perceive neighbours → migrate).
 - **Toward minds — the self-improvement arc found the answer (Ω-0.24–0.47).** A precise, honest,
   falsifiable sequence that ruled out every *selection/representation* route to compounding collective
   competence, located the reason in the *substrate law*, **broke the wall** with a substrate-law feedback

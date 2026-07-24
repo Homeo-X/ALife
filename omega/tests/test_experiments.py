@@ -596,6 +596,59 @@ class TestScientificClaims(unittest.TestCase):
         r = run(*get_experiment("exp036")(seed=0, ticks=800))
         self.assertGreater(r.open_endedness["novelty_rate"], 0.0)   # still an open world
 
+    def test_exp062_embodied_agency_is_selected_and_is_byte_identical_off(self):
+        # Ω-0.51 (embodiment, rung 1): an agent is a collective with a heritable perception->action policy
+        # (perceive the season, forage the band phi away from it). Pin: agent_policy="" is byte-identical to
+        # exp036; an embodied agent's policy CONCENTRATES at the anticipatory phase phi=1 (perception is used
+        # and selected) and its behaviour tracks the environment above chance, where the blind control (fixed
+        # percept) does neither. Dose-response magnitudes are the study's science (EXP062_FINDINGS.md).
+        from collections import Counter
+        from omega.kernel.universe import Universe
+        from omega.kernel.scheduler import Scheduler
+        from omega.substrate.noise import Noise
+
+        def classes(**ov):                                   # byte-identity probe
+            p, c = get_experiment("exp062")(seed=0, ticks=1500, **ov)
+            u, rng = Universe(total_quanta=c.total_quanta), Noise(c.seed); p.seed(u, rng)
+            Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                      max_reactions_per_tick=c.max_reactions_per_tick).run(1500)
+            return u.classes_ever_seen
+
+        base = get_experiment("exp036")(seed=0, ticks=1500)
+        ub, rb = Universe(total_quanta=base[1].total_quanta), Noise(base[1].seed); base[0].seed(ub, rb)
+        Scheduler(ub, base[0], rb, decay_hazard=base[1].decay_hazard,
+                  max_reactions_per_tick=base[1].max_reactions_per_tick).run(1500)
+        self.assertEqual(classes(agent_policy=""), ub.classes_ever_seen)   # off => exp036 byte-identical
+        self.assertNotEqual(classes(agent_policy="embodied", forage_n=12), ub.classes_ever_seen)  # on => acts
+
+        # embodied vs blind at strong action: does perception get SELECTED and USED?
+        def evolve(policy, ticks=6000, cycle=1200):
+            p, c = get_experiment("exp062")(seed=0, agent_policy=policy, forage_n=12)
+            u, rng = Universe(total_quanta=c.total_quanta), Noise(c.seed); p.seed(u, rng)
+            sch = Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                            max_reactions_per_tick=c.max_reactions_per_tick)
+            sch.run(ticks)
+            match = []
+            for _ in range(8):                               # anticipation averaged over a season cycle
+                sch.run(cycle // 8)
+                nb = p._next_band
+                tot = m = 0
+                for d in p._deme_atoms.values():
+                    for a, nn in d.items():
+                        tot += nn; m += nn if a in nb else 0
+                if tot:
+                    match.append(m / tot)
+            phis = list(p._deme_phase.values())
+            phi1 = sum(1 for x in phis if x == 1) / len(phis) if phis else 0.0
+            return (sum(match) / len(match) if match else 0.0), phi1
+
+        emb_anticip, emb_phi1 = evolve("embodied")
+        bl_anticip, bl_phi1 = evolve("blind")
+        self.assertGreater(emb_phi1, 0.4)                    # embodied concentrates at the informative phase
+        self.assertGreater(emb_phi1, bl_phi1)                # more than the perception-ablated control
+        self.assertGreater(emb_anticip, 0.4)                 # its behaviour tracks the environment (>> 0.25)
+        self.assertGreater(emb_anticip, bl_anticip)          # and beats blind — perception pays
+
     def test_exp037_per_collective_genome_is_evolvable_internal_state(self):
         # Ω-0.25: the engine piece exp036 lacked — a collective carries a heritable, mutable
         # construction rule of its own (its type_resolution), used in its own compositions and

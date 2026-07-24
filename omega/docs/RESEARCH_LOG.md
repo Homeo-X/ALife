@@ -6,6 +6,43 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.51 — Embodied agency is SELECTABLE: a heritable perception→action policy is selected and pays dose-dependently — the world's collectives are agents (exp062)
+
+**Date:** 2026-07-24 · **Status:** complete · **Verdict:** a **positive** — the first rung of the
+embodiment/minds thread: the world's collectives perceive their environment, act on it with a heritable
+policy, and are *selected* for doing so, with the payoff scaling with action strength. Detail:
+`studies/EXP062_FINDINGS.md`. Gated; `agent_policy=""` (default) ⇒ exp001–061 byte-identical.
+
+The living world sustains OEE and self-maintaining life at scale (Ω-0.48–0.50); exp062 asks whether its
+collectives are *agents*. An **agent** is a collective with a heritable policy that **perceives** the
+environment's season (the cyclic feed band, exp036) and **acts** by foraging atoms from the band an offset
+`phi` from the *perceived* season (foraged atoms become build material); selection is
+`deme_fitness="anticipation"`. `phi` is a heritable genome (`_deme_phase`, the exp037 pattern). The decisive
+matched control **`agent_policy="blind"`** has the identical policy+forage but a **fixed percept** (decoupled
+from the real season) — same action, no sensing. Swept as a dose-response in action strength (`forage_n`).
+
+**Result (6 seeds; anticipation averaged over a season cycle; φ=1 = the anticipatory phase, chance = 1/4).**
+Two clean signals. **Perception is selected:** embodied policies concentrate at **φ=1** (0.47 → 0.76 as the
+signal strengthens), while the perception-ablated blind control drifts *away* (0.18 → 0.06). **Perception
+pays, dose-dependently:** the embodied anticipation advantage over blind grows monotonically **+0.020 →
++0.099 → +0.171** (embodied 0.694 vs blind 0.523 at strong action, both far above chance 0.25). Blind agents
+forage too and rise above chance, but a fixed percept cannot *track* the moving season — the ~0.17 gap is
+the isolated value of perception itself.
+
+**Interpretation.** The world is not just alive; its collectives are **agents** — a perceive → act → select
+loop is closed, using the same heritable-per-collective-genome machinery that carried construction rules
+(exp037), goals (exp044), and credit (exp046). The minimal substrate-native mind: perception is *used*,
+*selected*, and *behaviourally advantageous*.
+
+### Is / is not
+- **Is:** the first proof that perception-coupled action is selectable and dose-dependently advantageous in
+  this world (a clean matched control isolating perception from action).
+- **Is not:** rich cognition — the percept is one scalar (season), the policy one heritable integer, the
+  action foraging. Internal models, memory, planning, multi-cue perception, and action-on-space are later
+  rungs. 6 seeds; `agent_policy=""` ⇒ byte-identical.
+
+---
+
 ## Milestone Ω-0.50 — The world census: the living world SUSTAINS open-ended novelty and self-maintaining life at 250k ticks and grows a deep tower — but competence saturates to a stable plateau across levels (exp061)
 
 **Date:** 2026-07-23 · **Status:** complete · **Verdict:** a **qualified positive** — the built world
