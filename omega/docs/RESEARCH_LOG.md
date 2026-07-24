@@ -6,6 +6,41 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.53 — An exogenous resource does NOT rescue locomotive agency: it deepens the negative — directed movement herds, random dispersal is the ideal-free optimum (exp064)
+
+**Date:** 2026-07-24 · **Status:** complete · **Verdict:** an **honest negative** that refutes exp063's
+predicted positive and generalizes it — locomotive agency fails not because of *where* the resource is, but
+because shared-perception simultaneous movement is anti-cooperative. Detail: `studies/EXP064_FINDINGS.md`.
+Gated; `spatial_feed=False` ⇒ exp001–063 byte-identical.
+
+exp063 (Ω-0.52) predicted an **exogenous, spatial** resource would make taxis pay. exp064 adds a gated
+`spatial_feed` (the environment injects the next band into a rotating set of *resource patches*; agent
+foraging off, so the only way to reach the resource is to **move** there) and sweeps its strength — a
+dose-response over {blind, greedy, taxis}.
+
+**Result (5 seeds).** The prediction is **refuted**, and taxis gets *worse* relative to random as the
+resource strengthens: taxis − blind gap **+0.001 → −0.097 → −0.202** as `spatial_feed_n` = 4 → 12 → 24. A
+stronger resource makes **blind** much better (anticipation 0.28 → 0.57) but **taxis barely moves** (0.28 →
+0.36). Blind holds the full even spread (24/24 patches); taxis **herds** onto ~18/24.
+
+**Interpretation.** Random dispersal already realizes the **ideal-free distribution** — an even spread
+harvests a rotating spatial resource optimally as it passes through every neighbourhood. Directed movement
+**herds** all agents onto the perceived-best patches, crowding them. Even the per-capita "ideal-free" taxis
+herds, because all agents best-respond to the *same stale state at once* (an information cascade;
+true ideal-free settling needs asynchronous moves or private information). So exp063 + exp064 make the bound
+on embodiment precise and general: **agency that BUILDS (exp062) pays; agency that RELOCATES does not,
+because directed relocation from shared perception herds and random dispersal is already optimal.** The value
+of embodiment here is **construction, not locomotion.**
+
+### Is / is not
+- **Is:** a robust, mechanism-diagnosed negative (dose-response; two directed policies both herd and lose;
+  monotone widening gap) that refutes and generalizes exp063.
+- **Is not:** a claim locomotive agency can *never* pay — the predicted regime where it should is **private /
+  heterogeneous perception or asynchronous settling** (breaking the shared-percept cascade), the natural next
+  probe. 5 seeds; `spatial_feed=False` ⇒ byte-identical.
+
+---
+
 ## Milestone Ω-0.52 — Locomotive agency does NOT pay: perception-directed movement (taxis) is worse than random in a niche-constructing world (exp063)
 
 **Date:** 2026-07-24 · **Status:** complete · **Verdict:** an **honest negative** (kept on purpose) that

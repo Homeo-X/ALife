@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.52).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.53).
 
 ## Where we are
 
@@ -38,9 +38,15 @@ milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0
   band) is *worse* than random movement (blind 0.43 vs taxis 0.29), because random already gives the optimal
   even spread and directed movement only *herds* agents — and the resource is self-generated and local, so
   relocating abandons self-built structure. Agency that BUILDS (exp062) pays; agency that RELOCATES does not,
-  in a niche-constructing world. Open next rungs: an **exogenous patchy resource** (a spatial feed) where
-  taxis *should* pay (the predicted positive that bounds exp063's negative); richer/multi-cue perception; and
-  a policy with **internal state / memory** (act on history — the step toward genuine cognition).
+  in a niche-constructing world. **exp064 (Ω-0.53) tested the predicted positive — an exogenous patchy
+  resource (a spatial feed) — and REFUTED it, deepening the negative:** no taxis policy beats random
+  dispersal, and taxis gets *worse* as the resource strengthens (gap +0.00 → −0.20), because random dispersal
+  already realizes the ideal-free distribution while directed movement *herds* — and even per-capita
+  "ideal-free" taxis herds, since all agents best-respond to the same stale state at once. Locomotive agency
+  fails because **shared-perception synchronous movement is anti-cooperative**, not because of where the
+  resource is. Open next rungs: **private / asynchronous perception** (which should break the herd and let
+  taxis pay — the sharpened predicted positive); richer/multi-cue perception; and a policy with **internal
+  state / memory** (act on history — the step toward genuine cognition).
 - **Toward minds — the self-improvement arc found the answer (Ω-0.24–0.47).** A precise, honest,
   falsifiable sequence that ruled out every *selection/representation* route to compounding collective
   competence, located the reason in the *substrate law*, **broke the wall** with a substrate-law feedback

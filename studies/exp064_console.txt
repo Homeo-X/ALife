@@ -1,0 +1,18 @@
+exp064 — does taxis pay when the resource is EXOGENOUS? dose-response in resource strength (5 seeds)
+
+  feed_n    blind   greedy    taxis  taxis-blind    blind occ  taxis occ
+       4    0.277    0.278    0.278       +0.001         24.0       18.6
+      12    0.381    0.290    0.283       -0.097         24.0       18.0
+      24    0.565    0.311    0.363       -0.202         24.0       18.6
+
+  taxis-blind gap: +0.001 (weak) -> -0.202 (strong resource)
+
+  => THE EXOGENOUS RESOURCE DOES NOT RESCUE LOCOMOTIVE AGENCY — it DEEPENS the exp063 negative.
+     No taxis policy beats random dispersal, and taxis gets WORSE relative to random as the
+     resource strengthens (blind rises steeply, taxis barely moves). Directed movement HERDS
+     agents onto the resource patches (crowding them), while random dispersal already realizes
+     the IDEAL-FREE distribution and harvests a rotating spatial resource efficiently. Even the
+     per-capita ('ideal-free') taxis herds, because all agents best-respond to the same stale
+     state at once. Locomotive agency fails not because of WHERE the resource is, but because
+     shared-perception simultaneous movement is anti-cooperative. Embodiment's value is
+     CONSTRUCTION (exp062), not locomotion.
