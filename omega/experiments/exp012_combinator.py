@@ -587,6 +587,12 @@ class CombinatorPhysics:
         self.forage_n = 2                     # atoms a deme forages per deme-generation
         self.policy_mut = 0.15                # per-founding mutation rate of the heritable phase phi
         self._deme_phase: dict[int, int] = {} # per-patch policy phase phi (the heritable agent genome)
+        # exp063 SPATIAL AGENCY (taxis): the second embodiment rung — action on SPACE. A deme PERCEIVES its
+        # neighbour patches' richness in the NEXT season's band and MIGRATES toward the richest (taxis),
+        # tracking the anticipated resource across space, vs the perception-ablated control that migrates to
+        # a RANDOM neighbour (blind == the default). spatial_policy="" (default) => migration is exactly the
+        # pre-exp063 random-neighbour hop => byte-identical.
+        self.spatial_policy = ""              # "" | "taxis" | "blind"
         # exp020 replicase: strength/fidelity of the explicit template-copy channel.
         # copy_rate=0 (default) leaves every earlier experiment untouched.
         self.copy_rate = 0.0
@@ -696,6 +702,22 @@ class CombinatorPhysics:
         for u in [u for u in self._patch if u not in live]:
             del self._patch[u]
         buckets = [[] for _ in range(self.n_patches)]
+        # exp063 SPATIAL AGENCY: the taxis percept — each patch's richness in the NEXT season's band (the
+        # anticipated resource) and its population (crowding). Migrants hop toward the best neighbour by the
+        # policy: "greedy" = richest ABSOLUTE (positive feedback — all agents see the same best patch and
+        # HERD, collapsing spatial diversity); "taxis" = richest PER CAPITA (band/pop — ideal-free, so agents
+        # spread across good patches instead of piling on one). Gated => byte-identical when off.
+        band_rich = patch_pop = None
+        if self.spatial_policy in ("taxis", "greedy") and self.space and self._next_band:
+            band_rich = [0] * self.n_patches
+            patch_pop = [0] * self.n_patches
+            for o in pop:
+                pp = self._patch.get(o.uid)
+                if pp is not None:
+                    patch_pop[pp] += 1
+                    for a in _path_nodes(o.state):
+                        if a in self._next_band:
+                            band_rich[pp] += 1
         for o in pop:
             p = self._patch.get(o.uid)
             if p is None:
@@ -720,7 +742,14 @@ class CombinatorPhysics:
                 self._patch[o.uid] = p
             if rng.random() < self.mig_rate:         # migration couples the demes
                 if self.space:                       # geography: hop to a neighbour only
-                    p = rng.choice(self._neighbors(p))
+                    nbrs = self._neighbors(p)
+                    if band_rich is not None:        # exp063 taxis: move toward the best neighbour
+                        if self.spatial_policy == "taxis":   # ideal-free: richest PER CAPITA (anti-herd)
+                            p = max(nbrs, key=lambda q: band_rich[q] / (patch_pop[q] + 1))
+                        else:                                # greedy: richest ABSOLUTE (herds)
+                            p = max(nbrs, key=lambda q: band_rich[q])
+                    else:                            # blind / default: a random neighbour
+                        p = rng.choice(nbrs)
                 else:
                     p = rng.randint(0, self.n_patches - 1)
                 self._patch[o.uid] = p
@@ -1614,6 +1643,7 @@ def _make(seed, experiment, **overrides):
     physics.agent_policy = str(overrides.get("agent_policy", ""))      # exp062 embodied agency
     physics.forage_n = int(overrides.get("forage_n", 2))
     physics.policy_mut = float(overrides.get("policy_mut", 0.15))
+    physics.spatial_policy = str(overrides.get("spatial_policy", ""))  # exp063 spatial agency (taxis)
     physics.deme_genome = bool(overrides.get("deme_genome", False))   # exp037 evolvable rule
     physics.genome_mut = float(overrides.get("genome_mut", 0.3))
     physics.network_template = float(overrides.get("network_template", 0.0))  # exp040 strength
@@ -2229,6 +2259,41 @@ def build_agent(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("feed_bands", 4)
     overrides.setdefault("agent_policy", "embodied")       # the perceive->act loop (control: "blind")
     return _make(seed, "exp062", **overrides)
+
+
+@register("exp063")
+def build_taxis(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp063 — SPATIAL AGENCY (taxis): the embodiment thread's second rung — action on SPACE. exp062
+    showed perception-directed *construction* (foraging) is selectable; exp063 asks the same of
+    perception-directed *movement*. In a spatial, seasonal world where embodied agents forage the next
+    season's band into their patches (so patches differ in that resource), a **taxis** agent PERCEIVES its
+    neighbour patches' richness in the next band and MIGRATES toward the richest — tracking the anticipated
+    resource across space. The decisive matched control `spatial_policy="blind"` migrates the same fraction
+    of members to a RANDOM neighbour (perception decoupled from movement). Selection is anticipation, so an
+    agent that moves to next-band-rich patches builds more matching products. Question: does taxis
+    out-anticipate blind — is *perception-directed movement* selectable, on top of foraging? Runs the
+    exp062 embodied-agent base + geography + migration. `spatial_policy=""` (default) => the pre-exp063
+    random-neighbour migration, byte-identical."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "anticipation")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("feed_pattern", "cyclic")
+    overrides.setdefault("feed_period", 300)
+    overrides.setdefault("feed_bands", 4)
+    overrides.setdefault("agent_policy", "embodied")       # foraging creates the spatial resource gradient
+    overrides.setdefault("forage_n", 6)
+    overrides.setdefault("space", True)                    # geography: a torus of patches
+    overrides.setdefault("mig_rate", 0.1)                  # movement to act on
+    overrides.setdefault("spatial_policy", "taxis")        # perceive neighbours -> move (control: "blind")
+    return _make(seed, "exp063", **overrides)
 
 
 @register("exp037")
