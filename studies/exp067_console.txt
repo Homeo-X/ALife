@@ -1,0 +1,16 @@
+exp067 — does TRANSPARENT cross-tier reification make competence compound across levels? (5 tiers, 6000 ticks/tier, 5 seeds)
+
+  [compounding ] per-tier competence 1.830 1.753 1.764 1.755 1.831  (3/5 full-depth)
+    across-tier slope +0.0005, collapse 0.40, mean depth 3.20
+
+  [law_only    ] per-tier competence 1.830 1.865 1.923 1.958 1.903  (3/5 full-depth)
+    across-tier slope +0.0240, collapse 0.40, mean depth 3.20
+
+  [transparent ] per-tier competence 1.822 1.947 1.918 1.914 1.878  (4/5 full-depth)
+    across-tier slope +0.0078, collapse 0.20, mean depth 4.00
+
+  across-tier competence slope: law_only +0.0240  ->  transparent +0.0078  (delta -0.0161)
+
+  => NO CROSS-LEVEL COMPOUNDING: transparent carry-over does not lift the across-tier slope
+     above the opaque tower — the competence ceiling is intrinsic to the per-tier substrate
+     (a clean negative bounding cross-level competence; the next lever is a rising target / H2).

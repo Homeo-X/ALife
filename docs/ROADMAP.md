@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.55).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.56).
 
 ## Where we are
 
@@ -129,7 +129,19 @@ world's competence/life/novelty hold at the 10⁶+ horizon the plain engine was 
 falsification:* at 10⁷ the floor finally dilutes to zero, or the living world's competence/life decays at
 the 10⁶+ horizon. The census also pinned an honest bound: **competence saturates** to a stable plateau both
 within a tier and across tower levels (per-tier competence flat ~1.85 over 16 tiers) — the world is
-open-ended in construction and individuality but **not unboundedly self-improving**.
+open-ended in construction and individuality but **not unboundedly self-improving**. **exp067 (Ω-0.56) then
+opened the *make-competence-compound-across-levels* program and delivered its first, boundary-independent
+negative:** the plateau is **not** an artifact of *opacity at the promotion boundary* — making promotion
+**transparent** (carry the finishing tier's network-visible catalytic repertoire across + seed the child
+with its product states, the exp053 fix one level up) does **not** raise the across-tier competence slope
+(transparent +0.008 vs the scalar-law tower's +0.024; competence stays on the ~1.9 plateau at every tier). So
+the cap is the **per-tier substrate's own optimal-richness ceiling** (exp053/054), boundary-independent — the
+within-level "rate up to optimal richness, then a stock" law holds at tower scale. (Bonus: transparent
+promotion halves tower collapse 0.40→0.20 and deepens it 3.2→4.0 tiers — it aids *bootstrapping*, not the
+ceiling.) The open next levers are therefore not about *carrying structure* but about *changing what each
+tier can express*: a **rising cross-tier target** that forces each level to exceed the last (H2), or a
+genuinely richer per-tier construction law (H3). *Predicted falsification of the program:* even those
+re-plateau at ~1.9 ⇒ cross-level competence compounding is impossible in this substrate, a hard bound.
 
 ## Secondary threads
 

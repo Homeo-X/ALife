@@ -6,6 +6,51 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.56 — Transparent cross-tier reification does NOT make competence compound across levels (the ceiling is intrinsic to the per-tier substrate) — but it makes the tower more robust and deeper (exp067)
+
+**Date:** 2026-07-25 · **Status:** complete · **Verdict:** an **honest negative** on the headline —
+carrying competent structure across the tower boundary does *not* raise the across-tier competence slope; the
+census ~1.9 plateau is set by the per-tier substrate, not by boundary opacity — plus a real **secondary
+positive**: transparent promotion lowers collapse and deepens the tower. Detail: `studies/EXP067_FINDINGS.md`.
+Gated; `carry_catalysts=False` ⇒ byte-identical.
+
+The first rung of the *compound-competence-across-levels* program. The census (Ω-0.50) showed per-tier
+competence saturates to a flat ~1.85 plateau across up to 16 emergent levels. The diagnosis, from the arc's
+own central lesson (exp049→exp053): promotion drops each collective at an **opaque** atom and carries only a
+scalar law strength, re-introducing the exp049 opacity at the tower boundary. exp067 tests the direct fix — a
+gated `carry_catalysts` that makes promotion **transparent**: the finishing tier's network-visible catalytic
+repertoire (`physics._catalysts`) is carried into the next tier and the child is seeded with the parent
+collectives' product states so those reactions keep firing (the exp053 fix applied across the boundary).
+
+**Result (5 tiers, 6000 ticks/tier, 5 seeds; per-tier competence, full-depth towers).** No cross-level
+compounding. Across-tier competence slope: **compounding +0.0005**, **law_only +0.0240**, **transparent
++0.0078** — transparent is *below* the scalar-law tower and far from a genuine climb; competence sits on the
+intrinsic **~1.9 plateau** at every tier (transparent gives a one-time lift at the first boundary — tier 1 =
+1.947, the highest of any arm — then flattens 1.918 → 1.914 → 1.878). But transparent **halves the collapse
+rate** (0.20 vs 0.40) and **deepens the tower** (mean depth 4.0 vs 3.2).
+
+**Interpretation.** The pre-registered hypothesis — that opacity *at the boundary* caps cross-level
+competence — is **falsified**: making the boundary transparent did not lift the slope, so the cap is **not**
+the boundary but the **per-tier substrate's own optimal-richness ceiling** (exp053/054). The arc's
+within-level law — competence is *a rate up to the substrate's optimal richness, then a stock* — is now shown
+to hold **at the tower scale and to be boundary-independent**: transparent reification cannot make a level
+exceed what its construction law allows; it can only help the level *reach* that ceiling, which is why it aids
+bootstrapping/depth (the exp057/58 floor) but not the competence slope. To make competence climb across
+levels the lever must change *what each tier can express* — a **rising target** that forces each tier to
+exceed the last (**H2**, the cross-tier competence ratchet) or a genuinely richer per-tier law (**H3**), not
+merely carry the previous tier's structure forward. That is the next rung.
+
+### Is / is not
+- **Is:** a clean, boundary-independent negative (transparent carry-over does not raise the across-tier
+  slope; the ceiling is intrinsic), plus a real secondary positive (lower collapse, greater depth —
+  transparency aids bootstrapping). Reproduces the exp055 "transient-lift-not-a-rate" pattern under a
+  transparent boundary.
+- **Is not:** a claim cross-level compounding is impossible — only that *transparent reification alone* does
+  not achieve it (H2/H3 untested). 5 seeds; the slope negative is clear, the robustness/depth benefit
+  suggestive at this n. `carry_catalysts=False` ⇒ byte-identical.
+
+---
+
 ## Milestone Ω-0.55 — Multi-cue perception PAYS, and only when the cue is relevant (an irrelevant cue COSTS): perceptual breadth is a second route to cognition — and a matched control defeats a parameter-count confound (exp066)
 
 **Date:** 2026-07-24 · **Status:** complete · **Verdict:** a **positive** result with a **genome-matched

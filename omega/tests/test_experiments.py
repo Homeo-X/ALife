@@ -1294,6 +1294,29 @@ class TestScientificClaims(unittest.TestCase):
         r0 = run_stack(max_tiers=2, seed=0, ticks=1500)
         self.assertTrue(all(t.catalyst_period == 400 for t in r0.tiers))  # no derivation ⇒ fixed law
 
+    def test_exp067_transparent_cross_tier_reification_gates_and_acts(self):
+        # Ω-0.56 (does competence compound ACROSS levels?): exp067 makes promotion TRANSPARENT — carry the
+        # finishing tier's network-visible catalytic repertoire (physics._catalysts) into the next tier
+        # (seed_catalysts) and seed the child with the parent collectives' product states, so the competent
+        # operations persist across the boundary (the exp053 fix applied one level up). Pin the mechanism:
+        # carry_catalysts=False (default) ⇒ the tower is byte-identical tier-for-tier; on, tier 0 is
+        # unchanged (nothing to carry yet) and tier 1+ differ (the carried structure acts). Whether it makes
+        # competence compound is the study's science — it does NOT (EXP067_FINDINGS.md): the ceiling is
+        # intrinsic to the per-tier substrate.
+        from omega.levels.stack import run_stack
+
+        base = run_stack(max_tiers=3, seed=0, ticks=2500, builder="exp053", law_from_competence=True)
+        off = run_stack(max_tiers=3, seed=0, ticks=2500, builder="exp053", law_from_competence=True,
+                        carry_catalysts=False)
+        self.assertEqual([t.classes_ever for t in off.tiers], [t.classes_ever for t in base.tiers])  # off ⇒ byte-identical
+
+        on = run_stack(max_tiers=3, seed=0, ticks=2500, builder="exp053", law_from_competence=True,
+                       carry_catalysts=True)
+        self.assertGreaterEqual(len(on.tiers), 2)                # the tower reaches tier 1 (carry engages)
+        self.assertEqual(on.tiers[0].classes_ever, base.tiers[0].classes_ever)  # tier 0 unchanged (no carry yet)
+        self.assertNotEqual([t.classes_ever for t in on.tiers],
+                            [t.classes_ever for t in base.tiers])  # tier 1+ differ ⇒ carried structure acts
+
     def test_exp056_competence_pressure_scales_selection_and_is_byte_identical_at_one(self):
         # Ω-0.45 (the competence–diversity trade-off dial): exp056 adds competence_pressure ∈ [0,1] scaling
         # the Red Queen's competence term (weight = 0.05 + pressure·(closure + core-novelty)). Pin it:
