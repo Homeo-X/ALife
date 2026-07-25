@@ -86,7 +86,9 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
               builder: str = "exp030", law_from_competence: bool = False,
               catalyst_period: int = 400, competence_pressure: float = 1.0,
               tier0_warmup: float = 1.0, tier0_patches: int = 24,
-              carry_catalysts: bool = False, carry_ratchet_bar: bool = False) -> StackResult:
+              carry_catalysts: bool = False, carry_ratchet_bar: bool = False,
+              resolution_from_competence: bool = False, resolution_step: float = 1.5,
+              resolution_cap: int = 4) -> StackResult:
     """Run the recursive tower; return per-tier results and the unfold map.
 
     ``levels`` makes the per-tier physics **first-class** (exp033): a sequence of
@@ -138,7 +140,18 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
     ``deme_fitness="ratchet"``) it seeds tier N+1's moving competence bar (``ratchet_seed``) from the level
     tier N reached (``physics._ratchet_bar``), so each tier must EXCEED the last to score above the floor.
     If the plateau is *satisficing* competence climbs; if it is a *hard* ceiling no deme clears the bar and
-    it stays flat / collapses. ``carry_ratchet_bar=False`` (default) ⇒ byte-identical (no ``ratchet_seed``)."""
+    it stays flat / collapses. ``carry_ratchet_bar=False`` (default) ⇒ byte-identical (no ``ratchet_seed``).
+
+    exp069 RICHER PER-TIER LAW (the last lever): exp067 (structure) and exp068 (target) both failed and
+    triangulated the limit to *what each tier can express* — the per-tier construction law. exp069 changes
+    that: ``resolution_from_competence`` DERIVES each tier's construction resolution from the competence
+    achieved below — a tier that clears ``resolution_step`` earns its successor a +1 deeper composition law
+    (``type_resolution``), capped at ``resolution_cap``. This is exp054's earned-reach idea applied ACROSS
+    the boundary, where the added richness composes lower-tier *collectives* (a new kind, so it may escape
+    the within-tier depth trap that starved exp054). If competence then climbs, cross-level compounding is
+    possible via a richer law; if the deeper law re-plateaus or starves cross-production, the ~1.9 ceiling is
+    a hard bound of this substrate. ``resolution_from_competence=False`` (default) ⇒ a fixed per-tier
+    resolution ⇒ byte-identical."""
     alphabet = [f"y{i}" for i in range(base_n_types)]          # tier-0 base types
     tiers: list = []
     unfold: dict = {}
@@ -146,10 +159,12 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
     carried: list = []                                         # exp067: parent tier's catalytic repertoire
     carried_seeds: tuple | None = None                        # exp067: parent product states (catalyst anchors)
     carried_bar: float = 0.0                                   # exp068: the competence level the parent reached
+    earned_res: int = 0                                       # exp069: resolution steps earned by competence below
     for tier in range(max_tiers):
         b = builder if not levels else levels[tier % len(levels)]
         tticks = int(ticks * tier0_warmup) if tier == 0 else ticks   # exp057: front-load tier-0 establishment
         npatch = tier0_patches if tier == 0 else 24                  # exp058: more founder demes at tier 0
+        res_tier = resolution + earned_res                          # exp069: a richer construction law up the tower
         extra: dict = {}
         if carry_catalysts and tier > 0 and carried:           # exp067: transparent cross-tier reification
             extra["seed_catalysts"] = tuple(carried)           # inherit the competent operations (visible)
@@ -160,7 +175,7 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
         physics, cfg = get_experiment(b)(
             seed=seed, ticks=tticks, n_patches=npatch, propagule_mode='source',
             explicit_atoms=tuple(alphabet), n_types=len(alphabet),
-            type_resolution=resolution, catalyst_period=period,
+            type_resolution=res_tier, catalyst_period=period,
             competence_pressure=competence_pressure, **extra)
         res = _harness_run(physics, cfg)
         collectives = _stable_collectives(physics)
@@ -174,6 +189,8 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
             carried_seeds = tuple(seeds) if seeds else None
         if carry_ratchet_bar:                                  # exp068: carry the level this tier reached
             carried_bar = physics._ratchet_bar
+        if resolution_from_competence and comp >= resolution_step:  # exp069: a competent tier earns its
+            earned_res = min(resolution_cap, earned_res + 1)         # successor a +1 deeper construction law
         hs = mean(physics._hered_edge_self) if physics._hered_edge_self else 0.0
         hn = mean(physics._hered_edge_null) if physics._hered_edge_null else 0.0
         tiers.append(TierResult(
