@@ -85,7 +85,8 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
               min_collectives: int = 2, levels: tuple | None = None,
               builder: str = "exp030", law_from_competence: bool = False,
               catalyst_period: int = 400, competence_pressure: float = 1.0,
-              tier0_warmup: float = 1.0, tier0_patches: int = 24) -> StackResult:
+              tier0_warmup: float = 1.0, tier0_patches: int = 24,
+              carry_catalysts: bool = False) -> StackResult:
     """Run the recursive tower; return per-tier results and the unfold map.
 
     ``levels`` makes the per-tier physics **first-class** (exp033): a sequence of
@@ -118,23 +119,48 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
     sharpened the follow-on — the failing seeds need a richer *starting diversity*, not a longer
     horizon. ``tier0_patches`` runs the founding tier (tier 0) with more independent founder demes
     (default 24, the per-tier count; higher tiers unchanged), a direct test of whether more founders
-    move the floor that warmup could not. ``tier0_patches=24`` (default) ⇒ byte-identical."""
+    move the floor that warmup could not. ``tier0_patches=24`` (default) ⇒ byte-identical.
+
+    exp067 TRANSPARENT CROSS-TIER REIFICATION: the census (Ω-0.50) showed per-tier competence saturates to
+    a flat plateau across emergent levels — because promotion drops each collective at an *opaque* atom
+    (``L{n}_{i}``) and carries only a scalar law strength, re-introducing the exp049 opacity at the tower
+    boundary (the child re-bootstraps from scratch). ``carry_catalysts`` makes promotion **transparent**:
+    the finishing tier's learned catalytic repertoire (``physics._catalysts`` — network-visible
+    anchor→product reactions) is carried into the next tier (``seed_catalysts``), and the child is seeded
+    with the parent collectives' representative product states (``seed_states``) so those reactions' anchors
+    are present and keep firing — the exp053 "keep competent structure network-visible" fix applied *across*
+    the tier boundary, so competence can build on competence. ``carry_catalysts=False`` (default) ⇒
+    byte-identical (no ``seed_catalysts``/``seed_states`` passed)."""
     alphabet = [f"y{i}" for i in range(base_n_types)]          # tier-0 base types
     tiers: list = []
     unfold: dict = {}
     period = catalyst_period                                    # law strength granted to the current tier
+    carried: list = []                                         # exp067: parent tier's catalytic repertoire
+    carried_seeds: tuple | None = None                        # exp067: parent product states (catalyst anchors)
     for tier in range(max_tiers):
         b = builder if not levels else levels[tier % len(levels)]
         tticks = int(ticks * tier0_warmup) if tier == 0 else ticks   # exp057: front-load tier-0 establishment
         npatch = tier0_patches if tier == 0 else 24                  # exp058: more founder demes at tier 0
+        extra: dict = {}
+        if carry_catalysts and tier > 0 and carried:           # exp067: transparent cross-tier reification
+            extra["seed_catalysts"] = tuple(carried)           # inherit the competent operations (visible)
+            if carried_seeds:
+                extra["seed_states"] = list(carried_seeds)     # seed anchors so the reactions keep firing
         physics, cfg = get_experiment(b)(
             seed=seed, ticks=tticks, n_patches=npatch, propagule_mode='source',
             explicit_atoms=tuple(alphabet), n_types=len(alphabet),
             type_resolution=resolution, catalyst_period=period,
-            competence_pressure=competence_pressure)
+            competence_pressure=competence_pressure, **extra)
         res = _harness_run(physics, cfg)
         collectives = _stable_collectives(physics)
         comp = _tier_competence(physics)
+        if carry_catalysts:                                    # exp067: capture this tier's competent
+            carried = list(physics._catalysts)                 # repertoire + representative product states
+            seeds: list = []                                   # (the network-visible structure to carry up)
+            for pi in list(physics._deme_edges):
+                if physics._deme_signature(pi):
+                    seeds.extend(physics._niche.get(pi, []))
+            carried_seeds = tuple(seeds) if seeds else None
         hs = mean(physics._hered_edge_self) if physics._hered_edge_self else 0.0
         hn = mean(physics._hered_edge_null) if physics._hered_edge_null else 0.0
         tiers.append(TierResult(

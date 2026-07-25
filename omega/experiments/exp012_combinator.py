@@ -1784,6 +1784,16 @@ def _make(seed, experiment, **overrides):
     if overrides.get("explicit_atoms"):
         physics.atoms = tuple(overrides["explicit_atoms"])
     physics.seed_states = overrides.get("seed_states")
+    # exp067 TRANSPARENT CROSS-TIER REIFICATION: pre-load a promoted tier's learned catalytic repertoire
+    # (network-visible anchor->product reactions) so the child tier INHERITS the competent operations of the
+    # tier below — the exp053 "keep it network-visible" fix applied across the tower boundary (vs the current
+    # promotion, which drops the competent structure at an opaque atom, the exp049 failure mode one level up).
+    # Seeded catalysts fire only under catalytic_law and only when their anchor class is present (which the
+    # matching seed_states provides). seed_catalysts absent (default) ⇒ _catalysts stays empty ⇒ byte-identical.
+    seed_catalysts = overrides.get("seed_catalysts")
+    if seed_catalysts:
+        physics._catalysts = list(seed_catalysts)
+        physics._catalyst_cls = {(a, canonical_cls(p)) for (a, p) in seed_catalysts}
     physics.horizontal_transfer = float(overrides.get("horizontal_transfer", 0.0))
     cfg = Config(
         experiment=experiment,
