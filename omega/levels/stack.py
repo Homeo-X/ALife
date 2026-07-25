@@ -86,7 +86,7 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
               builder: str = "exp030", law_from_competence: bool = False,
               catalyst_period: int = 400, competence_pressure: float = 1.0,
               tier0_warmup: float = 1.0, tier0_patches: int = 24,
-              carry_catalysts: bool = False) -> StackResult:
+              carry_catalysts: bool = False, carry_ratchet_bar: bool = False) -> StackResult:
     """Run the recursive tower; return per-tier results and the unfold map.
 
     ``levels`` makes the per-tier physics **first-class** (exp033): a sequence of
@@ -130,13 +130,22 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
     with the parent collectives' representative product states (``seed_states``) so those reactions' anchors
     are present and keep firing — the exp053 "keep competent structure network-visible" fix applied *across*
     the tier boundary, so competence can build on competence. ``carry_catalysts=False`` (default) ⇒
-    byte-identical (no ``seed_catalysts``/``seed_states`` passed)."""
+    byte-identical (no ``seed_catalysts``/``seed_states`` passed).
+
+    exp068 CROSS-TIER COMPETENCE RATCHET: exp067 showed transparent carry-over does not lift the across-tier
+    competence slope (the cap is the per-tier substrate's optimal-richness ceiling, not the boundary).
+    ``carry_ratchet_bar`` tests whether a RISING TARGET does: with a ratchet-fitness builder (``exp068``,
+    ``deme_fitness="ratchet"``) it seeds tier N+1's moving competence bar (``ratchet_seed``) from the level
+    tier N reached (``physics._ratchet_bar``), so each tier must EXCEED the last to score above the floor.
+    If the plateau is *satisficing* competence climbs; if it is a *hard* ceiling no deme clears the bar and
+    it stays flat / collapses. ``carry_ratchet_bar=False`` (default) ⇒ byte-identical (no ``ratchet_seed``)."""
     alphabet = [f"y{i}" for i in range(base_n_types)]          # tier-0 base types
     tiers: list = []
     unfold: dict = {}
     period = catalyst_period                                    # law strength granted to the current tier
     carried: list = []                                         # exp067: parent tier's catalytic repertoire
     carried_seeds: tuple | None = None                        # exp067: parent product states (catalyst anchors)
+    carried_bar: float = 0.0                                   # exp068: the competence level the parent reached
     for tier in range(max_tiers):
         b = builder if not levels else levels[tier % len(levels)]
         tticks = int(ticks * tier0_warmup) if tier == 0 else ticks   # exp057: front-load tier-0 establishment
@@ -146,6 +155,8 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
             extra["seed_catalysts"] = tuple(carried)           # inherit the competent operations (visible)
             if carried_seeds:
                 extra["seed_states"] = list(carried_seeds)     # seed anchors so the reactions keep firing
+        if carry_ratchet_bar and tier > 0:                     # exp068: seed the rising target from below
+            extra["ratchet_seed"] = carried_bar                # this tier must EXCEED what the last reached
         physics, cfg = get_experiment(b)(
             seed=seed, ticks=tticks, n_patches=npatch, propagule_mode='source',
             explicit_atoms=tuple(alphabet), n_types=len(alphabet),
@@ -161,6 +172,8 @@ def run_stack(max_tiers: int = 4, seed: int = 0, ticks: int = 3000,
                 if physics._deme_signature(pi):
                     seeds.extend(physics._niche.get(pi, []))
             carried_seeds = tuple(seeds) if seeds else None
+        if carry_ratchet_bar:                                  # exp068: carry the level this tier reached
+            carried_bar = physics._ratchet_bar
         hs = mean(physics._hered_edge_self) if physics._hered_edge_self else 0.0
         hn = mean(physics._hered_edge_null) if physics._hered_edge_null else 0.0
         tiers.append(TierResult(

@@ -1794,6 +1794,12 @@ def _make(seed, experiment, **overrides):
     if seed_catalysts:
         physics._catalysts = list(seed_catalysts)
         physics._catalyst_cls = {(a, canonical_cls(p)) for (a, p) in seed_catalysts}
+    # exp068 CROSS-TIER COMPETENCE RATCHET: seed the moving competence bar (deme_fitness="ratchet") from the
+    # level a lower tier reached, so this tier must EXCEED it to score above the floor — a rising target
+    # carried ACROSS the tower boundary. Absent (default) ⇒ the bar starts at 0.0 as before ⇒ byte-identical.
+    ratchet_seed = overrides.get("ratchet_seed")
+    if ratchet_seed is not None:
+        physics._ratchet_bar = float(ratchet_seed)
     physics.horizontal_transfer = float(overrides.get("horizontal_transfer", 0.0))
     cfg = Config(
         experiment=experiment,
@@ -2916,6 +2922,41 @@ def build_catalytic(seed: int = 0, **overrides) -> tuple[Physics, Config]:
     overrides.setdefault("catalytic_law", True)         # exp053 — the substrate-law feedback, ON
     overrides.setdefault("catalyst_period", 400)
     return _make(seed, "exp053", **overrides)
+
+
+@register("exp068")
+def build_ratchet_tower(seed: int = 0, **overrides) -> tuple[Physics, Config]:
+    """exp068 — THE CROSS-TIER COMPETENCE RATCHET: is the tower's ~1.9 competence plateau a SATISFICING
+    plateau or a HARD expressivity ceiling? exp067 (Ω-0.56) showed transparent promotion does not lift the
+    across-tier competence slope — the cap is the per-tier substrate's optimal-richness ceiling, not the
+    promotion boundary. exp068 asks the sharp follow-on: does a RISING TARGET carried across the boundary
+    push competence up the tower? It runs the exp053 network-visible Catalytic Law but with
+    `deme_fitness="ratchet"` (exp042) — reward = 0.05 + max(0, competence − _ratchet_bar), the bar chasing
+    the achieved frontier and never lowering. In `run_stack(carry_ratchet_bar=True)` the transition SEEDS
+    tier N+1's bar from tier N's achievement (`ratchet_seed`), so each tier must EXCEED the last to score
+    above the floor. If the plateau is satisficing, competence climbs across tiers; if it is a hard ceiling,
+    no deme clears the seeded bar, selection goes to the floor (drift), and competence stays flat / the tower
+    collapses. The matched control is the same builder with the bar RESET per tier (the within-tier ratchet,
+    exp042's known plateau). `ratchet_seed` absent (default) ⇒ the bar starts at 0.0 ⇒ byte-identical to a
+    plain ratchet tower."""
+    overrides.setdefault("mut_prob", 0.05)
+    overrides.setdefault("track_ecology", True)
+    overrides.setdefault("n_patches", 24)
+    overrides.setdefault("deme_gen", 20)
+    overrides.setdefault("mig_rate", 0.0)
+    overrides.setdefault("propagule_size", 8)
+    overrides.setdefault("feed_mode", "recycle")
+    overrides.setdefault("track_signature", True)
+    overrides.setdefault("deme_fitness", "ratchet")     # exp042 — the moving competence bar (the rising target)
+    overrides.setdefault("ratchet_lr", 0.25)            # the bar chases the achieved frontier
+    overrides.setdefault("propagule_bias", "network")
+    overrides.setdefault("substrate", "typed_path")
+    overrides.setdefault("n_types", 32)
+    overrides.setdefault("type_resolution", 3)
+    overrides.setdefault("network_template", 0.5)       # exp040 heredity channel — ON
+    overrides.setdefault("catalytic_law", True)         # exp053 — the network-visible law, ON
+    overrides.setdefault("catalyst_period", 400)
+    return _make(seed, "exp068", **overrides)
 
 
 @register("exp054")
