@@ -2,7 +2,7 @@
 
 Project Ω is a falsifiable research program, so this roadmap is a list of **open questions with
 predicted falsification conditions**, not a feature backlog. Status is tracked milestone-by-
-milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.57).
+milestone in [`omega/docs/RESEARCH_LOG.md`](../omega/docs/RESEARCH_LOG.md) (Ω-0.1 → Ω-0.58).
 
 ## Where we are
 
@@ -148,9 +148,18 @@ the last — makes the across-tier slope **negative** (−0.036 vs the reset +0.
 build past ~1.9, no deme clears the seeded bar, selection drops to the floor (drift), competence *erodes*,
 and towers die. So the limit is now **triangulated**: cross-level competence is capped by *what each tier can
 express*, not by the promotion boundary (Ω-0.56) *or* the selection target (Ω-0.57) — two of three levers
-ruled out. The one remaining is **H3 — a genuinely richer per-tier construction law** (change what a tier can
-*build*). *Predicted falsification of the program:* even H3 re-plateaus at ~1.9 ⇒ cross-level competence
-compounding is impossible in this substrate, a hard, publishable bound on self-improvement at world scale.
+ruled out. **exp069 (Ω-0.58) then tested the last lever — H3, a genuinely richer per-tier construction law
+(derive each tier's construction reach from the competence below) — and it FAILED decisively, closing the
+program:** the deeper earned law **starves cross-production and collapses the tower** (collapse 1.00 vs 0.40,
+mean depth 2.4 vs 3.2 — no seed reaches full depth; the exp054 depth-trap compounding up the tower), and
+where towers stay shallow enough to survive competence plateaus flat ~1.9 (no climb). So **all three
+cross-tier levers fail** — carry structure (Ω-0.56), raise the target (Ω-0.57), enrich the law (Ω-0.58): the
+predicted falsification is **realized**. **Cross-level competence compounding is impossible in this
+substrate.** The world is open-ended in construction and individuality indefinitely and competent to a high
+stable level (~1.9), but **competence is a STOCK, not a rate, at world scale** — a hard, falsifiable close of
+the self-improvement arc. Exceeding the ceiling would require a *different substrate* whose per-level optimal
+richness is itself unbounded (a new physics), not a new lever on this one — the sharp open question that
+remains.
 
 ## Secondary threads
 

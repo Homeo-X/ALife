@@ -6,6 +6,52 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.58 — A richer per-tier construction law does NOT make competence compound across levels — it starves cross-production and collapses the tower: the ~1.9 ceiling is a HARD bound of the substrate, and the three-lever triangulation is complete (exp069)
+
+**Date:** 2026-07-25 · **Status:** complete · **Verdict:** the **decisive close** of the
+compound-competence-across-levels program — a mechanism-diagnosed negative on the last lever. Deriving each
+tier's construction resolution from the competence below makes the tower **collapse** (collapse rate 1.00 vs
+0.40, mean depth 2.40 vs 3.20 — no seed reached full depth), because the deeper law **starves
+cross-production** (the exp054 depth trap, now at tower scale). With exp067 (structure) and exp068 (target),
+**all three levers fail: cross-level competence compounding is impossible in this substrate.** Detail:
+`studies/EXP069_FINDINGS.md`. Gated; `resolution_from_competence=False` ⇒ byte-identical.
+
+The last rung. exp067 (transparent promotion) and exp068 (a rising cross-tier target) both failed and
+triangulated the limit to the per-tier construction law — the ~1.9 plateau is set by *what each tier can
+express*. exp069 changes that with a gated `resolution_from_competence`: a tier that clears `resolution_step`
+earns its successor a +1 deeper composition law (`type_resolution`), capped — exp054's earned-reach idea
+applied across the boundary, where the added richness composes lower-tier *collectives*.
+
+**Result (5 tiers, 6000 ticks/tier, 5 seeds).** The richer law collapses the tower: **collapse 1.00 (0/5
+full-depth) vs fixed_law's 0.40, mean depth 2.40 vs 3.20** — no full-depth tower even forms to measure a
+slope. A shallower 4-tier probe shows the milder regime, where surviving towers plateau flat (richer per-tier
+1.22, 1.88, 1.91, 1.88 vs fixed 1.22, 1.87, 1.95, 1.97 — no climb). So the richer law fails in both regimes:
+shallow ⇒ no climb; deep ⇒ collapse.
+
+**Interpretation — the ceiling is a hard bound; the arc closes.** This is the exp054 mechanism at tower
+scale: a deeper reach demands more parts per product than the network can supply, so cross-production (the
+closure the competence metric rewards) starves — within a tier competence *fell* (exp054), across tiers the
+starvation compounds and kills the tower. The substrate has a fixed **optimal richness**, and a tier cannot
+express more competence than that optimum by *any* of the three cross-tier levers: carry the structure
+(exp067 — cap is not the boundary), raise the target (exp068 — cap is not selection), or enrich the law
+(exp069 — a richer law overshoots the optimum and starves). **The triangulation is complete and consistent:
+cross-level competence compounding is impossible in this substrate.** The world is open-ended in construction
+and individuality indefinitely and competent to a high stable level (~1.9), but **competence is a STOCK, not
+a rate, at world scale** — the precise, falsifiable close of the self-improvement arc. The Catalytic Law made
+competence a rate *within* a level (Ω-0.42) up to the substrate's optimal richness (Ω-0.43); that optimum is
+a hard ceiling holding across tower levels. To exceed it would require a *different substrate* whose
+per-level optimal richness is itself unbounded — a new physics, not a new lever on this one.
+
+### Is / is not
+- **Is:** a decisive, mechanism-diagnosed negative (a richer law starves cross-production and collapses the
+  tower) completing a consistent three-lever triangulation that the ~1.9 ceiling is a hard bound of the
+  substrate's expressivity.
+- **Is not:** a claim *no* substrate can compound competence across levels — only that *this* one cannot, via
+  any lever a cross-tier ratchet affords; the escape (an unbounded-optimal-richness per-level law) is a
+  new-physics question. 5 seeds; the collapse is unambiguous, the no-climb regime is from a 4-tier probe.
+
+---
+
 ## Milestone Ω-0.57 — The ~1.9 tower plateau is a HARD expressivity ceiling, not a satisficing one: a rising cross-tier target does not lift competence — it starves selection and collapses the tower (exp068)
 
 **Date:** 2026-07-25 · **Status:** complete · **Verdict:** a **decisive negative** that resolves the

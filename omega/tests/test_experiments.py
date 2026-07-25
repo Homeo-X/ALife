@@ -1353,6 +1353,28 @@ class TestScientificClaims(unittest.TestCase):
         self.assertNotEqual([t.classes_ever for t in on.tiers],
                             [t.classes_ever for t in base.tiers])                 # seeded bar acts at tier 1+
 
+    def test_exp069_richer_per_tier_law_derives_resolution_and_gates(self):
+        # Ω-0.58 (the last cross-level lever): exp067 (structure) and exp068 (target) failed and triangulated
+        # the limit to the per-tier construction law. exp069 changes what a tier can EXPRESS —
+        # resolution_from_competence derives each tier's construction resolution from the competence below
+        # (a competent tier earns its successor a +1 deeper composition law). Pin the mechanism: off (default)
+        # ⇒ the tower is byte-identical tier-for-tier; on ⇒ tier 0 is unchanged (nothing earned yet) and, once
+        # a tier clears the step, deeper tiers run a richer law and differ. Whether it makes competence
+        # compound is the study's science — it does NOT (EXP069_FINDINGS.md): the ~1.9 ceiling is a hard bound.
+        from omega.levels.stack import run_stack
+
+        base = run_stack(max_tiers=3, seed=0, ticks=2500, builder="exp053", law_from_competence=True)
+        off = run_stack(max_tiers=3, seed=0, ticks=2500, builder="exp053", law_from_competence=True,
+                        resolution_from_competence=False)
+        self.assertEqual([t.classes_ever for t in off.tiers], [t.classes_ever for t in base.tiers])  # off ⇒ identical
+
+        on = run_stack(max_tiers=3, seed=0, ticks=2500, builder="exp053", law_from_competence=True,
+                       resolution_from_competence=True, resolution_step=1.0)   # low step ⇒ tier 0 earns +1
+        self.assertGreaterEqual(len(on.tiers), 2)
+        self.assertEqual(on.tiers[0].classes_ever, base.tiers[0].classes_ever)  # tier 0 unchanged (no reach yet)
+        self.assertNotEqual([t.classes_ever for t in on.tiers],
+                            [t.classes_ever for t in base.tiers])               # richer law acts at tier 1+
+
     def test_exp056_competence_pressure_scales_selection_and_is_byte_identical_at_one(self):
         # Ω-0.45 (the competence–diversity trade-off dial): exp056 adds competence_pressure ∈ [0,1] scaling
         # the Red Queen's competence term (weight = 0.05 + pressure·(closure + core-novelty)). Pin it:

@@ -1,0 +1,16 @@
+exp069 — does a richer per-tier construction law make competence compound across levels? (5 tiers, 6000 ticks/tier, 5 seeds)
+
+  [fixed_law  ] per-tier competence 1.830 1.865 1.923 1.958 1.903  (3/5 full-depth)
+    across-tier slope +0.0240, collapse 0.40, mean depth 3.20
+
+  [richer_law ] per-tier competence 0.000 0.000 0.000 0.000 0.000  (0/5 full-depth)
+    across-tier slope +0.0000, collapse 1.00, mean depth 2.40
+
+  across-tier competence slope: fixed_law +0.0240  ->  richer_law +0.0000  (delta -0.0240)
+  collapse: fixed 0.40 -> richer 1.00
+
+  => THE CEILING IS A HARD BOUND OF THE SUBSTRATE: even a richer per-tier construction law does
+     not lift the across-tier slope (it re-plateaus / starves cross-production, the exp054 depth
+     trap at tower scale). With exp067 (structure) and exp068 (target), all three levers fail —
+     cross-level competence compounding is IMPOSSIBLE in this substrate: the world is open-ended
+     in construction and individuality, but competence is a STOCK at world scale. A hard bound.
