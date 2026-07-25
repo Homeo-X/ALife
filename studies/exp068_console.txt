@@ -1,0 +1,19 @@
+exp068 — cross-tier competence ratchet: is the ~1.9 plateau satisficing or a hard ceiling? (5 tiers, 6000 ticks/tier, 5 seeds)
+
+  [ratchet_reset ] per-tier competence 1.773 1.746 1.878 1.790 1.803  (3/5 full-depth)
+    across-tier slope +0.0104, collapse 0.40, mean depth 3.40
+
+  [ratchet_carry ] per-tier competence 1.805 1.906 1.468 1.857 1.651  (2/5 full-depth)
+    across-tier slope -0.0357, collapse 0.60, mean depth 2.80
+
+  [census_ref    ] per-tier competence 1.830 1.865 1.923 1.958 1.903  (3/5 full-depth)
+    across-tier slope +0.0240, collapse 0.40, mean depth 3.20
+
+  across-tier competence slope: ratchet_reset +0.0104  ->  ratchet_carry -0.0357  (delta -0.0461)
+  collapse: reset 0.40 -> carry 0.60
+
+  => HARD CEILING: carrying the bar across tiers does NOT make competence climb (it stays flat
+     / collapses — no deme clears the seeded bar, so selection drifts). The ~1.9 plateau is a
+     hard expressivity limit of the per-tier substrate; a rising target cannot pass it. This
+     tightens exp067: cross-level competence is capped by what each tier can EXPRESS, not by
+     selection — the next lever is a richer per-tier law (H3), not more pressure.

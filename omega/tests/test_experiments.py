@@ -1317,6 +1317,42 @@ class TestScientificClaims(unittest.TestCase):
         self.assertNotEqual([t.classes_ever for t in on.tiers],
                             [t.classes_ever for t in base.tiers])  # tier 1+ differ ⇒ carried structure acts
 
+    def test_exp068_cross_tier_ratchet_seeds_the_bar_and_gates(self):
+        # Ω-0.57 (is the ~1.9 plateau satisficing or a hard ceiling?): exp068 runs the exp053 network-visible
+        # law with deme_fitness="ratchet" (a moving competence bar) and carries the bar ACROSS the boundary —
+        # seed tier N+1's bar from the level tier N reached, so each tier must EXCEED the last. Pin the
+        # mechanism: the gated physics `ratchet_seed` pre-loads _ratchet_bar (a nonzero seed changes the
+        # dynamics; absent ⇒ byte-identical), and `carry_ratchet_bar=False` (default) is byte-identical to a
+        # plain ratchet tower while tier 0 is unchanged when on. Whether it makes competence climb is the
+        # study's science — it does NOT (EXP068_FINDINGS.md): the plateau is a hard ceiling.
+        from omega.kernel.universe import Universe
+        from omega.kernel.scheduler import Scheduler
+        from omega.substrate.noise import Noise
+        from omega.levels.stack import run_stack
+
+        def classes(**ov):                                       # physics-level ratchet_seed gate
+            p, c = get_experiment("exp068")(seed=0, ticks=1500, **ov)
+            u, rng = Universe(total_quanta=c.total_quanta), Noise(c.seed); p.seed(u, rng)
+            Scheduler(u, p, rng, decay_hazard=c.decay_hazard,
+                      max_reactions_per_tick=c.max_reactions_per_tick).run(1500)
+            return u.classes_ever_seen, p._ratchet_bar
+
+        base_cls, _ = classes()
+        self.assertEqual(classes(ratchet_seed=0.0)[0], base_cls)          # 0.0 ⇒ byte-identical (bar starts 0)
+        seeded_cls, seeded_bar = classes(ratchet_seed=1.5)               # a nonzero seed pre-loads the bar
+        self.assertGreaterEqual(seeded_bar, 1.5)                         # the bar started at the seeded level
+        self.assertNotEqual(seeded_cls, base_cls)                        # and it changed selection ⇒ dynamics
+
+        # tower gating: carry off ⇒ byte-identical tier-for-tier; on ⇒ tier 0 unchanged, tier 1+ differ.
+        base = run_stack(max_tiers=3, seed=0, ticks=2500, builder="exp068")
+        off = run_stack(max_tiers=3, seed=0, ticks=2500, builder="exp068", carry_ratchet_bar=False)
+        self.assertEqual([t.classes_ever for t in off.tiers], [t.classes_ever for t in base.tiers])  # off ⇒ identical
+        on = run_stack(max_tiers=3, seed=0, ticks=2500, builder="exp068", carry_ratchet_bar=True)
+        self.assertGreaterEqual(len(on.tiers), 2)
+        self.assertEqual(on.tiers[0].classes_ever, base.tiers[0].classes_ever)   # tier 0 unchanged (no carry)
+        self.assertNotEqual([t.classes_ever for t in on.tiers],
+                            [t.classes_ever for t in base.tiers])                 # seeded bar acts at tier 1+
+
     def test_exp056_competence_pressure_scales_selection_and_is_byte_identical_at_one(self):
         # Ω-0.45 (the competence–diversity trade-off dial): exp056 adds competence_pressure ∈ [0,1] scaling
         # the Red Queen's competence term (weight = 0.05 + pressure·(closure + core-novelty)). Pin it:

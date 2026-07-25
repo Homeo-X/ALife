@@ -6,6 +6,47 @@ what was falsified.
 
 ---
 
+## Milestone Ω-0.57 — The ~1.9 tower plateau is a HARD expressivity ceiling, not a satisficing one: a rising cross-tier target does not lift competence — it starves selection and collapses the tower (exp068)
+
+**Date:** 2026-07-25 · **Status:** complete · **Verdict:** a **decisive negative** that resolves the
+satisficing-vs-hard-ceiling question and, with exp067, triangulates the limit — carrying a *rising
+competence target* across the tower boundary makes competence *fall* (slope −0.036 vs the reset +0.010) and
+collapses more towers (0.60 vs 0.40). Detail: `studies/EXP068_FINDINGS.md`. Gated;
+`carry_ratchet_bar=False` / `ratchet_seed` absent ⇒ byte-identical.
+
+The second rung of the *make-competence-compound-across-levels* program. exp067 (Ω-0.56) showed transparent
+promotion does not lift the across-tier competence slope — the cap is the per-tier substrate, not the
+boundary. exp068 asks whether the ~1.9 plateau is *satisficing* (a rising target would push higher) or a
+*hard* expressivity ceiling. It runs the exp053 network-visible law with `deme_fitness="ratchet"` (a moving
+competence bar, exp042) and a gated `carry_ratchet_bar` that seeds tier N+1's bar from the level tier N
+reached — so each tier must **exceed** the last to score above the 0.05 floor.
+
+**Result (5 tiers, 6000 ticks/tier, 5 seeds; full-depth towers).** A hard ceiling. Across-tier competence
+slope: **ratchet_reset +0.0104**, **ratchet_carry −0.0357** (competence *drops* at deeper tiers — tier 2
+1.468, tier 4 1.651, below the ~1.9 plateau), **census_ref +0.0240**; and the carry **raises collapse**
+(0.60 vs 0.40) and **shrinks the tower** (depth 2.8 vs 3.4). Carrying the bar is *actively harmful*.
+
+**Interpretation.** Exactly the predicted hard-ceiling failure: when tier N reaches ~1.9 (the substrate's
+optimal richness) and seeds tier N+1's bar there, tier N+1 **cannot build a network more competent than
+~1.9**, so no deme clears the bar, every deme collapses to the floor, selection goes uniform (drift), and
+competence *erodes* while the diversity the tower needs thins. A rising target cannot extract competence the
+substrate cannot express — it only removes the signal that held competence *at* the ceiling. This tightens
+the bound into a two-experiment triangulation: **cross-level competence is capped by what each tier can
+EXPRESS** — not by the promotion boundary's opacity (exp067) and not by the selection target (exp068). Two
+of three candidate levers are ruled out; the remaining one is **H3 — a genuinely richer per-tier
+construction law** (change what a tier *can build*), now sharply motivated. The ~1.9 ceiling is a property of
+the substrate's expressivity — the within-level exp053/054 "rate up to optimal richness, then a stock" law,
+holding at tower scale against both a transparent boundary and a rising target.
+
+### Is / is not
+- **Is:** a clean, decisive negative (a rising target makes competence *fall* and towers collapse, with a
+  diagnosed starved-selection mechanism); with exp067 it triangulates the limit to the per-tier law.
+- **Is not:** a claim cross-level competence can never climb — only that neither carrying structure (exp067)
+  nor raising the target (exp068) does it; a richer per-tier law (H3) is untested. 5 seeds; off ⇒
+  byte-identical.
+
+---
+
 ## Milestone Ω-0.56 — Transparent cross-tier reification does NOT make competence compound across levels (the ceiling is intrinsic to the per-tier substrate) — but it makes the tower more robust and deeper (exp067)
 
 **Date:** 2026-07-25 · **Status:** complete · **Verdict:** an **honest negative** on the headline —

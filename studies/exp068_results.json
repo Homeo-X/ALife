@@ -1,0 +1,46 @@
+{
+  "max_tiers": 5,
+  "ticks_per_tier": 6000,
+  "n_seeds": 5,
+  "summary": {
+    "ratchet_reset": {
+      "per_tier_competence_fulldepth": [
+        1.7730321462885703,
+        1.745666535857815,
+        1.878399966839689,
+        1.7895523570152356,
+        1.8029052971738775
+      ],
+      "within_seed_across_tier_slope": 0.01036321229280351,
+      "collapse_rate": 0.4,
+      "mean_depth": 3.4,
+      "n_full": 3
+    },
+    "ratchet_carry": {
+      "per_tier_competence_fulldepth": [
+        1.8054462567424843,
+        1.9056446042919695,
+        1.4677193523839667,
+        1.8566187246960597,
+        1.6514317843480983
+      ],
+      "within_seed_across_tier_slope": -0.03570548243846816,
+      "collapse_rate": 0.6,
+      "mean_depth": 2.8,
+      "n_full": 2
+    },
+    "census_ref": {
+      "per_tier_competence_fulldepth": [
+        1.8295722579432112,
+        1.8653203801406442,
+        1.9227286760992421,
+        1.958126686560247,
+        1.9030906936029448
+      ],
+      "within_seed_across_tier_slope": 0.023984317773907013,
+      "collapse_rate": 0.4,
+      "mean_depth": 3.2,
+      "n_full": 3
+    }
+  }
+}
